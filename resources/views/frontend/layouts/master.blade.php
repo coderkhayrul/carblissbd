@@ -19,8 +19,8 @@
 
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <!-- Custom Styles (Overriding Bootstrap defaults to match the brand) -->
+
     <style>
         :root {
             --bs-primary: #F15A29;
@@ -408,7 +408,7 @@
         <div class="container-lg py-3 d-flex align-items-center justify-content-between gap-3">
 
             <!-- Brand Logo -->
-            <a href="carblissbd_home.html" class="text-decoration-none d-flex align-items-center flex-shrink-0">
+            <a href="#" class="text-decoration-none d-flex align-items-center flex-shrink-0">
                 <span class="fs-4 fs-md-3 fw-bolder text-dark d-flex align-items-center">
                     CAR<span class="text-primary d-flex align-items-center gap-1">BLISS<i
                             class="fa-solid fa-gauge-high"></i></span>BD
@@ -442,7 +442,7 @@
                     </div>
                     <!-- Product Grid Layout in Search -->
                     <div class="p-3 row row-cols-5 g-3 m-0">
-                        <a href="product_detail.html"
+                        <a href="#"
                             class="col text-decoration-none text-dark d-flex flex-column align-items-center gap-2 p-2 rounded-3 hover-text-primary hover-bg-primary bg-opacity-10 transition-all">
                             <div class="w-100 ratio ratio-1x1 bg-light rounded-3 overflow-hidden border border-light">
                                 <img src="https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&q=80&w=200"
@@ -453,7 +453,7 @@
                             <span class="fw-bolder text-primary mt-auto" style="font-size: 0.75rem;">৳10,200</span>
                         </a>
                         <!-- Search Item 2 -->
-                        <a href="product_detail.html"
+                        <a href="#"
                             class="col text-decoration-none text-dark d-flex flex-column align-items-center gap-2 p-2 rounded-3 hover-text-primary hover-bg-primary bg-opacity-10 transition-all">
                             <div class="w-100 ratio ratio-1x1 bg-light rounded-3 overflow-hidden border border-light">
                                 <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=200"
@@ -464,7 +464,7 @@
                             <span class="fw-bolder text-primary mt-auto" style="font-size: 0.75rem;">৳4,500</span>
                         </a>
                         <!-- Search Item 3 -->
-                        <a href="product_detail.html"
+                        <a href="#"
                             class="col text-decoration-none text-dark d-flex flex-column align-items-center gap-2 p-2 rounded-3 hover-text-primary hover-bg-primary bg-opacity-10 transition-all">
                             <div class="w-100 ratio ratio-1x1 bg-light rounded-3 overflow-hidden border border-light">
                                 <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=200"
@@ -475,7 +475,7 @@
                             <span class="fw-bolder text-primary mt-auto" style="font-size: 0.75rem;">৳1,190</span>
                         </a>
                         <!-- Search Item 4 -->
-                        <a href="product_detail.html"
+                        <a href="#"
                             class="col text-decoration-none text-dark d-flex flex-column align-items-center gap-2 p-2 rounded-3 hover-text-primary hover-bg-primary bg-opacity-10 transition-all">
                             <div class="w-100 ratio ratio-1x1 bg-light rounded-3 overflow-hidden border border-light">
                                 <img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=200"
@@ -486,7 +486,7 @@
                             <span class="fw-bolder text-primary mt-auto" style="font-size: 0.75rem;">৳9,500</span>
                         </a>
                         <!-- Search Item 5 -->
-                        <a href="product_detail.html"
+                        <a href="#"
                             class="col text-decoration-none text-dark d-flex flex-column align-items-center gap-2 p-2 rounded-3 hover-text-primary hover-bg-primary bg-opacity-10 transition-all">
                             <div class="w-100 ratio ratio-1x1 bg-light rounded-3 overflow-hidden border border-light">
                                 <img src="https://images.unsplash.com/photo-1600706432502-75a0e2b34440?auto=format&fit=crop&q=80&w=200"
@@ -497,7 +497,7 @@
                             <span class="fw-bolder text-primary mt-auto" style="font-size: 0.75rem;">৳10,000</span>
                         </a>
                         <!-- Add 5 more items for the second row -->
-                        <a href="product_detail.html"
+                        <a href="#"
                             class="col text-decoration-none text-dark d-flex flex-column align-items-center gap-2 p-2 rounded-3 hover-text-primary hover-bg-primary bg-opacity-10 transition-all">
                             <div class="w-100 ratio ratio-1x1 bg-light rounded-3 overflow-hidden border border-light">
                                 <img src="https://images.unsplash.com/photo-1554223090-7e482851df45?auto=format&fit=crop&q=80&w=200"
@@ -507,7 +507,7 @@
                                 Bright H4 LED Headlight Bulbs</h4>
                             <span class="fw-bolder text-primary mt-auto" style="font-size: 0.75rem;">৳3,500</span>
                         </a>
-                        <a href="product_detail.html"
+                        <a href="#"
                             class="col text-decoration-none text-dark d-flex flex-column align-items-center gap-2 p-2 rounded-3 hover-text-primary hover-bg-primary bg-opacity-10 transition-all">
                             <div class="w-100 ratio ratio-1x1 bg-light rounded-3 overflow-hidden border border-light">
                                 <img src="https://images.unsplash.com/photo-1594535182308-8ffef26626b9?auto=format&fit=crop&q=80&w=200"
@@ -517,7 +517,7 @@
                                 Dashboard Liquid Perfume</h4>
                             <span class="fw-bolder text-primary mt-auto" style="font-size: 0.75rem;">৳850</span>
                         </a>
-                        <a href="product_detail.html"
+                        <a href="#"
                             class="col text-decoration-none text-dark d-flex flex-column align-items-center gap-2 p-2 rounded-3 hover-text-primary hover-bg-primary bg-opacity-10 transition-all">
                             <div class="w-100 ratio ratio-1x1 bg-light rounded-3 overflow-hidden border border-light">
                                 <img src="https://images.unsplash.com/photo-1583267746897-ea9cf3c46d9a?auto=format&fit=crop&q=80&w=200"
@@ -527,7 +527,7 @@
                                 AI Android Multimedia Box</h4>
                             <span class="fw-bolder text-primary mt-auto" style="font-size: 0.75rem;">৳12,990</span>
                         </a>
-                        <a href="product_detail.html"
+                        <a href="#"
                             class="col text-decoration-none text-dark d-flex flex-column align-items-center gap-2 p-2 rounded-3 hover-text-primary hover-bg-primary bg-opacity-10 transition-all">
                             <div class="w-100 ratio ratio-1x1 bg-light rounded-3 overflow-hidden border border-light">
                                 <img src="https://images.unsplash.com/photo-1518182170546-07661fd94144?auto=format&fit=crop&q=80&w=200"
@@ -537,7 +537,7 @@
                                 Silicone Frameless Wiper Blades</h4>
                             <span class="fw-bolder text-primary mt-auto" style="font-size: 0.75rem;">৳650</span>
                         </a>
-                        <a href="product_detail.html"
+                        <a href="#"
                             class="col text-decoration-none text-dark d-flex flex-column align-items-center gap-2 p-2 rounded-3 hover-text-primary hover-bg-primary bg-opacity-10 transition-all">
                             <div class="w-100 ratio ratio-1x1 bg-light rounded-3 overflow-hidden border border-light">
                                 <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&q=80&w=200"
@@ -717,16 +717,6 @@
 
             <!-- Bullet Pagination -->
             <div class="swiper-pagination mb-2"></div>
-
-            <!-- Slider Controls -->
-            <div
-                class="swiper-button-prev btn btn-light position-absolute top-50 start-0 translate-middle-y ms-3 shadow-sm z-3 d-flex align-items-center justify-content-center">
-                <i class="fa-solid fa-chevron-left"></i>
-            </div>
-            <div
-                class="swiper-button-next btn btn-light position-absolute top-50 end-0 translate-middle-y me-3 shadow-sm z-3 d-flex align-items-center justify-content-center">
-                <i class="fa-solid fa-chevron-right"></i>
-            </div>
         </div>
     </section>
 
@@ -960,7 +950,7 @@
                             </div>
                             <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                                 style="height: 180px;">
-                                <a href="product_detail.html"><img
+                                <a href="#"><img
                                         src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                         alt="Universal Steering Cover"
                                         class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -969,7 +959,7 @@
                                 <div class="mb-auto">
                                     <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                         style="font-size: 0.6rem; letter-spacing: 0.05em;">Car Interior</span>
-                                    <a href="product_detail.html" class="text-decoration-none text-dark">
+                                    <a href="#" class="text-decoration-none text-dark">
                                         <h3 class="h6 fw-bold line-clamp-2 mb-2 hover-text-primary transition-all"
                                             style="font-size: 0.85rem;">Universal Carbon Fiber Style Custom Premium
                                             Steering Cover</h3>
@@ -1004,7 +994,7 @@
                             </div>
                             <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                                 style="height: 180px;">
-                                <a href="product_detail.html"><img
+                                <a href="#"><img
                                         src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=400"
                                         alt="Ceramic Brake Pads"
                                         class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1013,7 +1003,7 @@
                                 <div class="mb-auto">
                                     <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                         style="font-size: 0.6rem; letter-spacing: 0.05em;">Spare Parts</span>
-                                    <a href="product_detail.html" class="text-decoration-none text-dark">
+                                    <a href="#" class="text-decoration-none text-dark">
                                         <h3 class="h6 fw-bold line-clamp-2 mb-2 hover-text-primary transition-all"
                                             style="font-size: 0.85rem;">Powerstop Extreme Sport Front Ceramic Carbon
                                             Brake Pads</h3>
@@ -1048,7 +1038,7 @@
                         <div class="card border-light shadow-sm rounded-4 h-100 product-card">
                             <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                                 style="height: 180px;">
-                                <a href="product_detail.html"><img
+                                <a href="#"><img
                                         src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=400"
                                         alt="Universal Seat Bed"
                                         class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1057,7 +1047,7 @@
                                 <div class="mb-auto">
                                     <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                         style="font-size: 0.6rem; letter-spacing: 0.05em;">Car Interior</span>
-                                    <a href="product_detail.html" class="text-decoration-none text-dark">
+                                    <a href="#" class="text-decoration-none text-dark">
                                         <h3 class="h6 fw-bold line-clamp-2 mb-2 hover-text-primary transition-all"
                                             style="font-size: 0.85rem;">Rechargeable Inflatable Back Seat Air Bed
                                             Mattress for Road Trips</h3>
@@ -1092,7 +1082,7 @@
                             </div>
                             <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                                 style="height: 180px;">
-                                <a href="product_detail.html"><img
+                                <a href="#"><img
                                         src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=400"
                                         alt="Pressure Washer"
                                         class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1101,7 +1091,7 @@
                                 <div class="mb-auto">
                                     <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                         style="font-size: 0.6rem; letter-spacing: 0.05em;">Car Care</span>
-                                    <a href="product_detail.html" class="text-decoration-none text-dark">
+                                    <a href="#" class="text-decoration-none text-dark">
                                         <h3 class="h6 fw-bold line-clamp-2 mb-2 hover-text-primary transition-all"
                                             style="font-size: 0.85rem;">Cordless High Pressure Car Washer & Gun -
                                             Premium Quality</h3>
@@ -1136,7 +1126,7 @@
                             </div>
                             <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                                 style="height: 180px;">
-                                <a href="product_detail.html"><img
+                                <a href="#"><img
                                         src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=400"
                                         alt="Car Audio Player"
                                         class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1145,7 +1135,7 @@
                                 <div class="mb-auto">
                                     <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                         style="font-size: 0.6rem; letter-spacing: 0.05em;">Electronics</span>
-                                    <a href="product_detail.html" class="text-decoration-none text-dark">
+                                    <a href="#" class="text-decoration-none text-dark">
                                         <h3 class="h6 fw-bold line-clamp-2 mb-2 hover-text-primary transition-all"
                                             style="font-size: 0.85rem;">Premium Car Smart AI Multimedia Box Android
                                             Player</h3>
@@ -1172,16 +1162,6 @@
                     </div>
 
                 </div>
-            </div>
-
-            <!-- Swiper Navigation Arrows -->
-            <div class="swiper-button-prev prod-prev btn btn-light position-absolute top-50 start-0 translate-middle-y shadow-sm z-3 d-none d-md-flex align-items-center justify-content-center"
-                style="margin-left: 5px;">
-                <i class="fa-solid fa-chevron-left"></i>
-            </div>
-            <div class="swiper-button-next prod-next btn btn-light position-absolute top-50 end-0 translate-middle-y shadow-sm z-3 d-none d-md-flex align-items-center justify-content-center"
-                style="margin-right: 5px;">
-                <i class="fa-solid fa-chevron-right"></i>
             </div>
         </div>
     </section>
@@ -1322,7 +1302,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1331,7 +1311,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1364,7 +1344,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1373,7 +1353,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1406,7 +1386,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1415,7 +1395,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1448,7 +1428,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1457,7 +1437,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1490,7 +1470,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1499,7 +1479,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1532,7 +1512,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1541,7 +1521,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1574,7 +1554,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1583,7 +1563,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1616,7 +1596,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1625,7 +1605,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1658,7 +1638,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1667,7 +1647,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1700,7 +1680,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1709,7 +1689,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1743,7 +1723,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1752,7 +1732,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1785,7 +1765,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1794,7 +1774,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1827,7 +1807,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1836,7 +1816,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1869,7 +1849,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1878,7 +1858,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -1911,7 +1891,7 @@
                     </div>
                     <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center"
                         style="height: 150px;">
-                        <a href="product_detail.html"><img
+                        <a href="#"><img
                                 src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400"
                                 alt="Recommended Item"
                                 class="w-100 h-100 object-fit-cover transition-all product-img"></a>
@@ -1920,7 +1900,7 @@
                         <div class="mb-auto">
                             <span class="text-muted fw-bold text-uppercase d-block mb-1"
                                 style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                            <a href="product_detail.html" class="text-decoration-none text-dark">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all"
                                     style="font-size: 0.75rem;">Premium Auto Part Model 5</h3>
                             </a>
@@ -2264,10 +2244,10 @@
                 el: ".swiper-pagination",
                 clickable: true,
             },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
+            // navigation: {
+            //     nextEl: ".swiper-button-next",
+            //     prevEl: ".swiper-button-prev",
+            // },
         });
 
         // --- Initialize Swiper for the New Category Section ---
@@ -2344,6 +2324,21 @@
             }
         });
 
+        // --- Live Search Logic ---
+        function handleSearchSuggestions(query) {
+            const suggestionBox = document.getElementById('search-suggestions');
+
+            // যদি ২টির বেশি ক্যারেক্টার টাইপ করা হয়, তবে বক্সটি শো করবে
+            if (query.trim().length > 1) {
+                suggestionBox.style.display = 'block';
+
+                // এখানে আপনি ভবিষ্যতে AJAX / Fetch API দিয়ে সার্ভার থেকে ডাটা আনতে পারবেন
+                // উদাহরণ: fetch(`/api/search?q=${query}`).then(res => res.json()).then(data => showData(data));
+            } else {
+                suggestionBox.style.display = 'none';
+            }
+        }
+
 
         // Init logic on load
         window.onload = function() {
@@ -2408,6 +2403,13 @@
             showToast("Added to Cart", name);
         }
 
+        // নতুন: রিমুভ ফাংশন
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
+            showToast("Item Removed", "Product has been removed from your cart.");
+        }
+
         function buyNow(id) {
             // Mock Buy Now Functionality (Add and trigger checkout or redirect)
             showToast("Processing", "Redirecting to checkout...");
@@ -2447,30 +2449,42 @@
 
             cart.forEach(item => {
                 const itemRow = document.createElement('div');
+                // Added position-relative for absolute delete button positioning
                 itemRow.className =
-                    "cart-item-row d-flex align-items-center justify-content-between border-bottom border-light pb-3 gap-3";
+                    "cart-item-row d-flex align-items-center justify-content-between border-bottom border-light pb-3 gap-3 position-relative";
                 itemRow.innerHTML = `
-                    <img src="${item.img}" alt="${item.name}" class="rounded-3 object-fit-cover flex-shrink-0" style="width: 50px; height: 50px;">
-                    <div class="flex-grow-1">
-                        <h5 class="fw-bold text-dark line-clamp-1 m-0" style="font-size: 0.75rem;">${item.name}</h5>
-                        <p class="text-primary fw-bolder mt-1 mb-0" style="font-size: 0.8rem;">৳${(item.price * item.qty).toLocaleString()}</p>
+                    <img src="${item.img}" alt="${item.name}" class="rounded-3 object-fit-cover flex-shrink-0 border border-light" style="width: 65px; height: 65px;">
+                    <div class="flex-grow-1 pe-4"> <!-- Added padding-end to prevent text overlap with remove button -->
+                        <h5 class="fw-bold text-dark line-clamp-2 m-0" style="font-size: 0.8rem; line-height: 1.4;">${item.name}</h5>
+                        <p class="text-primary fw-bolder mt-1 mb-2" style="font-size: 0.85rem;">৳${(item.price * item.qty).toLocaleString()}</p>
+
+                        <!-- Quantity Controls -->
+                        <div class="d-flex align-items-center gap-2 mt-1">
+                            <button onclick="changeQty(${item.id}, -1)" class="btn btn-light rounded-circle d-flex align-items-center justify-content-center p-0 fw-bold border hover-bg-primary transition-all" style="width: 25px; height: 25px; font-size: 0.8rem;" ${item.qty <= 1 ? 'disabled' : ''}>-</button>
+                            <span class="fw-bolder" style="font-size: 0.85rem; width: 15px; text-align: center;">${item.qty}</span>
+                            <button onclick="changeQty(${item.id}, 1)" class="btn btn-light rounded-circle d-flex align-items-center justify-content-center p-0 fw-bold border hover-bg-primary transition-all" style="width: 25px; height: 25px; font-size: 0.8rem;">+</button>
+                        </div>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <button onclick="changeQty(${item.id}, -1)" class="btn btn-light rounded-circle d-flex align-items-center justify-content-center p-0 fw-bold border" style="width: 25px; height: 25px; font-size: 0.7rem;">-</button>
-                        <span class="fw-bolder" style="font-size: 0.8rem;">${item.qty}</span>
-                        <button onclick="changeQty(${item.id}, 1)" class="btn btn-light rounded-circle d-flex align-items-center justify-content-center p-0 fw-bold border" style="width: 25px; height: 25px; font-size: 0.7rem;">+</button>
-                    </div>
+
+                    <!-- Remove Button -->
+                    <button onclick="removeFromCart(${item.id})" class="btn btn-link text-danger p-0 position-absolute top-0 end-0 mt-1 hover-text-primary transition-all" title="Remove Item">
+                        <i class="fa-solid fa-trash-can" style="font-size: 0.9rem;"></i>
+                    </button>
                 `;
                 container.appendChild(itemRow);
             });
         }
 
+        // আপডেট: কোয়ান্টিটি কন্ট্রোল (মিনিমাম ১)
         function changeQty(id, modifier) {
             const item = cart.find(i => i.id === id);
             if (item) {
-                item.qty += modifier;
-                if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
-                updateCartUI();
+                if (item.qty + modifier >= 1) { // কোয়ান্টিটি যেন ১ এর নিচে না যায়
+                    item.qty += modifier;
+                    updateCartUI();
+                } else {
+                    showToast("Notice", "Minimum quantity must be 1.");
+                }
             }
         }
 
@@ -2512,12 +2526,12 @@
                                 <span class="badge bg-dark rounded-pill text-uppercase shadow-sm" style="font-size: 0.55rem;">Recommended</span>
                             </div>
                             <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center" style="height: 150px;">
-                                <a href="product_detail.html"><img src="${img}" alt="Recommended Item" class="w-100 h-100 object-fit-cover transition-all product-img"></a>
+                                <a href="#"><img src="${img}" alt="Recommended Item" class="w-100 h-100 object-fit-cover transition-all product-img"></a>
                             </div>
                             <div class="card-body d-flex flex-column p-2 p-sm-3">
                                 <div class="mb-auto">
                                     <span class="text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                                    <a href="product_detail.html" class="text-decoration-none text-dark"><h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all" style="font-size: 0.75rem;">Premium Auto Part Model ${i}</h3></a>
+                                    <a href="#" class="text-decoration-none text-dark"><h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all" style="font-size: 0.75rem;">Premium Auto Part Model ${i}</h3></a>
                                     <div class="d-flex text-warning mb-2" style="font-size: 0.6rem;">
                                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
                                     </div>
