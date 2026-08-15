@@ -8,6 +8,11 @@ class FrontendController extends Controller
 {
     public function home()
     {
-        return view('frontend.layouts.master');
+        return view('frontend.pages.home');
+    }
+
+    public function category()
+    {
+        return view('frontend.pages.category');
     }
 }
