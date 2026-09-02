@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\CustomerAuthController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,10 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', [FrontendController::class, 'home'])->name('home');
+// কাস্টমার লগইন
+Route::get('/login', [CustomerAuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [CustomerAuthController::class, 'login'])->name('login.submit');
+
 Route::get('/category', [FrontendController::class, 'category'])->name('category');
 Route::get('/offers', [FrontendController::class, 'offers'])->name('offers');
 Route::get('/product-detail', [FrontendController::class, 'productDetail'])->name('product.detail');
@@ -26,5 +31,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__ . '/auth.php';
-require __DIR__ . '/admin.php';
+// require __DIR__ . '/auth.php';
