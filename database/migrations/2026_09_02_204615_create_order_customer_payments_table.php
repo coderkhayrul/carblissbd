@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('order_customer_payments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
+            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
+            $table->enum('payment_method', ['Cash', 'Bkash', 'Nagad', 'Rocket', 'Bank Transfer'])->default('Cash');
+            $table->enum('payment_status', ['Pending', 'Completed', 'Failed'])->default('Pending');
+            $table->decimal('amount', 10, 2);
+            $table->string('payment_tnx_no')->nullable();
+            $table->string('transaction_id')->nullable();
             $table->timestamps();
         });
     }

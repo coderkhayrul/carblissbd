@@ -13,6 +13,17 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('name');
+            $table->string('mobile')->nullable();
+            $table->string('email')->nullable();
+            $table->string('address')->nullable();
+            $table->string('shipping_address')->nullable();
+            $table->enum('register_from', ['Website', 'Shop'])->nullable();
+            $table->enum('gender', ['Male', 'Female', 'Other'])->nullable();
+            $table->string('country')->default('Bangladesh');
+            $table->boolean('status')->default(false);
+            $table->date('date_of_birth')->nullable();
             $table->timestamps();
         });
     }

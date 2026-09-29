@@ -27,6 +27,11 @@ return new class extends Migration
             $table->integer('tab_serial')->default(0);
             $table->boolean('status')->default(false);
             $table->boolean('is_top_ten')->default(false);
+            $table->text('description')->nullable();
+            // SEO TABLES
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->string('meta_tags')->nullable();
             $table->timestamps();
         });
     }

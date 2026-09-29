@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('popup_ads', function (Blueprint $table) {
             $table->id();
+            $table->string('title')->nullable();
+            $table->string('url')->nullable();
+            $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->boolean('is_video')->default(false);
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

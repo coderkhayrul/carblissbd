@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('shipping_charge_settings', function (Blueprint $table) {
             $table->id();
+            $table->string('area_name')->nullable();
+            $table->decimal('charge', 10, 2)->nullable();
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }

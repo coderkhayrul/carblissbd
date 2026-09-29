@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('next_invoice_nos', function (Blueprint $table) {
             $table->id();
+            $table->string('type');
+            $table->string('year');
+            $table->integer('next_id');
             $table->timestamps();
         });
     }

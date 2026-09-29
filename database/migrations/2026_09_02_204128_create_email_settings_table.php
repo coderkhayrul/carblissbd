@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('email_settings', function (Blueprint $table) {
             $table->id();
+            $table->string('sender_name');
+            $table->string('sender_email');
+            $table->string('mail_mailer');
+            $table->string('mail_host');
+            $table->string('mail_port');
+            $table->string('mail_username');
+            $table->string('mail_password');
+            $table->string('mail_encryption');
             $table->timestamps();
         });
     }

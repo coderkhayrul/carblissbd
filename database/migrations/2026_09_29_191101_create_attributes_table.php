@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('web_social_links', function (Blueprint $table) {
+        Schema::create('attributes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('attribute_type_id')->constrained('attribute_types')->onDelete('cascade');
             $table->string('name');
-            $table->string('url');
-            $table->string('icon')->nullable();
-            $table->string('background_color')->nullable();
-            $table->string('foreground_color')->nullable();
-            $table->boolean('status')->default(false);
+            $table->string('slug')->unique();
+            $table->string('color_code')->nullable();
+            $table->string('description')->nullable();
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('web_social_links');
+        Schema::dropIfExists('attributes');
     }
 };

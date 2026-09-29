@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('return_reasons', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->integer('serial_no')->nullable();
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }

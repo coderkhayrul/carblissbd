@@ -15,12 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug');
+            $table->string('title')->nullable();
             $table->string('logo')->nullable();
             $table->string('banner_image')->nullable();
             $table->boolean('is_highlight')->default(false);
             $table->integer('serial')->default(0);
             $table->boolean('status')->default(false);
             $table->boolean('is_top_ten')->default(false);
+
+            // SEO TABLES
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->string('meta_tags')->nullable();
             $table->timestamps();
         });
     }
