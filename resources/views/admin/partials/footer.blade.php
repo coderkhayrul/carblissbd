@@ -26,6 +26,8 @@
 
 <!-- Page JS -->
 <script src="{{ asset('backend') }}/assets/js/app-ecommerce-dashboard.js"></script>
+
+<script src="{{ asset('backend') }}/js/custom.js"></script>
 </body>
 
 </html>

@@ -61,8 +61,8 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboards -->
-        <li class="menu-item active">
-            <a href="javascript:void(0);" class="menu-link">
+        <li class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('admin.dashboard') }}" class="menu-link">
                 <i class="menu-icon icon-base bx bx-home-smile"></i>
                 <div data-i18n="Dashboards">Dashboards</div>
             </a>
@@ -287,8 +287,9 @@
             </ul>
         </li>
         <!-- Settings -->
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link">
+        <li
+            class="menu-item {{ request()->routeIs('admin.company.settings') || request()->routeIs('admin.payment.settings') || request()->routeIs('admin.email.settings') || request()->routeIs('admin.sms.api.settings') ? 'active' : '' }} ">
+            <a href="{{ route('admin.company.settings') }}" class="menu-link">
                 <i class="menu-icon icon-base bx bx-cog"></i>
                 <div data-i18n="Settings">Settings</div>
             </a>
