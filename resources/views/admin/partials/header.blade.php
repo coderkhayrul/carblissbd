@@ -2,7 +2,7 @@
 
 <html lang="en" class="layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr" data-skin="default"
     data-assets-path="{{ asset('backend') }}/assets/" data-template="vertical-menu-template-no-customizer"
-    data-bs-theme="light">
+    data-bs-theme="dark">
 
 <head>
     <meta charset="utf-8" />
@@ -25,33 +25,20 @@
 
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/fonts/iconify-icons.css" />
 
-    <!-- Core CSS -->
-    <!-- build:css assets/vendor/css/theme.css  -->
-
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/css/core.css" />
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/css/demo.css" />
 
     <!-- Vendors CSS -->
-
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
 
     <!-- endbuild -->
-
-    <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/apex-charts/apex-charts.css" />
-
-    <!-- Page CSS -->
-    <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/css/pages/card-analytics.css" />
+    <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/notyf/notyf.css" />
+    <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/animate-css/animate.css" />
 
     <!-- Helpers -->
     <script src="{{ asset('backend') }}/assets/vendor/js/helpers.js"></script>
-    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
 
-    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-
-    <script src="{{ asset('backend') }}/css/js/style.css"></script>
-
-
-
+    <script src="{{ asset('backend') }}/assets/css/style.css"></script>
 
 </head>
 

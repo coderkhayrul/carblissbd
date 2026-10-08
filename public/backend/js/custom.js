@@ -1,3 +1,5 @@
+
+
 // Update/reset Company Logo of company setting page
 let companyLogo = document.getElementById('companyLogo');
 const fileInputLogo = document.querySelector('.logo-file-input'),
@@ -33,6 +35,42 @@ if (companyFavicon) {
     resetFileInputFavicon.onclick = () => {
         fileInputFavicon.value = '';
         companyFavicon.src = resetFavicon;
+    };
+}
+
+// Update/reset Admin Favicon of company setting page
+let adminFavicon = document.getElementById('adminFavicon');
+const fileInputAdminFavicon = document.querySelector('#adminFaviconUpload'),
+    resetFileInputAdminFavicon = document.querySelector('.admin-favicon-image-reset');
+
+if (adminFavicon) {
+    const resetAdminFavicon = adminFavicon.src;
+    fileInputAdminFavicon.onchange = () => {
+        if (fileInputAdminFavicon.files[0]) {
+            adminFavicon.src = window.URL.createObjectURL(fileInputAdminFavicon.files[0]);
+        }
+    };
+    resetFileInputAdminFavicon.onclick = () => {
+        fileInputAdminFavicon.value = '';
+        adminFavicon.src = resetAdminFavicon;
+    };
+}
+
+// Update/reset Authentication Background of company setting page
+let authBg = document.getElementById('authBg');
+const fileInputAuthBg = document.querySelector('#authBgUpload'),
+    resetFileInputAuthBg = document.querySelector('.auth-bg-image-reset');
+
+if (authBg) {
+    const resetAuthBg = authBg.src;
+    fileInputAuthBg.onchange = () => {
+        if (fileInputAuthBg.files[0]) {
+            authBg.src = window.URL.createObjectURL(fileInputAuthBg.files[0]);
+        }
+    };
+    resetFileInputAuthBg.onclick = () => {
+        fileInputAuthBg.value = '';
+        authBg.src = resetAuthBg;
     };
 }
 

@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('hotline')->nullable();
             $table->string('email');
             $table->text('address');
-            $table->string('logo');
-            $table->string('favicon');
+            $table->string('logo')->nullable();
+            $table->string('favicon')->nullable();
             $table->string('admin_favicon')->nullable();
             $table->text('google_map_embed_code')->nullable();
             $table->string('website')->nullable();

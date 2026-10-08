@@ -23,7 +23,10 @@ Route::get('/', function () {
 Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+
     Route::get('/settings/company-setting', [AdminController::class, 'companySettings'])->name('company.settings');
+    Route::post('/settings/company-setting', [AdminController::class, 'companySettingsUpdate'])->name('company.settings.update');
+
     Route::get('/settings/payment-setting', [AdminController::class, 'paymentSettings'])->name('payment.settings');
     Route::get('/settings/email-setting', [AdminController::class, 'emailSettings'])->name('email.settings');
     Route::get('/settings/sms-api-setting', [AdminController::class, 'smsApiSettings'])->name('sms.api.settings');
