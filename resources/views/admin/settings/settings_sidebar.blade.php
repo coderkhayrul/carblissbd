@@ -1,4 +1,4 @@
-<div class="col-12 col-lg-2">
+<div class="col-12 col-lg-3">
     <div class="d-flex justify-content-between flex-column mb-4 mb-md-0">
         <ul class="list-group">
             <li

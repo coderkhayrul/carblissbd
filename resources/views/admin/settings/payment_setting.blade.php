@@ -4,238 +4,139 @@
         <!-- Navigation -->
         @include('admin.settings.settings_sidebar')
         <!-- /Navigation -->
-
-        <!-- Options -->
-        <div class="col-12 col-lg-8 pt-6 pt-lg-0">
-            <div class="tab-content p-0">
-                <!-- Notification Tab -->
-                <div class="tab-pane fade show active" id="notifications" role="tabpanel">
-                    <div class="card mb-6">
-                        <div class="card-body">
-                            <h5 class="card-title mb-4">Customer</h5>
-                            <div class="card shadow-none mb-6 border-0">
-                                <div class="table-responsive border border-top-0 rounded">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-nowrap w-50">Type</th>
-                                                <th class="text-nowrap text-center w-25">Email</th>
-                                                <th class="text-nowrap text-center w-25">App</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">New customer sign up</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_cust_1" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_cust_2" checked />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Customer account password reset</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_cust_4" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_cust_5" checked />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-transparent">
-                                                <td class="text-nowrap text-heading">Customer account invite</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_cust_7" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_cust_8" />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+        <div class="col-12 col-lg-9">
+            <!-- BKASH PAYMENT CONFIGURATION -->
+            <div class="card mb-6 card-action">
+                <div class="card-header bg-light mb-4">
+                    <h5 class="card-action-title mb-0">Bkash Payment Configuration</h5>
+                    <div class="card-action-element">
+                        <img src="{{ asset('backend') }}/default/bkash.png" alt="bkash" class="me-4" height="32">
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row gx-6">
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="bkash_active">Bkash Status</label>
+                            <div class="input-group">
+                                <select class="form-select" id="bkash_active" name="bkash_active">
+                                    <option value="0">Inactive</option>
+                                    <option value="1">Active</option>
+                                </select>
                             </div>
-
-                            <h5 class="card-title mb-4">Orders</h5>
-                            <div class="card shadow-none mb-6 border-0">
-                                <div class="table-responsive border border-top-0 rounded">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-nowrap w-50">Type</th>
-                                                <th class="text-nowrap text-center w-25">Email</th>
-                                                <th class="text-nowrap text-center w-25">App</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Order purchase</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_1" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_2" checked />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Order cancelled</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_4" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_5" />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Order refund request</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_7" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_8" checked />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Order confirmation</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_9" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_10" />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-transparent">
-                                                <td class="text-nowrap text-heading">Payment error</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_11" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_12" />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="bkash_url">Bkash Base Url</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="bkash_url" name="bkash_url" placeholder="" />
                             </div>
-
-                            <h5 class="card-title mb-4">Shipping</h5>
-                            <div class="card shadow-none border-0">
-                                <div class="table-responsive border border-top-0 rounded">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-nowrap w-50">Type</th>
-                                                <th class="text-nowrap text-center w-25">Email</th>
-                                                <th class="text-nowrap text-center w-25">App</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Picked up</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_ship_1" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_ship_2" checked />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Shipping update</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_ship_3" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_ship_4" />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-transparent">
-                                                <td class="text-nowrap text-heading">Delivered</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_ship_5" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_ship_6" checked />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="bkash_app_key">Bkash App Key</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="bkash_app_key" name="bkash_app_key"
+                                    placeholder="" />
+                            </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="bkash_app_secret">Bkash App Secret</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="bkash_app_secret" name="bkash_app_secret"
+                                    placeholder="" />
+                            </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="bkash_username">Bkash Username</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="bkash_username" name="bkash_username"
+                                    placeholder="" />
+                            </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="bkash_password">Bkash Password</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="bkash_password" name="bkash_password"
+                                    placeholder="" />
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-end gap-4">
-                        <button type="button" class="btn btn-label-secondary">Discard</button>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+            <!--/ BKASH PAYMENT CONFIGURATION -->
+
+            <!-- SSLCOMMERZ PAYMENT CONFIGURATION -->
+            <div class="card mb-6 card-action">
+                <div class="card-header bg-light mb-4">
+                    <h5 class="card-action-title mb-0">SSLCOMMERZ Payment Configuration</h5>
+                    <div class="card-action-element">
+                        <img src="{{ asset('backend') }}/default/ssl.png" alt="bkash" class="me-4" height="32">
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row gx-6">
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="ssl_active">SSLCOMMERZ Status</label>
+                            <div class="input-group">
+                                <select class="form-select" id="ssl_active" name="ssl_active">
+                                    <option value="0">Inactive</option>
+                                    <option value="1">Active</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="ssl_store_id">STORE ID</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="ssl_store_id" name="ssl_store_id"
+                                    placeholder="" />
+                            </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="ssl_store_password">STORE PASSWORD</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="ssl_store_password"
+                                    name="ssl_store_password" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="ssl_store_url">API DOMAIN URL</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="ssl_store_url" name="ssl_store_url"
+                                    placeholder="" />
+                            </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="ssl_store_callback_url">CALLBACK URL</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="ssl_store_callback_url"
+                                    name="ssl_store_callback_url" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="ssl_store_failure_url">FAILURE URL</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="ssl_store_failure_url"
+                                    name="ssl_store_failure_url" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="ssl_is_localhost">IS LOCALHOST</label>
+                            <div class="input-group">
+                                <select class="form-select" id="ssl_is_localhost" name="ssl_is_localhost">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <!--/ SSLCOMMERZ PAYMENT CONFIGURATION -->
+
+            <!-- UPDATE BUTTON -->
+            <div class="card mb-6 card-action text-r">
+                <button type="submit" class="btn btn-primary">
+                    <span class="icon-base bx bx-check-circle icon-sm me-2"></span>Update Setting
+                </button>
+            </div>
         </div>
-        <!-- /Options-->
     </div>
 @endsection

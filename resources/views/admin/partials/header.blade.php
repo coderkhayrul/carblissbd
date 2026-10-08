@@ -35,10 +35,11 @@
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/notyf/notyf.css" />
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/animate-css/animate.css" />
 
+    <link rel="stylesheet" href="{{ asset('backend') }}/css/style.css">
+
     <!-- Helpers -->
     <script src="{{ asset('backend') }}/assets/vendor/js/helpers.js"></script>
 
-    <script src="{{ asset('backend') }}/assets/css/style.css"></script>
 
 </head>
 
