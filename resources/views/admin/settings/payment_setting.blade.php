@@ -58,6 +58,11 @@
                                     placeholder="" />
                             </div>
                         </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="icon-base bx bx-check-circle icon-sm me-2"></span>Update Setting
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -126,17 +131,15 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="icon-base bx bx-check-circle icon-sm me-2"></span>Update Setting
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
             <!--/ SSLCOMMERZ PAYMENT CONFIGURATION -->
-
-            <!-- UPDATE BUTTON -->
-            <div class="card mb-6 card-action text-r">
-                <button type="submit" class="btn btn-primary">
-                    <span class="icon-base bx bx-check-circle icon-sm me-2"></span>Update Setting
-                </button>
-            </div>
         </div>
     </div>
 @endsection

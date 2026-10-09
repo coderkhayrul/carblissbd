@@ -5,237 +5,54 @@
         @include('admin.settings.settings_sidebar')
         <!-- /Navigation -->
 
-        <!-- Options -->
-        <div class="col-12 col-lg-8 pt-6 pt-lg-0">
-            <div class="tab-content p-0">
-                <!-- Notification Tab -->
-                <div class="tab-pane fade show active" id="notifications" role="tabpanel">
-                    <div class="card mb-6">
-                        <div class="card-body">
-                            <h5 class="card-title mb-4">Customer</h5>
-                            <div class="card shadow-none mb-6 border-0">
-                                <div class="table-responsive border border-top-0 rounded">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-nowrap w-50">Type</th>
-                                                <th class="text-nowrap text-center w-25">Email</th>
-                                                <th class="text-nowrap text-center w-25">App</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">New customer sign up</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_cust_1" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_cust_2" checked />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Customer account password reset</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_cust_4" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_cust_5" checked />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-transparent">
-                                                <td class="text-nowrap text-heading">Customer account invite</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_cust_7" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_cust_8" />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <h5 class="card-title mb-4">Orders</h5>
-                            <div class="card shadow-none mb-6 border-0">
-                                <div class="table-responsive border border-top-0 rounded">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-nowrap w-50">Type</th>
-                                                <th class="text-nowrap text-center w-25">Email</th>
-                                                <th class="text-nowrap text-center w-25">App</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Order purchase</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_1" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_2" checked />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Order cancelled</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_4" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_5" />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Order refund request</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_7" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_8" checked />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Order confirmation</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_9" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_10" />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-transparent">
-                                                <td class="text-nowrap text-heading">Payment error</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_11" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_order_12" />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <h5 class="card-title mb-4">Shipping</h5>
-                            <div class="card shadow-none border-0">
-                                <div class="table-responsive border border-top-0 rounded">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-nowrap w-50">Type</th>
-                                                <th class="text-nowrap text-center w-25">Email</th>
-                                                <th class="text-nowrap text-center w-25">App</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Picked up</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_ship_1" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_ship_2" checked />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-nowrap text-heading">Shipping update</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_ship_3" checked />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_ship_4" />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-transparent">
-                                                <td class="text-nowrap text-heading">Delivered</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_ship_5" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="defaultCheck_ship_6" checked />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+        <div class="col-12 col-lg-9">
+            <div class="card mb-6 card-action">
+                <div class="card-header bg-light mb-4">
+                    <h5 class="card-action-title mb-0">SMS Provider Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row gx-6">
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="base_url">Base Url</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="base_url" name="base_url" placeholder="" />
                             </div>
                         </div>
-                    </div>
-                    <div class="d-flex justify-content-end gap-4">
-                        <button type="button" class="btn btn-label-secondary">Discard</button>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="sender_id">Sender Id</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="sender_id" name="sender_id" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="mail_mailer">Mail Mailer</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="mail_mailer" name="mail_mailer"
+                                    placeholder="" />
+                            </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="api_key">Api Key</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="api_key" name="api_key" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="mb-4 col-12 col-sm-6">
+                            <label class="form-label" for="api_secret">Api Secret</label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="api_secret" name="api_secret"
+                                    placeholder="" />
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="icon-base bx bx-check-circle icon-sm me-2"></span>Update Setting
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- /Options-->
     </div>
 @endsection
