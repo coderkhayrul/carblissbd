@@ -30,4 +30,6 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/settings/payment-setting', [AdminController::class, 'paymentSettings'])->name('payment.settings');
     Route::get('/settings/email-setting', [AdminController::class, 'emailSettings'])->name('email.settings');
     Route::get('/settings/sms-api-setting', [AdminController::class, 'smsApiSettings'])->name('sms.api.settings');
+
+    // Route::resource('shipping-charge-settings', ShippingChargeSettingController::class);
 });

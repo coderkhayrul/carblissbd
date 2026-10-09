@@ -4,6 +4,8 @@
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
+    <script src="{{ asset('frontend/js/script.js') }}"></script>
+
     <script>
         // --- Initialize Swiper for Hero Section ---
         var heroSwiper = new Swiper(".hero-swiper", {
@@ -417,6 +419,22 @@
                 showToast('Cart is Empty', 'Please add items before checking out.');
             } else {
                 showToast('Redirecting...', 'Proceeding to secure checkout');
+            }
+        }
+
+        // --- Password Visibility Toggle ---
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById('login-password');
+            const toggleIcon = document.getElementById('toggle-pwd-icon');
+
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            } else {
+                pwdInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
             }
         }
     </script>

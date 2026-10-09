@@ -40,12 +40,14 @@
             notyf.error("{{ session()->get('error') }}");
         @endif
 
+        // Check for Laravel session 'info'
         @if (session()->has('info'))
-            notyf.Info("{{ session()->get('error') }}");
+            notyf.Info("{{ session()->get('info') }}");
         @endif
 
+        // Check for Laravel session 'warning'
         @if (session()->has('warning'))
-            notyf.Warning("{{ session()->get('error') }}");
+            notyf.Warning("{{ session()->get('warning') }}");
         @endif
     });
 </script>

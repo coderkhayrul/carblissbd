@@ -8,7 +8,7 @@
         <div class="col-12 col-lg-9">
             <div class="card mb-6 card-action">
                 <div class="card-header bg-light mb-4">
-                    <h5 class="card-action-title mb-0">SMS Provider Settings</h5>
+                    <h5 class="card-action-title mb-0">Sms Api Settings</h5>
                 </div>
                 <div class="card-body">
                     <div class="row gx-6">

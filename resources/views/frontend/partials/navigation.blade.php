@@ -166,14 +166,15 @@
         </button>
 
         <!-- User Profile -->
-        <a href="javascript:void(0)" onclick="toggleModal('user-modal')"
+        <a href="{{ Auth::check() ? route('profile') : route('login') }}"
             class="text-decoration-none text-dark hover-text-primary d-flex align-items-center gap-2 transition-all">
             <div class="bg-orange-50 rounded-circle d-flex align-items-center justify-content-center transition-all"
                 style="width: 40px; height: 40px;">
                 <i class="fa-regular fa-user fs-5"></i>
             </div>
             <div class="d-none d-lg-block text-start lh-1">
-                <span class="text-muted d-block mb-1" style="font-size: 0.7rem;">Sign In</span>
+                <span class="text-muted d-block mb-1"
+                    style="font-size: 0.7rem;">{{ Auth::check() ? Auth::user()->name : 'Sign In' }}</span>
                 <span class="fw-bold d-block" style="font-size: 0.85rem;">My Account</span>
             </div>
         </a>

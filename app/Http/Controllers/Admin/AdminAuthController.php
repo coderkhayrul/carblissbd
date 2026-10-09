@@ -14,7 +14,7 @@ class AdminAuthController extends Controller
         return view('admin.auth.login');
     }
 
-    // ২. লগইন প্রসেস
+    // ২. admin লগইন প্রসেস
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -28,7 +28,7 @@ class AdminAuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'সঠিক ইমেইল বা পাসওয়ার্ড দিন, অথবা আপনার অ্যাডমিন অ্যাক্সেস নেই।',
+            'email' => 'Enter the correct email or password',
         ])->onlyInput('email');
     }
 
