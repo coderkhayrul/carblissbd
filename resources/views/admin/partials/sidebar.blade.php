@@ -269,13 +269,13 @@
             </ul>
         </li>
         <!-- Configuration -->
-        <li class="menu-item">
+        <li class="menu-item {{ request()->routeIs('admin.shipping-charge-settings.*') ? 'open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-cube"></i>
                 <div data-i18n="Configuration">Configuration</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item">
+                <li class="menu-item {{ request()->routeIs('admin.shipping-charge-settings.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.shipping-charge-settings.index') }}" class="menu-link">
                         <div data-i18n="Shipping Charge">Shipping Charge</div>
                     </a>
