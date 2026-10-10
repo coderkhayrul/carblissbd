@@ -32,6 +32,15 @@
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
 
     <!-- endbuild -->
+    <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
+    <link rel="stylesheet"
+        href="{{ asset('backend') }}/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
+    <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/select2/select2.css" />
+    <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/quill/typography.css" />
+    <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/quill/katex.css" />
+    <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/quill/editor.css" />
+    <link rel="stylesheet"
+        href="{{ asset('backend') }}/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/notyf/notyf.css" />
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/animate-css/animate.css" />
 

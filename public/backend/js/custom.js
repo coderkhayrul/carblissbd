@@ -1,4 +1,30 @@
 
+document.addEventListener('DOMContentLoaded', function (e) {
+    // SELECT 2 DROPDOWN
+    var select2 = $('.select2');
+    if (select2.length) {
+        select2.each(function () {
+            var $this = $(this);
+            $this.wrap('<div class="position-relative"></div>').select2({
+                dropdownParent: $this.parent(),
+                placeholder: $this.data('placeholder') //for dynamic placeholder
+            });
+        });
+    }
+});
+
+
+// Quill Comment Editor
+const commentEditor = document.querySelector('.comment-editor');
+if (commentEditor) {
+    new Quill(commentEditor, {
+        modules: {
+            toolbar: '.comment-toolbar'
+        },
+        placeholder: 'Write a Comment...',
+        theme: 'snow'
+    });
+}
 
 // Update/reset Company Logo of company setting page
 let companyLogo = document.getElementById('companyLogo');

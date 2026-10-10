@@ -276,15 +276,16 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="#" class="menu-link">
+                    <a href="{{ route('admin.shipping-charge-settings.index') }}" class="menu-link">
                         <div data-i18n="Shipping Charge">Shipping Charge</div>
                     </a>
                 </li>
-                <li class="menu-item">
+
+                {{-- <li class="menu-item">
                     <a href="#" class="menu-link">
                         <div data-i18n="System Setting">System Setting</div>
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </li>
         <!-- Settings -->

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\ShippingChargeSettingController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FrontendController;
 use Illuminate\Support\Facades\Auth;
@@ -31,5 +32,5 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/settings/email-setting', [AdminController::class, 'emailSettings'])->name('email.settings');
     Route::get('/settings/sms-api-setting', [AdminController::class, 'smsApiSettings'])->name('sms.api.settings');
 
-    // Route::resource('shipping-charge-settings', ShippingChargeSettingController::class);
+    Route::resource('shipping-charge-settings', ShippingChargeSettingController::class)->except(['show']);
 });

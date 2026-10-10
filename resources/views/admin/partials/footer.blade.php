@@ -10,6 +10,11 @@
 
 <script src="{{ asset('backend') }}/assets/vendor/js/menu.js"></script>
 <!-- Vendors JS -->
+<script src="{{ asset('backend') }}/assets/vendor/libs/moment/moment.js"></script>
+<script src="{{ asset('backend') }}/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+<script src="{{ asset('backend') }}/assets/vendor/libs/select2/select2.js"></script>
+<script src="{{ asset('backend') }}/assets/vendor/libs/quill/katex.js"></script>
+<script src="{{ asset('backend') }}/assets/vendor/libs/quill/quill.js"></script>
 <script src="{{ asset('backend') }}/assets/vendor/libs/notyf/notyf.js"></script>
 
 
@@ -56,6 +61,8 @@
 <script src="{{ asset('backend') }}/assets/js/main.js"></script>
 
 <script src="{{ asset('backend') }}/js/custom.js"></script>
+
+@stack('backend_script')
 </body>
 
 </html>
