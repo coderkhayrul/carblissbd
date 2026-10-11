@@ -29,8 +29,14 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/settings/company-setting', [AdminController::class, 'companySettingsUpdate'])->name('company.settings.update');
 
     Route::get('/settings/payment-setting', [AdminController::class, 'paymentSettings'])->name('payment.settings');
+    Route::post('/settings/payment-setting', [AdminController::class, 'paymentSettingsUpdate'])->name('payment.settings.update');
+
+
     Route::get('/settings/email-setting', [AdminController::class, 'emailSettings'])->name('email.settings');
+    Route::post('/settings/email-setting', [AdminController::class, 'emailSettingsUpdate'])->name('email.settings.update');
+
     Route::get('/settings/sms-api-setting', [AdminController::class, 'smsApiSettings'])->name('sms.api.settings');
+    Route::post('/settings/sms-api-setting', [AdminController::class, 'smsApiSettingsUpdate'])->name('sms.api.settings.update');
 
     Route::resource('shipping-charge-settings', ShippingChargeSettingController::class)->except(['show']);
 });

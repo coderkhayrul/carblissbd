@@ -3,6 +3,10 @@
 namespace App\Services;
 
 use App\Models\CompanySetting;
+use App\Models\EmailSetting;
+use App\Models\PaymentSetting;
+use App\Models\SMSApiSetting;
+use Illuminate\Support\Facades\Log;
 
 class SettingService
 {
@@ -74,5 +78,80 @@ class SettingService
             }
             $companySetting->update(['auth_bg' => $authBg]);
         }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | PAYMENT SETTING UPDATE
+    |--------------------------------------------------------------------------
+    */
+
+    public function updatePaymentSetting(PaymentSetting $paymentSetting,  array $request)
+    {
+
+        if ($request['type'] == 'bkash') {
+            $paymentSetting->update([
+                'bkash_active' => $request['bkash_active'] == '1' ? true : false,
+                'bkash_url' => $request['bkash_url'],
+                'bkash_app_key' => $request['bkash_app_key'],
+                'bkash_app_secret' => $request['bkash_app_secret'],
+                'bkash_username' => $request['bkash_username'],
+                'bkash_password' => $request['bkash_password'],
+            ]);
+            $message = 'Bkash Payment settings updated successfully.';
+        } else {
+            $paymentSetting->update([
+                // SSL
+                'ssl_active' => $request['ssl_active'] == '1' ? true : false,
+                'ssl_store_id' => $request['ssl_store_id'],
+                'ssl_store_password' => $request['ssl_store_password'],
+                'ssl_store_url' => $request['ssl_store_url'],
+                'ssl_store_callback_url' => $request['ssl_store_callback_url'],
+                'ssl_store_failure_url' => $request['ssl_store_failure_url'],
+                'ssl_is_localhost' => $request['ssl_is_localhost'] == '1' ? true : false,
+            ]);
+            $message = 'SSL Payment settings updated successfully.';
+        }
+
+        return $message;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EMAIL SETTING UPDATE
+    |--------------------------------------------------------------------------
+    */
+
+    public function emailSettingUpdate(EmailSetting $emailSetting,  array $request)
+    {
+
+        $emailSetting->update([
+            'sender_name' => $request['sender_name'],
+            'sender_email' => $request['sender_email'],
+            'mail_mailer' => $request['mail_mailer'],
+            'mail_host' => $request['mail_host'],
+            'mail_port' => $request['mail_port'],
+            'mail_username' => $request['mail_username'],
+            'mail_password' => $request['mail_password'],
+            'mail_encryption' => $request['mail_encryption'],
+        ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SMS API SETTING UPDATE
+    |--------------------------------------------------------------------------
+    */
+
+    public function smsApiSettingUpdate(SMSApiSetting $SMSApiSetting,  array $request)
+    {
+        $SMSApiSetting->update([
+            'base_url' => $request['base_url'],
+            'sender_id' => $request['sender_id'],
+            'api_key' => $request['api_key'],
+            'api_secret' => $request['api_secret'],
+        ]);
     }
 }

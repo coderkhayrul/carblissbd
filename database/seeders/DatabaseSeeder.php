@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\PaymentSetting;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -25,6 +26,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             CompanySettingSeeder::class,
+            PaymentSettingSeeder::class,
+            EmailSettingSeeder::class,
+            SMSApiSettingSeeder::class,
         ]);
     }
 }
