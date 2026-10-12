@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\ShippingChargeSettingController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FrontendController;
 use Illuminate\Support\Facades\Auth;
@@ -39,4 +40,5 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/settings/sms-api-setting', [AdminController::class, 'smsApiSettingsUpdate'])->name('sms.api.settings.update');
 
     Route::resource('shipping-charge-settings', ShippingChargeSettingController::class)->except(['show']);
+    Route::resource('users', UserController::class)->except(['show']);
 });

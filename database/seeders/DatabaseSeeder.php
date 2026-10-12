@@ -25,10 +25,11 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
-            CompanySettingSeeder::class,
-            PaymentSettingSeeder::class,
             EmailSettingSeeder::class,
             SMSApiSettingSeeder::class,
+            CompanySettingSeeder::class,
+            PaymentSettingSeeder::class,
+            ShippingChargeSettingSeeder::class,
         ]);
     }
 }

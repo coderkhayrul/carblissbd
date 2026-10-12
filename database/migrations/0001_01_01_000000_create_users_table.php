@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('role', ['admin', 'customer'])->default('customer');
             $table->string('image')->nullable();
             $table->string('address')->nullable();
+            $table->boolean('status')->default(true);
 
             $table->rememberToken();
             $table->timestamps();

@@ -45,6 +45,7 @@
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/animate-css/animate.css" />
 
     <link rel="stylesheet" href="{{ asset('backend') }}/css/style.css">
+    @stack('backend_style')
 
     <!-- Helpers -->
     <script src="{{ asset('backend') }}/assets/vendor/js/helpers.js"></script>

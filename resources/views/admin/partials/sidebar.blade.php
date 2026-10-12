@@ -255,14 +255,14 @@
             </ul>
         </li>
         <!-- Users -->
-        <li class="menu-item">
+        <li class="menu-item {{ request()->routeIs('admin.users.*') ? 'open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-key"></i>
                 <div data-i18n="User & Access">User & Access</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.users.index') }}" class="menu-link">
                         <div data-i18n="User List">User List</div>
                     </a>
                 </li>
@@ -290,7 +290,7 @@
         </li>
         <!-- Settings -->
         <li
-            class="menu-item {{ request()->routeIs('admin.company.settings') || request()->routeIs('admin.payment.settings') || request()->routeIs('admin.email.settings') || request()->routeIs('admin.sms.api.settings') ? 'active' : '' }} ">
+            class="menu-item {{ request()->routeIs('admin.company.settings') || request()->routeIs('admin.payment.settings') || request()->routeIs('admin.email.settings') || request()->routeIs('admin.sms.api.settings') ? 'active' : '' }}">
             <a href="{{ route('admin.company.settings') }}" class="menu-link">
                 <i class="menu-icon icon-base bx bx-cog"></i>
                 <div data-i18n="Settings">Settings</div>
