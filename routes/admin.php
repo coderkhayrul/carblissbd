@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\ShippingChargeSettingController;
+use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FrontendController;
@@ -43,4 +44,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::resource('users', UserController::class)->except(['create', 'edit']);
     Route::patch('users/{id}/suspend', [UserController::class, 'suspend'])->name('users.suspend');
     Route::patch('users/{id}/unsuspend', [UserController::class, 'unsuspend'])->name('users.unsuspend');
+
+
+    Route::resource('sliders', SliderController::class);
 });

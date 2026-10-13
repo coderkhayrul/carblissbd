@@ -200,19 +200,14 @@
             </ul>
         </li>
         <!-- Website CMS -->
-        <li class="menu-item">
+        <li class="menu-item {{ request()->routeIs('admin.sliders.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-globe-alt"></i>
                 <div data-i18n="Website CMS">Website CMS</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
-                        <div data-i18n="Banner">Banner</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.sliders.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.sliders.index') }}" class="menu-link">
                         <div data-i18n="Slider">Slider</div>
                     </a>
                 </li>
@@ -255,7 +250,7 @@
             </ul>
         </li>
         <!-- Users -->
-        <li class="menu-item {{ request()->routeIs('admin.users.*') ? 'open' : '' }}">
+        <li class="menu-item {{ request()->routeIs('admin.users.*') ? 'open active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-key"></i>
                 <div data-i18n="User & Access">User & Access</div>
@@ -269,7 +264,7 @@
             </ul>
         </li>
         <!-- Configuration -->
-        <li class="menu-item {{ request()->routeIs('admin.shipping-charge-settings.*') ? 'open' : '' }}">
+        <li class="menu-item {{ request()->routeIs('admin.shipping-charge-settings.*') ? 'open active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-cube"></i>
                 <div data-i18n="Configuration">Configuration</div>

@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('button_title')->nullable();
             $table->string('button_icon')->nullable();
             $table->string('button_url')->nullable();
-            $table->string('button_status')->nullable();
+            $table->integer('orderBy')->default(0);
+            $table->boolean('button_status')->default(false);
             $table->boolean('status')->default(false);
             $table->timestamps();
         });
