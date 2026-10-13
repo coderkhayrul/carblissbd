@@ -39,6 +39,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/settings/sms-api-setting', [AdminController::class, 'smsApiSettings'])->name('sms.api.settings');
     Route::post('/settings/sms-api-setting', [AdminController::class, 'smsApiSettingsUpdate'])->name('sms.api.settings.update');
 
-    Route::resource('shipping-charge-settings', ShippingChargeSettingController::class)->except(['show']);
-    Route::resource('users', UserController::class)->except(['show']);
+    Route::resource('shipping-charge-settings', ShippingChargeSettingController::class)->except(['show', 'create', 'edit']);
+    Route::resource('users', UserController::class)->except(['create', 'edit']);
+    Route::patch('users/{id}/suspend', [UserController::class, 'suspend'])->name('users.suspend');
+    Route::patch('users/{id}/unsuspend', [UserController::class, 'unsuspend'])->name('users.unsuspend');
 });

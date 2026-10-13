@@ -16,6 +16,7 @@
 <script src="{{ asset('backend') }}/assets/vendor/libs/quill/katex.js"></script>
 <script src="{{ asset('backend') }}/assets/vendor/libs/quill/quill.js"></script>
 <script src="{{ asset('backend') }}/assets/vendor/libs/notyf/notyf.js"></script>
+<script src="{{ asset('backend/assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
 
 
 <script>

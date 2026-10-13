@@ -55,7 +55,7 @@ class UserSeeder extends Seeder
             'role' => 'customer',
         ]);
         User::create([
-            'name' => 'oNTO',
+            'name' => 'ONTO',
             'email' => 'onto@gmail.com',
             'mobile' => '01803132067',
             'password' => Hash::make('password'),

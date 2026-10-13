@@ -43,6 +43,7 @@
         href="{{ asset('backend') }}/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/notyf/notyf.css" />
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/animate-css/animate.css" />
+    <link rel="stylesheet" href="{{ asset('backend/assets/vendor/libs/sweetalert2/sweetalert2.css') }}">
 
     <link rel="stylesheet" href="{{ asset('backend') }}/css/style.css">
     @stack('backend_style')

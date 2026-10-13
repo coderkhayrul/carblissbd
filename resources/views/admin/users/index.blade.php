@@ -1,6 +1,15 @@
 @extends('admin.layouts.app')
 @push('backend_style')
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendor/libs/sweetalert2/sweetalert2.css') }}">
+    <style>
+        .users-datatable {
+            min-width: 0;
+            max-width: 100%;
+        }
+
+        .users-datatable .dt-scroll-body {
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
 @endpush
 @section('admin-content')
     <div class="row g-6 mb-6">
@@ -89,42 +98,17 @@
             </div>
         </div>
     </div>
+
     <!-- User List Table -->
     <div class="card">
-        <div class="card-header border-bottom">
-            <h5 class="card-title mb-0">Search Filters</h5>
-            <div class="d-flex justify-content-between align-items-center row pt-4 gap-md-0 g-6">
-                <div class="col-md-4 user_role">
-                    <select id="UserRole" class="form-select text-capitalize">
-                        <option value="">Select Role</option>
-                        <option value="Admin">Admin</option>
-                        <option value="Author">Author</option>
-                        <option value="Editor">Editor</option>
-                        <option value="Maintainer">Maintainer</option>
-                        <option value="Subscriber">Subscriber</option>
-                    </select>
-                </div>
-                <div class="col-md-4 user_plan">
-                    <select id="UserPlan" class="form-select text-capitalize">
-                        <option value="">Select Plan</option>
-                        <option value="Basic">Basic</option>
-                        <option value="Company">Company</option>
-                        <option value="Enterprise">Enterprise</option>
-                        <option value="Team">Team</option>
-                    </select>
-                </div>
-                <div class="col-md-4 user_status">
-                    <select id="FilterTransaction" class="form-select text-capitalize">
-                        <option value="">Select Status</option>
-                        <option value="Pending" class="text-capitalize">Pending</option>
-                        <option value="Active" class="text-capitalize">Active</option>
-                        <option value="Inactive" class="text-capitalize">Inactive</option>
-                    </select>
-                </div>
-            </div>
+        <div class="card-header border-bottom d-flex justify-content-between">
+            <h5 class="card-title">All User List</h5>
+            <button class="btn create-new btn-primary" tabindex="0" type="button"
+                aria-controls="offcanvasAddUser"><span><i class="icon-base bx bx-plus icon-sm me-0 me-sm-2"></i><span
+                        class="d-none d-sm-inline-block">Add New User</span></span></button>
         </div>
-        <div class="card-datatable text-nowrap">
-            <table class="users-table table table table-bordered table-responsive">
+        <div class="card-datatable users-datatable text-nowrap">
+            <table class="users-table table table-bordered">
                 <thead>
                     <tr>
                         <th>User</th>
@@ -140,36 +124,51 @@
                         <tr>
                             <td>
                                 <div class="d-flex justify-content-start align-items-center user-name">
-                                    <div class="avatar-wrapper">
-                                        <div class="avatar avatar-sm me-4">
-                                            <img src="{{ asset('backend/assets/img/avatars/1.png') }}" alt="Avatar"
-                                                class="rounded-circle">
+
+                                    @if ($row->image)
+                                        <div class="avatar-wrapper">
+                                            <div class="avatar avatar-sm me-4">
+                                                <img src="{{ asset($row->image) }}" alt="Avatar" class="rounded-circle">
+                                            </div>
                                         </div>
-                                    </div>
+                                    @else
+                                        <div class="avatar-wrapper">
+                                            <div class="avatar avatar-sm me-4"><span
+                                                    class="avatar-initial rounded-circle bg-label-danger">{{ Str::limit($row->name, 2, '') }}</span>
+                                            </div>
+                                        </div>
+                                    @endif
                                     <div class="d-flex flex-column">
                                         <a href="" class="text-heading text-truncate">
-                                            <span class="fw-medium"> Admin User</span>
+                                            <span class="fw-medium"> {{ $row->name }}</span>
                                         </a>
-                                        <small>admin@gmail.com</small>
+                                        <small>{{ $row->email }}</small>
                                     </div>
                                 </div>
                             </td>
+
+                            <td><span class="text-heading">{{ $row->mobile }}</span></td>
+                            <td><span class="text-heading">{{ $row->username ?? 'N/A' }}</span></td>
                             <td>
                                 <span class="text-truncate d-flex align-items-center text-heading"><i
-                                        class="icon-base bx bx-user text-success me-2"></i>Maintainer</span>
+                                        class="icon-base bx bx-user text-success me-2"></i>{{ Str::ucfirst($row->role) }}</span>
                             </td>
-                            <td><span class="text-heading">CoderKhayrul</span></td>
-                            <td><span class="text-heading">CoderKhayrul</span></td>
                             <td>
                                 <span class="badge bg-label-{{ $row->status ? 'success' : 'danger' }}"
                                     text-capitalized="">{{ $row->status ? 'Active' : 'Inactive' }}</span>
                             </td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <a href="javascript:;" class="btn btn-icon delete-record">
-                                        <i class="icon-base bx bx-trash icon-md"></i>
-                                    </a>
-                                    <a href="app-user-view-account.html" class="btn btn-icon">
+                                    <form class="delete-user-form" method="POST"
+                                        action="{{ route('admin.users.destroy', $row->id) }}"
+                                        data-user-name="{{ $row->name }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-icon delete-user" aria-label="Delete user">
+                                            <i class="icon-base bx bx-trash icon-md"></i>
+                                        </button>
+                                    </form>
+                                    <a href="{{ route('admin.users.show', $row->id) }}" class="btn btn-icon">
                                         <i class="icon-base bx bx-show icon-md"></i>
                                     </a>
                                     <a href="javascript:;" class="btn btn-icon dropdown-toggle hide-arrow"
@@ -177,8 +176,25 @@
                                         <i class="icon-base bx bx-dots-vertical-rounded icon-md"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end m-0">
-                                        <a href="javascript:;" class="dropdown-item">Edit</a>
-                                        <a href="javascript:;" class="dropdown-item">Suspend</a>
+                                        <a href="javascript:;" class="dropdown-item edit-button"
+                                            data-update-url="{{ route('admin.users.update', $row->id) }}"
+                                            data-user="{{ json_encode($row->only(['id', 'name', 'email', 'mobile', 'username', 'address', 'status', 'image'])) }}">Edit</a>
+                                        <form class="suspend-user-form" method="POST"
+                                            action="{{ route('admin.users.suspend', $row->id) }}"
+                                            data-user-name="{{ $row->name }}">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="dropdown-item suspend-btn"
+                                                @disabled(!$row->status)>Suspend</button>
+                                        </form>
+                                        <form class="unsuspend-user-form" method="POST"
+                                            action="{{ route('admin.users.unsuspend', $row->id) }}"
+                                            data-user-name="{{ $row->name }}">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="dropdown-item unsuspend-btn"
+                                                @disabled($row->status)>Unsuspend</button>
+                                        </form>
                                     </div>
                                 </div>
                             </td>
@@ -189,109 +205,314 @@
         </div>
     </div>
 
-    <!-- Offcanvas to add Shipping Charge -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasShippingCharge"
-        aria-labelledby="offcanvasShippingChargeSetting">
-        <!-- Offcanvas Header -->
-        <div class="offcanvas-header py-6">
-            <h5 id="offcanvasShippingChargeSetting" class="offcanvas-title">Add Shipping Charge</h5>
+    <!-- Offcanvas to add new user -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Add User</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <!-- Offcanvas Body -->
-        <div class="offcanvas-body border-top">
-            <form class="pt-0" id="" method="POST"
-                action="{{ route('admin.shipping-charge-settings.store') }}">
+        <div class="offcanvas-body mx-0 flex-grow-0 p-6 h-100">
+            <form class="add-new-user pt-0" id="addNewUserForm" action="{{ route('admin.users.store') }}"
+                method="POST" enctype="multipart/form-data">
                 @csrf
-                <!-- Title -->
                 <div class="mb-6 form-control-validation">
-                    <label class="form-label" for="area_name">Area Name</label>
-                    <input type="text" class="form-control" id="area_name" placeholder="Enter Area Name"
-                        name="area_name" aria-label="area name" />
+                    <label class="form-label" for="name">Full Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="John Doe" name="name"
+                        aria-label="John Doe" />
                 </div>
                 <div class="mb-6 form-control-validation">
-                    <label class="form-label" for="delivery_charge">Delivery Charge</label>
-                    <input type="number" class="form-control" id="delivery_charge" placeholder="Enter Delivery Charge"
-                        name="delivery_charge" aria-label="area name" />
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="john.doe@example.com"
+                        aria-label="email" name="email" />
                 </div>
                 <div class="mb-6 form-control-validation">
-                    <label class="form-label" for="delivery_time">Delivery Time</label>
-                    <input type="text" class="form-control" id="delivery_time" placeholder="Enter 1-2 Days"
-                        name="delivery_time" aria-label="area name" />
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter Password"
+                        aria-label="password" name="password" />
                 </div>
-                <div class="mb-6 form-control-validation">
+                <div class="mb-6">
+                    <label class="form-label" for="mobile">Mobile</label>
+                    <input type="text" id="mobile" class="form-control phone-mask" placeholder="017xxxxxxxx"
+                        aria-label="mobile" name="mobile" />
+                </div>
+                <div class="mb-6">
+                    <label class="form-label" for="username">User Name</label>
+                    <input type="text" id="username" class="form-control" placeholder="User Name"
+                        aria-label="username" name="username" />
+                </div>
+                <div class="mb-6">
+                    <label class="form-label" for="image">Image</label>
+                    <input type="file" name="image" class="form-control">
+                </div>
+                <div class="mb-6">
+                    <label class="form-label" for="address">Address</label>
+                    <textarea class="form-control" name="address" id="" rows="3"></textarea>
+                </div>
+                <div class="mb-6">
                     <label class="form-label" for="status">Status</label>
-                    <select name="status" id="status" class="form-control">
+                    <select id="status" class="form-select" name="status">
                         <option value="1">Active</option>
                         <option value="0">Inactive</option>
                     </select>
                 </div>
-                <!-- Submit and reset -->
-                <div class="mb-6">
-                    <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Add</button>
-                    <button type="reset" class="btn btn-label-danger" data-bs-dismiss="offcanvas">Discard</button>
-                </div>
+                <button type="submit" class="btn btn-primary me-3 data-submit">Submit</button>
+                <button type="reset" class="btn btn-label-danger" data-bs-dismiss="offcanvas">Cancel</button>
             </form>
         </div>
     </div>
 
-    <!-- Offcanvas to Edit Shipping Charge -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasShippingChargeEdit"
-        aria-labelledby="offcanvasShippingChargeSettingEdit">
-        <!-- Offcanvas Header -->
-        <div class="offcanvas-header py-6">
-            <h5 id="offcanvasShippingChargeSettingEdit" class="offcanvas-title">Edit Shipping Charge</h5>
+    <!-- Offcanvas To Edit User -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEditUser" aria-labelledby="offcanvasEditUserLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 id="offcanvasEditUserLabel" class="offcanvas-title">Edit User</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <!-- Offcanvas Body -->
-        <div class="offcanvas-body border-top">
-            <form class="pt-0" id="shipping-charge-edit-form" method="POST" action="">
+        <div class="offcanvas-body mx-0 flex-grow-0 p-6 h-100">
+            <form class="edit-user pt-0" id="addEditUserForm" action="" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-                <!-- Title -->
+                <input type="hidden" name="edit_user_id" id="edit-user-id">
                 <div class="mb-6 form-control-validation">
-                    <label class="form-label" for="edit_area_name">Area Name</label>
-                    <input type="text" class="form-control" id="edit_area_name" placeholder="Enter Area Name"
-                        name="area_name" aria-label="area name" />
+                    <label class="form-label" for="edit-name">Full Name</label>
+                    <input type="text" class="form-control" id="edit-name" placeholder="John Doe" name="name"
+                        aria-label="John Doe" />
                 </div>
                 <div class="mb-6 form-control-validation">
-                    <label class="form-label" for="edit_delivery_charge">Delivery Charge</label>
-                    <input type="number" class="form-control" id="edit_delivery_charge" min="0" step="0.01"
-                        placeholder="Enter Delivery Charge" name="delivery_charge" aria-label="area name" />
+                    <label class="form-label" for="edit-email">Email</label>
+                    <input type="email" id="edit-email" class="form-control" placeholder="john.doe@example.com"
+                        aria-label="email" name="email" />
                 </div>
                 <div class="mb-6 form-control-validation">
-                    <label class="form-label" for="edit_delivery_time">Delivery Time</label>
-                    <input type="text" class="form-control" id="edit_delivery_time" placeholder="Enter 1-2 Days"
-                        name="delivery_time" aria-label="area name" />
+                    <label class="form-label" for="edit-password">Password</label>
+                    <input type="password" id="edit-password" class="form-control"
+                        placeholder="Leave blank to keep current password" aria-label="password" name="password" />
                 </div>
-                <div class="mb-6 form-control-validation">
-                    <label class="form-label" for="edit_status">Status</label>
-                    <select name="status" id="edit_status" class="form-control">
+                <div class="mb-6">
+                    <label class="form-label" for="edit-mobile">Mobile</label>
+                    <input type="text" id="edit-mobile" class="form-control phone-mask" placeholder="017xxxxxxxx"
+                        aria-label="mobile" name="mobile" />
+                </div>
+                <div class="mb-6">
+                    <label class="form-label" for="edit-username">User Name</label>
+                    <input type="text" id="edit-username" class="form-control" placeholder="User Name"
+                        aria-label="username" name="username" />
+                </div>
+                <div class="mb-6">
+                    <label class="form-label" for="edit-image">Image</label>
+                    <input type="file" id="edit-image" name="image" accept="image/*" class="form-control">
+                    <img id="edit-user-image-preview" class="rounded mt-3" width="80" height="80"
+                        alt="Current user image" hidden>
+                </div>
+                <div class="mb-6">
+                    <label class="form-label" for="edit-address">Address</label>
+                    <textarea class="form-control" name="address" id="edit-address" rows="3"></textarea>
+                </div>
+                <div class="mb-6">
+                    <label class="form-label" for="edit-status">Status</label>
+                    <select id="edit-status" class="form-select" name="status">
                         <option value="1">Active</option>
                         <option value="0">Inactive</option>
                     </select>
                 </div>
-                <!-- Submit and reset -->
-                <div class="mb-6">
-                    <button type="submit" class="btn btn-primary me-sm-3 me-1">Update</button>
-                    <button type="reset" class="btn btn-label-danger" data-bs-dismiss="offcanvas">Discard</button>
-                </div>
+                @if ($errors->editUser->any())
+                    <div class="alert alert-danger" role="alert">
+                        @foreach ($errors->editUser->all() as $message)
+                            <div>{{ $message }}</div>
+                        @endforeach
+                    </div>
+                @endif
+                <button type="submit" class="btn btn-primary me-3 data-submit">Submit</button>
+                <button type="reset" class="btn btn-label-danger" data-bs-dismiss="offcanvas">Cancel</button>
             </form>
         </div>
     </div>
 @endsection
 
 @push('backend_script')
-    <script src="{{ asset('backend/assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
     <script>
-        document.querySelector('.shipping-charge-table').addEventListener('submit', function(event) {
-            const form = event.target.closest('.shipping-charge-delete-form');
-            if (!form) return;
+        const addUserForm = document.querySelector('#addNewUserForm');
+        addUserForm.noValidate = true;
 
+        const userValidationRules = {
+            name: {
+                label: 'Full Name',
+                required: true,
+                max: 255
+            },
+            email: {
+                label: 'Email',
+                required: true,
+                max: 255
+            },
+            password: {
+                label: 'Password',
+                required: true,
+                max: 255
+            },
+            mobile: {
+                label: 'Mobile',
+                required: true,
+                max: 20
+            },
+            username: {
+                label: 'User Name',
+                required: false,
+                max: 20
+            }
+        };
+
+        function validateUserField(field, rules = userValidationRules) {
+            const rule = rules[field.name];
+            const value = field.name === 'password' ? field.value : field.value.trim();
+            let message = '';
+
+            if (rule.required && !value.trim()) {
+                message = rule.label + ' is required.';
+            } else if (value.length > rule.max) {
+                message = rule.label + ' must not exceed ' + rule.max + ' characters.';
+            } else if (value && field.name === 'email' && field.validity.typeMismatch) {
+                message = 'Please enter a valid email address.';
+            } else if (value && field.name === 'mobile' && !/^\+?[0-9]+(?:[ -][0-9]+)*$/.test(value)) {
+                message = 'Please enter a valid mobile number using digits and an optional + prefix.';
+            } else if (field.name === 'status' && !['0', '1'].includes(value)) {
+                message = 'Please select a valid status.';
+            } else if (field.name === 'image' && field.files.length) {
+                const image = field.files[0];
+                if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/x-ms-bmp'].includes(image
+                        .type)) {
+                    message = 'Please choose a JPG, PNG, GIF, WebP or BMP image.';
+                } else if (image.size > 2048 * 1024) {
+                    message = 'Image must not exceed 2 MB.';
+                }
+            }
+
+            let feedback = field.parentElement.querySelector('.invalid-feedback');
+            if (!feedback) {
+                feedback = document.createElement('div');
+                feedback.className = 'invalid-feedback';
+                field.insertAdjacentElement('afterend', feedback);
+            }
+            feedback.id = field.id + '-error';
+            feedback.setAttribute('aria-live', 'polite');
+            feedback.textContent = message;
+            field.classList.toggle('is-invalid', Boolean(message));
+            field.setAttribute('aria-invalid', String(Boolean(message)));
+            field.setAttribute('aria-describedby', feedback.id);
+            return !message;
+        }
+
+        Object.entries(userValidationRules).forEach(function([name, rule]) {
+            const field = addUserForm.elements.namedItem(name);
+            field.required = rule.required;
+            field.maxLength = rule.max;
+            field.addEventListener('blur', function() {
+                validateUserField(field);
+            });
+            field.addEventListener('input', function() {
+                if (field.classList.contains('is-invalid')) validateUserField(field);
+            });
+        });
+
+        addUserForm.addEventListener('submit', function(event) {
+            let firstInvalid = null;
+            Object.keys(userValidationRules).forEach(function(name) {
+                const field = addUserForm.elements.namedItem(name);
+                if (!validateUserField(field) && !firstInvalid) firstInvalid = field;
+            });
+            if (firstInvalid) {
+                event.preventDefault();
+                firstInvalid.focus();
+            }
+        });
+
+        addUserForm.addEventListener('reset', function() {
+            Object.keys(userValidationRules).forEach(function(name) {
+                const field = addUserForm.elements.namedItem(name);
+                field.classList.remove('is-invalid');
+                field.removeAttribute('aria-invalid');
+                field.removeAttribute('aria-describedby');
+                const feedback = field.parentElement.querySelector('.invalid-feedback');
+                if (feedback) feedback.textContent = '';
+            });
+        });
+
+        // Open the Add User panel from the create button.
+        document.querySelectorAll('.create-new').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const offcanvas = document.querySelector('#offcanvasAddUser');
+                bootstrap.Offcanvas.getOrCreateInstance(offcanvas).show(button);
+            });
+        });
+        const editUserForm = document.querySelector('#addEditUserForm');
+        document.querySelector('.users-table').addEventListener('submit', function(event) {
+            const form = event.target.closest('.unsuspend-user-form');
+            if (!form) return;
             event.preventDefault();
+            const button = form.querySelector('.unsuspend-btn');
+            if (button.disabled) return;
+            button.disabled = true;
             Swal.fire({
-                title: 'Delete shipping charge?',
-                text: 'Are you sure you want to delete the shipping charge for "' + form.dataset.areaName +
-                    '"?',
+                title: 'Unsuspend user?',
+                text: 'Are you sure you want to unsuspend "' + form.dataset.userName + '"?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, unsuspend!',
+                cancelButtonText: 'Cancel',
+                focusCancel: true,
+                customClass: {
+                    confirmButton: 'btn btn-success me-3',
+                    cancelButton: 'btn btn-label-secondary'
+                },
+                buttonsStyling: false
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    HTMLFormElement.prototype.submit.call(form);
+                } else {
+                    button.disabled = false;
+                }
+            });
+        });
+        document.querySelector('.users-table').addEventListener('submit', function(event) {
+            const form = event.target.closest('.suspend-user-form');
+            if (!form) return;
+            event.preventDefault();
+            const button = form.querySelector('.suspend-btn');
+            if (button.disabled) return;
+            button.disabled = true;
+            Swal.fire({
+                title: 'Suspend user?',
+                text: 'Are you sure you want to suspend "' + form.dataset.userName + '"?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, suspend!',
+                cancelButtonText: 'Cancel',
+                focusCancel: true,
+                customClass: {
+                    confirmButton: 'btn btn-warning me-3',
+                    cancelButton: 'btn btn-label-secondary'
+                },
+                buttonsStyling: false
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    HTMLFormElement.prototype.submit.call(form);
+                } else {
+                    button.disabled = false;
+                }
+            });
+        });
+        document.querySelector('.users-table').addEventListener('submit', function(event) {
+            const form = event.target.closest('.delete-user-form');
+            if (!form) return;
+            event.preventDefault();
+            const button = form.querySelector('.delete-user');
+            if (button.disabled) return;
+            button.disabled = true;
+            Swal.fire({
+                title: 'Delete user?',
+                text: 'Are you sure you want to delete "' + form.dataset.userName +
+                    '"? This cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
@@ -305,43 +526,102 @@
             }).then(function(result) {
                 if (result.isConfirmed) {
                     HTMLFormElement.prototype.submit.call(form);
+                } else {
+                    button.disabled = false;
                 }
             });
         });
-
-        // SHOW CREATE SIDEBAR MODEL
-        setTimeout(() => {
-            const newRecord = document.querySelector('.create-new'),
-                offCanvasElement = document.querySelector('#offcanvasShippingCharge');
-
-            // To open offCanvas, to add new record
-            if (newRecord) {
-                newRecord.addEventListener('click', function() {
-                    offCanvasEl = new bootstrap.Offcanvas(offCanvasElement);
-                    offCanvasEl.show();
-                });
-            }
-        }, 200);
-
-        // Delegate clicks so editing also works after table pagination and filtering.
-        document.querySelector('.shipping-charge-table').addEventListener('click', function(event) {
-            const editButton = event.target.closest('.item-edit');
-            if (!editButton) return;
-
+        document.querySelector('.users-table').addEventListener('click', function(event) {
+            const button = event.target.closest('.edit-button');
+            if (!button) return;
             event.preventDefault();
-            const form = document.querySelector('#shipping-charge-edit-form');
-            form.action = editButton.dataset.updateUrl;
-            form.elements.area_name.value = editButton.dataset.areaName;
-            form.elements.delivery_charge.value = editButton.dataset.deliveryCharge;
-            form.elements.delivery_time.value = editButton.dataset.deliveryTime;
-            form.elements.status.value = editButton.dataset.status;
-
-            bootstrap.Offcanvas.getOrCreateInstance(document.querySelector('#offcanvasShippingChargeEdit')).show();
+            const user = JSON.parse(button.dataset.user);
+            editUserForm.reset();
+            editUserForm.action = button.dataset.updateUrl;
+            editUserForm.elements.edit_user_id.value = user.id;
+            ['name', 'email', 'mobile', 'username', 'address', 'status'].forEach(function(name) {
+                editUserForm.elements.namedItem(name).value = user[name] ?? '';
+            });
+            editUserForm.elements.password.value = '';
+            const preview = document.querySelector('#edit-user-image-preview');
+            preview.hidden = !user.image;
+            if (user.image) {
+                preview.src = @json(asset('/')) + user.image.replace(/^\/+/, '');
+            } else {
+                preview.removeAttribute('src');
+            }
+            bootstrap.Offcanvas.getOrCreateInstance(document.querySelector('#offcanvasEditUser')).show(button);
+        });
+        const editValidationRules = {
+            ...userValidationRules,
+            password: {
+                ...userValidationRules.password,
+                required: false
+            },
+            address: {
+                label: 'Address',
+                required: true,
+                max: 500
+            },
+            status: {
+                label: 'Status',
+                required: true
+            },
+            image: {
+                label: 'Image',
+                required: false
+            }
+        };
+        editUserForm.noValidate = true;
+        Object.entries(editValidationRules).forEach(function([name, rule]) {
+            const field = editUserForm.elements.namedItem(name);
+            field.required = rule.required;
+            if (rule.max) field.maxLength = rule.max;
+            field.addEventListener('blur', function() {
+                validateUserField(field, editValidationRules);
+            });
+            field.addEventListener('input', function() {
+                if (field.classList.contains('is-invalid')) validateUserField(field, editValidationRules);
+            });
+            field.addEventListener('change', function() {
+                validateUserField(field, editValidationRules);
+            });
+        });
+        editUserForm.addEventListener('submit', function(event) {
+            let firstInvalid = null;
+            Object.keys(editValidationRules).forEach(function(name) {
+                const field = editUserForm.elements.namedItem(name);
+                if (!validateUserField(field, editValidationRules) && !firstInvalid) firstInvalid = field;
+            });
+            if (firstInvalid) {
+                event.preventDefault();
+                firstInvalid.focus();
+            }
+        });
+        editUserForm.addEventListener('reset', function() {
+            Object.keys(editValidationRules).forEach(function(name) {
+                const field = editUserForm.elements.namedItem(name);
+                field.classList.remove('is-invalid');
+                field.removeAttribute('aria-invalid');
+                field.removeAttribute('aria-describedby');
+                const feedback = field.parentElement.querySelector('.invalid-feedback');
+                if (feedback) feedback.textContent = '';
+            });
         });
 
+        @if ($errors->editUser->any() && old('edit_user_id'))
+            editUserForm.action = @json(route('admin.users.update', old('edit_user_id')));
+            const previousEdit = @json(old());
+            ['edit_user_id', 'name', 'email', 'mobile', 'username', 'address', 'status'].forEach(function(name) {
+                editUserForm.elements.namedItem(name).value = previousEdit[name] ?? '';
+            });
+            bootstrap.Offcanvas.getOrCreateInstance(document.querySelector('#offcanvasEditUser')).show();
+        @endif
 
-        // SHIPPING CHARGE TABLE
-        new DataTable('.shipping-charge-table', {
+        // USERS TABLE
+        new DataTable('.users-table', {
+            scrollX: true,
+            sort: false,
             layout: {
                 topStart: {
                     rowClass: 'row m-3 my-0 justify-content-between',

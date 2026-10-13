@@ -1,11 +1,10 @@
 @extends('admin.layouts.app')
 @push('backend_style')
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendor/libs/sweetalert2/sweetalert2.css') }}">
 @endpush
 @section('admin-content')
     <!-- Shipping Chargea List Table -->
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-baseline">
+        <div class="card-header d-flex justify-content-between align-items-baseline border-bottom">
             <h5>Shipping Charge Setting List</h5>
             <div>
                 <button class="btn btn-primary create-new" id="form-add-new-record">
@@ -16,7 +15,7 @@
             </div>
         </div>
         <div class="card-datatable text-nowrap">
-            <table class="shipping-charge-table table table table-bordered table-responsive">
+            <table class="shipping-charge-table table table-bordered table-responsive">
                 <thead>
                     <tr>
                         <th>Area Name</th>
@@ -163,7 +162,6 @@
 @endsection
 
 @push('backend_script')
-    <script src="{{ asset('backend/assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
     <script>
         document.querySelector('.shipping-charge-table').addEventListener('submit', function(event) {
             const form = event.target.closest('.shipping-charge-delete-form');
