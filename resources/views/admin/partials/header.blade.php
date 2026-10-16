@@ -36,22 +36,16 @@
     <link rel="stylesheet"
         href="{{ asset('backend') }}/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/select2/select2.css" />
-    <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/quill/typography.css" />
-    <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/quill/katex.css" />
-    <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/quill/editor.css" />
     <link rel="stylesheet"
         href="{{ asset('backend') }}/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/notyf/notyf.css" />
-    <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/animate-css/animate.css" />
     <link rel="stylesheet" href="{{ asset('backend/assets/vendor/libs/sweetalert2/sweetalert2.css') }}">
 
     <link rel="stylesheet" href="{{ asset('backend') }}/css/style.css">
-    @stack('backend_style')
 
     <!-- Helpers -->
     <script src="{{ asset('backend') }}/assets/vendor/js/helpers.js"></script>
-
-
+    @stack('backend_style')
 </head>
 
 <body>

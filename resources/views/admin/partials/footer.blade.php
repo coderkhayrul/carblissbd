@@ -13,28 +13,25 @@
 <script src="{{ asset('backend') }}/assets/vendor/libs/moment/moment.js"></script>
 <script src="{{ asset('backend') }}/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
 <script src="{{ asset('backend') }}/assets/vendor/libs/select2/select2.js"></script>
-<script src="{{ asset('backend') }}/assets/vendor/libs/quill/katex.js"></script>
-<script src="{{ asset('backend') }}/assets/vendor/libs/quill/quill.js"></script>
 <script src="{{ asset('backend') }}/assets/vendor/libs/notyf/notyf.js"></script>
 <script src="{{ asset('backend/assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
-
 
 <script>
     // CORE CONFIG DO NOT TOUCH
     window.assetsPath = "{{ asset('backend/assets/') }}/";
     window.templateName = 'carblissbd-admin';
+    // Initialize Notyf
+    const notyf = new Notyf({
+        duration: 4000, // Notification duration in milliseconds
+        position: {
+            x: 'right',
+            y: 'top',
+        },
+        dismissible: true
+    });
 
     // SHOW GLOBAL NOTIFICATION USING NOTYF
     document.addEventListener("DOMContentLoaded", function() {
-        // Initialize Notyf
-        const notyf = new Notyf({
-            duration: 4000, // Notification duration in milliseconds
-            position: {
-                x: 'right',
-                y: 'top',
-            },
-            dismissible: true
-        });
 
         // Check for Laravel session 'success'
         @if (session()->has('success'))

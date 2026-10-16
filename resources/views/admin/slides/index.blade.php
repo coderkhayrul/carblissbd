@@ -15,11 +15,11 @@
         <div class="card-header d-flex justify-content-between align-items-baseline border-bottom">
             <h5>Slider List</h5>
             <div>
-                <button class="btn btn-primary create-new" id="form-add-new-record">
+                <a href="{{ route('admin.sliders.create') }}" class="btn btn-primary create-new" id="add-new-record">
                     <span class="d-flex align-items-center gap-2"><i class="icon-base bx bx-plus icon-sm"></i>
                         <span class="d-none d-sm-inline-block">Add New Record</span>
                     </span>
-                </button>
+                </a>
             </div>
         </div>
         <div class="card-datatable text-nowrap">
@@ -29,7 +29,6 @@
                         <th>Image</th>
                         <th>Button Feature</th>
                         <th>Order By</th>
-                        <th>Slug</th>
                         <th>Short Description</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -65,15 +64,16 @@
                                 </div>
                             </td>
                             <td>{{ $row->orderBy }}</td>
-                            <td>{{ $row->slug }}</td>
                             <td>
                                 <div class="slide-short-description">{{ $row->short_description }}</div>
                             </td>
                             <td>
                                 <span class="text-truncate">
-
                                     <label class="switch switch-primary switch-sm">
-                                        <input type="checkbox" class="switch-input" id="switch" name="status">
+                                        <input type="checkbox" class="switch-input slider-status-switch"
+                                            id="slider-status-{{ $row->id }}" name="status"
+                                            data-url="{{ route('admin.sliders.status.update', $row->id) }}"
+                                            @checked($row->status)>
                                         <span class="switch-toggle-slider">
                                             <span class="switch-off"></span>
                                         </span>
@@ -109,6 +109,37 @@
 
 @push('backend_script')
     <script>
+        // STATUS UPDATE
+        $('.data-table').on('change', '.slider-status-switch', function() {
+            const input = this;
+            const status = input.checked;
+            input.disabled = true;
+
+            $.ajax({
+                url: input.dataset.url,
+                method: 'PATCH',
+                contentType: 'application/json',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': @json(csrf_token())
+                },
+                data: JSON.stringify({
+                    status
+                }),
+                success: function(result) {
+                    input.checked = result.status;
+                    notyf.success('Slider status updated successfully.');
+                },
+                error: function() {
+                    input.checked = !status;
+                    notyf.error('Unable to update slider status. Please try again.');
+                },
+                complete: function() {
+                    input.disabled = false;
+                }
+            });
+        });
+
         // SLIDER TABLE
         new DataTable('.data-table', {
             scrollX: true,

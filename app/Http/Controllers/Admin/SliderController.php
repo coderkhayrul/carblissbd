@@ -28,11 +28,26 @@ class SliderController extends Controller
     }
 
     /**
+     * Update the status of the specified slider.
+     */
+    public function updateStatus(Request $request, Slider $slider)
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'boolean'],
+        ]);
+
+        $slider->status = (bool) $validated['status'];
+        $slider->save();
+
+        return response()->json(['status' => (bool) $slider->status]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return view('admin.slides.create');
     }
 
     /**

@@ -46,5 +46,6 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::patch('users/{id}/unsuspend', [UserController::class, 'unsuspend'])->name('users.unsuspend');
 
 
+    Route::patch('sliders/{slider}/status', [SliderController::class, 'updateStatus'])->name('sliders.status.update');
     Route::resource('sliders', SliderController::class);
 });
