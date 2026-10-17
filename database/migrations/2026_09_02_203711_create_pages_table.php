@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('group_name')->nullable()->comment('Customer Care, Information');
             $table->string('bangla_name')->nullable();
             $table->string('slug')->nullable();
             $table->string('banner_image')->nullable();
             $table->string('image')->nullable();
-            $table->integer('serial')->nullable();
+            $table->integer('orderBy')->nullable();
             $table->longText('content')->nullable();
             $table->boolean('status')->default(false);
             $table->boolean('show_in_quick_links')->default(false);

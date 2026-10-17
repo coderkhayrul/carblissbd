@@ -206,13 +206,14 @@
                 <div data-i18n="Website CMS">Website CMS</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item {{ request()->routeIs('admin.sliders.*') ? 'active' : '' }}">
+                <li
+                    class="menu-item {{ request()->routeIs('admin.sliders.*') || request()->routeIs('admin.pages.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.sliders.index') }}" class="menu-link">
                         <div data-i18n="Slider">Slider</div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="#" class="menu-link">
+                    <a href="{{ route('admin.pages.index') }}" class="menu-link">
                         <div data-i18n="Page">Page</div>
                     </a>
                 </li>
@@ -221,12 +222,12 @@
                         <div data-i18n="Social Link">Social Link</div>
                     </a>
                 </li>
-                <li class="menu-item">
+                {{-- <li class="menu-item">
                     <a href="#" class="menu-link">
                         <div data-i18n="Contact Message">Contact Message</div>
                     </a>
-                </li>
-                <li class="menu-item">
+                </li> --}}
+                {{-- <li class="menu-item">
                     <a href="#" class="menu-link">
                         <div data-i18n="Subscribers">Subscribers</div>
                     </a>
@@ -245,7 +246,7 @@
                     <a href="#" class="menu-link">
                         <div data-i18n="Article">Article</div>
                     </a>
-                </li>
+                </li> --}}
 
             </ul>
         </li>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ShippingChargeSettingController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\UserController;
@@ -48,4 +49,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
     Route::patch('sliders/{slider}/status', [SliderController::class, 'updateStatus'])->name('sliders.status.update');
     Route::resource('sliders', SliderController::class);
+
+    Route::patch('pages/{page}/status', [PageController::class, 'updateStatus'])->name('pages.status.update');
+    Route::patch('pages/{page}/quick-link', [PageController::class, 'updateQuickLink'])->name('pages.quick-link.update');
+    Route::resource('pages', PageController::class);
 });

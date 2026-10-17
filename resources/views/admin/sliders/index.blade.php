@@ -41,8 +41,8 @@
                                 <div class="d-flex justify-content-start align-items-center product-name">
                                     <div class="avatar-wrapper">
                                         <div class="avatar avatar me-2 me-sm-4 rounded-2 bg-label-secondary"><img
-                                                src="{{ asset('backend') }}/assets/img/ecommerce-images/product-9.png"
-                                                alt="Product-9" class="rounded"></div>
+                                                src="{{ $row->image ? asset($row->image) : asset('backend/assets/extra/preview-image.png') }}"
+                                                alt="{{ $row->name }}" class="rounded"></div>
                                     </div>
                                     <div class="d-flex flex-column">
                                         <h6 class="text-nowrap mb-0">{{ $row->tagline }}</h6>
@@ -58,14 +58,15 @@
                                                 alt="Product-9" class="rounded"></div>
                                     </div>
                                     <div class="d-flex flex-column">
-                                        <h6 class="text-nowrap mb-0">{{ $row->button_title }}</h6>
+                                        <h6 class="text-nowrap mb-0">{{ Str::limit($row->button_title, 30, '...') }}</h6>
                                         <small class="text-truncate d-none d-sm-block">{{ $row->button_url }}</small>
                                     </div>
                                 </div>
                             </td>
                             <td>{{ $row->orderBy }}</td>
                             <td>
-                                <div class="slide-short-description">{{ $row->short_description }}</div>
+                                <div class="slide-short-description">{{ Str::limit($row->short_description, 50, '...') }}
+                                </div>
                             </td>
                             <td>
                                 <span class="text-truncate">
@@ -82,14 +83,15 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="javascript:;" class="btn btn-icon item-edit"><i
+                                <a href="{{ route('admin.sliders.edit', $row) }}" class="btn btn-icon item-edit"><i
                                         class="icon-base bx bx-edit icon-sm"></i></a>
                                 <div class="d-inline-block">
                                     <a href="javascript:;" class="btn btn-icon dropdown-toggle hide-arrow"
                                         data-bs-toggle="dropdown"><i class="icon-base bx bx-dots-vertical-rounded"></i></a>
                                     <ul class="dropdown-menu dropdown-menu-end m-0">
                                         <li>
-                                            <form method="POST" action="#" class="shipping-charge-delete-form">
+                                            <form method="POST" action="{{ route('admin.sliders.destroy', $row->id) }}"
+                                                class="delete-form" data-slider-name="{{ $row->name }}">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
@@ -109,6 +111,32 @@
 
 @push('backend_script')
     <script>
+        document.querySelector('.data-table').addEventListener('submit', function(event) {
+            const form = event.target.closest('.delete-form');
+            if (!form) return;
+
+            event.preventDefault();
+            Swal.fire({
+                title: 'Delete slider?',
+                text: 'Delete "' + form.dataset.sliderName + '" and its image? This cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                focusCancel: true,
+                customClass: {
+                    confirmButton: 'btn btn-danger me-3',
+                    cancelButton: 'btn btn-label-secondary'
+                },
+                buttonsStyling: false
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    form.querySelector('.delete-record').disabled = true;
+                    HTMLFormElement.prototype.submit.call(form);
+                }
+            });
+        });
+
         // STATUS UPDATE
         $('.data-table').on('change', '.slider-status-switch', function() {
             const input = this;
