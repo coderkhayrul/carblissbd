@@ -36,7 +36,8 @@
 @endpush
 @section('admin-content')
     <div class="app-ecommerce page-create">
-        <form action="{{ route('admin.pages.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="pageForm" action="{{ route('admin.pages.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
             <!-- Add Slider -->
             <div
                 class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-6 row-gap-4">
@@ -52,9 +53,6 @@
                     <button type="submit" class="btn btn-primary"><i class="bx bx-save me-2 fs-5"></i> Save Page</button>
                 </div>
             </div>
-
-
-            @csrf
             @if ($errors->any())
                 <div class="alert alert-danger" role="alert">
                     <ul class="mb-0">
@@ -62,7 +60,7 @@
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
-                    <div class="mt-2">Please select the Page image again before submitting.</div>
+                    <div class="mt-2">If you attached images, please select them again before submitting.</div>
                 </div>
             @endif
             <div class="row">
@@ -107,7 +105,7 @@
                                 src="{{ asset('backend/assets/extra/preview-image.png') }}" alt="Preview Image">
                             <hr>
                             <input type="file" class="form-control" name="banner_image" id="input-banner"
-                                accept="image/jpeg,image/png,image/webp,image/gif" required>
+                                accept="image/jpeg,image/png,image/webp,image/gif">
                             <small class="text-muted">JPG, PNG, WebP or GIF. Maximum 5 MB.</small>
                         </div>
                     </div>
@@ -121,7 +119,7 @@
                                 src="{{ asset('backend/assets/extra/preview-image.png') }}" alt="Preview Image">
                             <hr>
                             <input type="file" class="form-control" name="image" id="input-Image"
-                                accept="image/jpeg,image/png,image/webp,image/gif" required>
+                                accept="image/jpeg,image/png,image/webp,image/gif">
                             <small class="text-muted">JPG, PNG, WebP or GIF. Maximum 5 MB.</small>
                         </div>
                     </div>
@@ -133,6 +131,7 @@
                             <h5 class="mb-0 card-title">Contents</h5>
                         </div>
                         <div class="card-body">
+                            <input type="hidden" name="content" id="page-content" value="{{ old('content') }}">
                             <div id="full-editor"></div>
                         </div>
                     </div>
@@ -205,7 +204,7 @@
                             <!-- Button Url -->
                             <div class="mb-6">
                                 <label class="form-label" for="meta_description">Meta Description</label>
-                                <textarea name="meta_description" class="form-control" id="meta_description" rows="5"></textarea>
+                                <textarea name="meta_description" class="form-control" id="meta_description" rows="5">{{ old('meta_description') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -375,6 +374,13 @@
                 toolbar: fullToolbar
             },
             theme: 'snow'
+        });
+        const contentInput = document.getElementById('page-content');
+        if (contentInput.value) {
+            fullEditor.clipboard.dangerouslyPasteHTML(contentInput.value);
+        }
+        document.getElementById('pageForm').addEventListener('submit', function() {
+            contentInput.value = fullEditor.getLength() > 1 ? fullEditor.root.innerHTML : '';
         });
     </script>
 @endpush

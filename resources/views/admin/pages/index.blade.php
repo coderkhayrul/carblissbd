@@ -117,8 +117,8 @@
 
             event.preventDefault();
             Swal.fire({
-                title: 'Delete slider?',
-                text: 'Delete "' + form.dataset.sliderName + '" and its image? This cannot be undone.',
+                title: 'Delete page?',
+                text: 'Delete "' + form.dataset.pageName + '" and its images? This cannot be undone.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
