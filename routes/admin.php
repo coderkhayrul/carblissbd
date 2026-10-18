@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ShippingChargeSettingController;
 use App\Http\Controllers\Admin\SliderController;
@@ -43,6 +44,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/settings/sms-api-setting', [AdminController::class, 'smsApiSettingsUpdate'])->name('sms.api.settings.update');
 
     Route::resource('shipping-charge-settings', ShippingChargeSettingController::class)->except(['show', 'create', 'edit']);
+
     Route::resource('users', UserController::class)->except(['create', 'edit']);
     Route::patch('users/{id}/suspend', [UserController::class, 'suspend'])->name('users.suspend');
     Route::patch('users/{id}/unsuspend', [UserController::class, 'unsuspend'])->name('users.unsuspend');
@@ -58,4 +60,6 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
     Route::patch('social-links/{id}/status', [SocialLinkController::class, 'updateStatus'])->name('social-links.status.update');
     Route::resource('social-links', SocialLinkController::class);
+
+    Route::resource('customers', CustomerController::class);
 });
