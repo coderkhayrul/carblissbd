@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class WebSocialLink extends Model
 {
-    //
+    protected $guarded = [];
 }

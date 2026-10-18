@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ShippingChargeSettingController;
 use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\SocialLinkController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FrontendController;
@@ -53,4 +54,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::patch('pages/{page}/status', [PageController::class, 'updateStatus'])->name('pages.status.update');
     Route::patch('pages/{page}/quick-link', [PageController::class, 'updateQuickLink'])->name('pages.quick-link.update');
     Route::resource('pages', PageController::class);
+
+
+    Route::patch('social-links/{id}/status', [SocialLinkController::class, 'updateStatus'])->name('social-links.status.update');
+    Route::resource('social-links', SocialLinkController::class);
 });

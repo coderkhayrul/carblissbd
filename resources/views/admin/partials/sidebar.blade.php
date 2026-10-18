@@ -200,25 +200,25 @@
             </ul>
         </li>
         <!-- Website CMS -->
-        <li class="menu-item {{ request()->routeIs('admin.sliders.*') ? 'active open' : '' }}">
+        <li
+            class="menu-item {{ request()->routeIs('admin.sliders.*') || request()->routeIs('admin.pages.*') || request()->routeIs('admin.social-links.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-globe-alt"></i>
                 <div data-i18n="Website CMS">Website CMS</div>
             </a>
             <ul class="menu-sub">
-                <li
-                    class="menu-item {{ request()->routeIs('admin.sliders.*') || request()->routeIs('admin.pages.*') ? 'active' : '' }}">
+                <li class="menu-item {{ request()->routeIs('admin.sliders.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.sliders.index') }}" class="menu-link">
                         <div data-i18n="Slider">Slider</div>
                     </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item {{ request()->routeIs('admin.pages.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.pages.index') }}" class="menu-link">
                         <div data-i18n="Page">Page</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.social-links.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.social-links.index') }}" class="menu-link">
                         <div data-i18n="Social Link">Social Link</div>
                     </a>
                 </li>
