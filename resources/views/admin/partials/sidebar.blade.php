@@ -180,14 +180,14 @@
             </ul>
         </li>
         <!-- Customer -->
-        <li class="menu-item">
+        <li class="menu-item {{ request()->routeIs('admin.customers.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-user"></i>
                 <div data-i18n="Customers">Customers</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.customers.index') }}" class="menu-link">
                         <div data-i18n="Customers">Customers</div>
                     </a>
                 </li>

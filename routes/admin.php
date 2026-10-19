@@ -61,5 +61,6 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::patch('social-links/{id}/status', [SocialLinkController::class, 'updateStatus'])->name('social-links.status.update');
     Route::resource('social-links', SocialLinkController::class);
 
+    Route::get('customers/{customer}/security', [CustomerController::class, 'editSecurity'])->name('customers.security.edit');
     Route::resource('customers', CustomerController::class);
 });
