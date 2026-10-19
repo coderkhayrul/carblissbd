@@ -55,8 +55,8 @@
                                 <td>
                                     <div class="d-flex align-items-center">
 
-                                        <a href="app-invoice-preview.html" class="btn btn-icon" data-bs-toggle="tooltip"
-                                            aria-label="Preview" data-bs-original-title="Preview">
+                                        <a href="#" class="btn btn-icon" data-bs-toggle="tooltip" aria-label="Preview"
+                                            data-bs-original-title="Preview">
                                             <i class="bx bx-show icon-md"></i>
                                         </a>
                                         <div class="d-inline-block">
@@ -85,8 +85,8 @@
                                 <td>
                                     <div class="d-flex align-items-center">
 
-                                        <a href="app-invoice-preview.html" class="btn btn-icon" data-bs-toggle="tooltip"
-                                            aria-label="Preview" data-bs-original-title="Preview">
+                                        <a href="#" class="btn btn-icon" data-bs-toggle="tooltip" aria-label="Preview"
+                                            data-bs-original-title="Preview">
                                             <i class="bx bx-show icon-md"></i>
                                         </a>
                                         <div class="d-inline-block">
@@ -115,8 +115,8 @@
                                 <td>
                                     <div class="d-flex align-items-center">
 
-                                        <a href="app-invoice-preview.html" class="btn btn-icon" data-bs-toggle="tooltip"
-                                            aria-label="Preview" data-bs-original-title="Preview">
+                                        <a href="#" class="btn btn-icon" data-bs-toggle="tooltip" aria-label="Preview"
+                                            data-bs-original-title="Preview">
                                             <i class="bx bx-show icon-md"></i>
                                         </a>
                                         <div class="d-inline-block">
@@ -145,8 +145,8 @@
                                 <td>
                                     <div class="d-flex align-items-center">
 
-                                        <a href="app-invoice-preview.html" class="btn btn-icon" data-bs-toggle="tooltip"
-                                            aria-label="Preview" data-bs-original-title="Preview">
+                                        <a href="#" class="btn btn-icon" data-bs-toggle="tooltip" aria-label="Preview"
+                                            data-bs-original-title="Preview">
                                             <i class="bx bx-show icon-md"></i>
                                         </a>
                                         <div class="d-inline-block">
@@ -175,7 +175,7 @@
                                 <td>
                                     <div class="d-flex align-items-center">
 
-                                        <a href="app-invoice-preview.html" class="btn btn-icon" data-bs-toggle="tooltip"
+                                        <a href="#" class="btn btn-icon" data-bs-toggle="tooltip"
                                             aria-label="Preview" data-bs-original-title="Preview">
                                             <i class="bx bx-show icon-md"></i>
                                         </a>

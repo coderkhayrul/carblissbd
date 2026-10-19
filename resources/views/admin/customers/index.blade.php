@@ -168,8 +168,10 @@
                                         <i class="icon-base bx bx-dots-vertical-rounded icon-md"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end m-0">
-                                        <a href="javascript:;" class="dropdown-item edit-button">Send SMS</a>
-                                        <a href="javascript:;" class="dropdown-item edit-button">Purchase History</a>
+                                        <a href="#sendSmsModal" class="dropdown-item send-sms" data-bs-toggle="modal"
+                                            data-bs-target="#sendSmsModal" data-customer-name="{{ $row->name }}"
+                                            data-customer-mobile="{{ $row->mobile }}">Send SMS</a>
+                                        <a href="javascript:;" class="dropdown-item ">Purchase History</a>
 
                                     </div>
                                 </div>
@@ -180,10 +182,89 @@
             </table>
         </div>
     </div>
+    <div class="modal fade" id="sendSmsModal" tabindex="-1" aria-labelledby="sendSmsModalLabel" aria-hidden="true"
+        data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <form id="sendSmsForm" class="d-flex flex-column overflow-hidden">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="sendSmsModalLabel">Send SMS</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-4">
+                            <label class="form-label" for="smsCustomerName">Customer</label>
+                            <input type="text" class="form-control" id="smsCustomerName" readonly>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="smsCustomerMobile">Mobile Number</label>
+                            <input type="text" class="form-control" id="smsCustomerMobile" readonly>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="smsMessage">Message</label>
+                            <textarea class="form-control" id="smsMessage" name="message" rows="6"
+                                placeholder="Write your SMS message here..." required maxlength="1000" aria-describedby="smsCharacterCount"
+                                style="resize: vertical; min-height: 150px;"></textarea>
+                            <div class="form-text text-end" id="smsCharacterCount" aria-live="polite">0 / 1000 characters
+                            </div>
+                        </div>
+                        <div class="alert alert-danger mb-0 d-none" id="smsError" role="alert"></div>
+                    </div>
+                    <div class="modal-footer gap-2">
+                        <button type="button" class="btn btn-label-secondary m-0"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary m-0" id="sendSmsButton">
+                            <i class="bx bx-send me-2"></i> Send SMS
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('backend_script')
     <script>
+        const smsModal = document.getElementById('sendSmsModal');
+        const smsForm = document.getElementById('sendSmsForm');
+        const smsMessage = document.getElementById('smsMessage');
+        const smsError = document.getElementById('smsError');
+        const smsButton = document.getElementById('sendSmsButton');
+
+        smsModal.addEventListener('show.bs.modal', function(event) {
+            const trigger = event.relatedTarget;
+            smsForm.reset();
+            smsError.classList.add('d-none');
+            document.getElementById('smsCharacterCount').textContent = '0 / 1000 characters';
+            document.getElementById('smsCustomerName').value = trigger.dataset.customerName || '';
+            document.getElementById('smsCustomerMobile').value = trigger.dataset.customerMobile || '';
+            smsButton.disabled = !trigger.dataset.customerMobile;
+            if (smsButton.disabled) {
+                smsError.textContent = 'This customer does not have a mobile number.';
+                smsError.classList.remove('d-none');
+            }
+        });
+
+        smsModal.addEventListener('shown.bs.modal', function() {
+            smsMessage.focus();
+        });
+
+        smsMessage.addEventListener('input', function() {
+            smsMessage.setCustomValidity('');
+            document.getElementById('smsCharacterCount').textContent = smsMessage.value.length +
+                ' / 1000 characters';
+        });
+
+        smsForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            if (!smsMessage.value.trim()) {
+                smsMessage.setCustomValidity('Please enter a message.');
+                smsMessage.reportValidity();
+                return;
+            }
+            smsError.textContent = 'SMS sending is not configured yet. Please connect your SMS gateway.';
+            smsError.classList.remove('d-none');
+        });
+
         // USERS TABLE
         new DataTable('.data-table', {
             scrollX: true,

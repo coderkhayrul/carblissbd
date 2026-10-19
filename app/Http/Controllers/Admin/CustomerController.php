@@ -4,10 +4,31 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Services\CustomerService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Password;
 
 class CustomerController extends Controller
 {
+    public function updateStatus(Request $request, Customer $customer, CustomerService $customerService)
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'boolean'],
+        ]);
+
+        try {
+            $customerService->updateStatus($customer, (bool) $validated['status']);
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return back()->with('error', 'Unable to update the customer status. Please try again.');
+        }
+
+        return back()->with('success', $customer->status
+            ? 'Customer activated successfully.'
+            : 'Customer suspended successfully.');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -38,12 +59,36 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
+        $customer->with(['orders', 'user']);
+        // return $customer;
         return view('admin.customers.show', compact('customer'));
     }
 
     public function editSecurity(Customer $customer)
     {
+        $customer->with(['orders', 'user']);
+        // return $customer;
         return view('admin.customers.security', compact('customer'));
+    }
+
+    public function changePassword(Request $request, Customer $customer, CustomerService $customerService)
+    {
+        $validated = $request->validate([
+            'password' => ['required', 'string', 'max:72', 'confirmed', Password::min(8)],
+            'password_confirmation' => ['required', 'string'],
+        ]);
+
+        try {
+            $customerService->changePassword($customer, $validated['password']);
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return redirect()->route('admin.customers.security.edit', $customer)
+                ->with('error', 'Unable to change the customer password. Please try again.');
+        }
+
+        return redirect()->route('admin.customers.security.edit', $customer)
+            ->with('success', 'Customer password changed successfully.');
     }
 
     /**

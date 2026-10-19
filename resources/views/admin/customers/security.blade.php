@@ -28,18 +28,29 @@
             <div class="card mb-6">
                 <h5 class="card-header">Change Password</h5>
                 <div class="card-body">
-                    <form id="formChangePassword" method="POST" action="">
+                    <form id="formChangePassword" method="POST" action="{{ route('admin.customers.password.update', $customer) }}">
                         @csrf
+                        @method('PATCH')
+                        @if ($errors->any())
+                            <div class="alert alert-danger" role="alert">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <div class="alert alert-warning alert-dismissible" role="alert">
                             <h5 class="alert-heading mb-1">Ensure that these requirements are met</h5>
-                            <span>Minimum 8 characters long, uppercase & symbol</span>
+                            <span>8–72 characters, including uppercase, lowercase and a symbol.</span>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                         <div class="row gx-6">
                             <div class="mb-4 col-12 col-sm-6 form-password-toggle form-control-validation">
                                 <label class="form-label" for="newPassword">New Password</label>
                                 <div class="input-group input-group-merge">
-                                    <input class="form-control" type="password" id="newPassword" name="newPassword"
+                                    <input class="form-control" type="password" id="newPassword" name="password"
+                                        required minlength="8" maxlength="72" autocomplete="new-password"
                                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" />
                                     <span class="input-group-text cursor-pointer"><i
                                             class="icon-base bx bx-hide"></i></span>
@@ -49,7 +60,8 @@
                             <div class="mb-4 col-12 col-sm-6 form-password-toggle form-control-validation">
                                 <label class="form-label" for="confirmPassword">Confirm New Password</label>
                                 <div class="input-group input-group-merge">
-                                    <input class="form-control" type="password" name="confirmPassword" id="confirmPassword"
+                                    <input class="form-control" type="password" name="password_confirmation" id="confirmPassword"
+                                        required minlength="8" maxlength="72" autocomplete="new-password"
                                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" />
                                     <span class="input-group-text cursor-pointer"><i
                                             class="icon-base bx bx-hide"></i></span>
