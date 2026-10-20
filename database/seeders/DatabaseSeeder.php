@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
             AttributeSeeder::class,
             StatusSeeder::class,
             TagSeeder::class,
+            SeasonSeeder::class,
             ReturnReasonSeeder::class,
         ]);
     }
