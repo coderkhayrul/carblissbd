@@ -217,7 +217,7 @@
         </li>
         <!-- Website CMS -->
         <li
-            class="menu-item {{ request()->routeIs('admin.sliders.*') || request()->routeIs('admin.pages.*') || request()->routeIs('admin.social-links.*') ? 'active open' : '' }}">
+            class="menu-item {{ request()->routeIs('admin.sliders.*') || request()->routeIs('admin.pages.*') || request()->routeIs('admin.social-links.*') || request()->routeIs('admin.popup-ads.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-globe-alt"></i>
                 <div data-i18n="Website CMS">Website CMS</div>
@@ -236,6 +236,11 @@
                 <li class="menu-item {{ request()->routeIs('admin.social-links.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.social-links.index') }}" class="menu-link">
                         <div data-i18n="Social Link">Social Link</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->routeIs('admin.popup-ads.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.popup-ads.edit') }}" class="menu-link">
+                        <div data-i18n="PopUp Ads">PopUp Ads</div>
                     </a>
                 </li>
                 {{-- <li class="menu-item">

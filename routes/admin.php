@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\PopupAdsController;
 use App\Http\Controllers\Admin\ReturnReasonController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -96,6 +97,9 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::resource('menus', MenuController::class)->except('show');
     Route::patch('coupons/{coupon}/status', [CouponController::class, 'updateStatus'])->name('coupons.status.update');
     Route::resource('coupons', CouponController::class)->except('show');
+    Route::get('popup-ads', [PopupAdsController::class, 'edit'])->name('popup-ads.edit');
+    Route::put('popup-ads', [PopupAdsController::class, 'update'])->name('popup-ads.update');
+    Route::patch('popup-ads/status', [PopupAdsController::class, 'updateStatus'])->name('popup-ads.status.update');
     Route::patch('return-reasons/{returnReason}/status', [ReturnReasonController::class, 'updateStatus'])->name('return-reasons.status.update');
     Route::resource('return-reasons', ReturnReasonController::class)
         ->parameters(['return-reasons' => 'returnReason'])->except('show');
