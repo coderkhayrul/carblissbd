@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ShippingChargeSettingController;
@@ -65,4 +66,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::patch('customers/{customer}/status', [CustomerController::class, 'updateStatus'])->name('customers.status.update');
     Route::patch('customers/{customer}/password', [CustomerController::class, 'changePassword'])->name('customers.password.update');
     Route::resource('customers', CustomerController::class);
+
+
+    Route::resource('brands', BrandController::class);
 });
