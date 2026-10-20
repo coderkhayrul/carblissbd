@@ -299,4 +299,5 @@
         </div>
     </div>
 
+    @include('frontend.partials.popup-ad')
     @include('frontend.partials.footer')

@@ -31,7 +31,7 @@
                         <div class="mb-4">
                             <label class="form-label" for="url">URL</label>
                             <input class="form-control" type="url" id="url" name="url" maxlength="255" placeholder="https://example.com" value="{{ old('url', $popup->url) }}">
-                            <div class="form-text">Destination link, or video URL when video mode is selected.</div>
+                            <div class="form-text">Destination link for image/text ads. For video, use a YouTube link or a direct browser-playable video URL (such as MP4).</div>
                         </div>
                         <label class="form-label" for="description">Description</label>
                         <textarea class="form-control" id="description" name="description" rows="5" maxlength="10000">{{ old('description', $popup->description) }}</textarea>
@@ -66,6 +66,7 @@
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+                        <p class="form-text mt-3 mb-0">Active ads appear in the center of the website on every page load. Turn off the ad to hide it. Add a title, description, image or video before enabling it.</p>
                     </div>
                 </div>
             </div>
