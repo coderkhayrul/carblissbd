@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\AttributeTypeController;
 use App\Http\Controllers\Admin\StatusController;
 use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\ReturnReasonController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
@@ -86,4 +87,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::resource('statuses', StatusController::class)->except('show');
     Route::patch('tags/{tag}/status', [TagController::class, 'updateStatus'])->name('tags.status.update');
     Route::resource('tags', TagController::class)->except('show');
+    Route::patch('return-reasons/{returnReason}/status', [ReturnReasonController::class, 'updateStatus'])->name('return-reasons.status.update');
+    Route::resource('return-reasons', ReturnReasonController::class)
+        ->parameters(['return-reasons' => 'returnReason'])->except('show');
 });

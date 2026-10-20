@@ -272,7 +272,7 @@
         </li>
         <!-- Configuration -->
         <li
-            class="menu-item {{ request()->routeIs('admin.shipping-charge-settings.*', 'admin.statuses.*') ? 'open active' : '' }}">
+            class="menu-item {{ request()->routeIs('admin.shipping-charge-settings.*', 'admin.statuses.*', 'admin.return-reasons.*') ? 'open active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-cube"></i>
                 <div data-i18n="Configuration">Configuration</div>
@@ -288,9 +288,10 @@
                     <a href="{{ route('admin.statuses.index') }}" class="menu-link">
                         <div data-i18n="Status">Status</div>
                     </a>
+                </li>
 
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.return-reasons.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.return-reasons.index') }}" class="menu-link">
                         <div data-i18n="Return Reasons">Return Reasons</div>
                     </a>
                 </li>
