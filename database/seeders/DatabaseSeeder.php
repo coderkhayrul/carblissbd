@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
             SeasonSeeder::class,
             MenuSeeder::class,
             CouponSeeder::class,
+            ProductSeeder::class,
             ReturnReasonSeeder::class,
         ]);
     }

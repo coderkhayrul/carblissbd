@@ -101,19 +101,19 @@
         </li>
         <!-- Products -->
         <li
-            class="menu-item {{ request()->routeIs('admin.brands.*', 'admin.categories.*', 'admin.attribute-types.*', 'admin.attributes.*', 'admin.tags.*', 'admin.seasons.*', 'admin.menus.*') ? 'active open' : '' }}">
+            class="menu-item {{ request()->routeIs('admin.brands.*', 'admin.categories.*', 'admin.attribute-types.*', 'admin.attributes.*', 'admin.tags.*', 'admin.seasons.*', 'admin.menus.*', 'admin.products.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-box"></i>
                 <div data-i18n="Products">Products</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.products.create') ? 'active' : '' }}">
+                    <a href="{{ route('admin.products.create') }}" class="menu-link">
                         <div data-i18n="Add Product">Add Product</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.products.index', 'admin.products.edit') ? 'active' : '' }}">
+                    <a href="{{ route('admin.products.index') }}" class="menu-link">
                         <div data-i18n="Product">Product</div>
                     </a>
                 </li>
