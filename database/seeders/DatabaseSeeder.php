@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
             StatusSeeder::class,
             TagSeeder::class,
             SeasonSeeder::class,
+            MenuSeeder::class,
             ReturnReasonSeeder::class,
         ]);
     }

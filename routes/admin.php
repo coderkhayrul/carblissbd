@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AttributeTypeController;
 use App\Http\Controllers\Admin\StatusController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\SeasonController;
+use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\ReturnReasonController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -90,6 +91,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::resource('tags', TagController::class)->except('show');
     Route::patch('seasons/{season}/status', [SeasonController::class, 'updateStatus'])->name('seasons.status.update');
     Route::resource('seasons', SeasonController::class)->except('show');
+    Route::patch('menus/{menu}/status', [MenuController::class, 'updateStatus'])->name('menus.status.update');
+    Route::resource('menus', MenuController::class)->except('show');
     Route::patch('return-reasons/{returnReason}/status', [ReturnReasonController::class, 'updateStatus'])->name('return-reasons.status.update');
     Route::resource('return-reasons', ReturnReasonController::class)
         ->parameters(['return-reasons' => 'returnReason'])->except('show');

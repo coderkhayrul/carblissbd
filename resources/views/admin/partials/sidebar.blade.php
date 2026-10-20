@@ -101,7 +101,7 @@
         </li>
         <!-- Products -->
         <li
-            class="menu-item {{ request()->routeIs('admin.brands.*', 'admin.categories.*', 'admin.attribute-types.*', 'admin.attributes.*', 'admin.tags.*', 'admin.seasons.*') ? 'active open' : '' }}">
+            class="menu-item {{ request()->routeIs('admin.brands.*', 'admin.categories.*', 'admin.attribute-types.*', 'admin.attributes.*', 'admin.tags.*', 'admin.seasons.*', 'admin.menus.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-box"></i>
                 <div data-i18n="Products">Products</div>
@@ -147,8 +147,8 @@
                         <div data-i18n="Seasons">Seasons</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.menus.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.menus.index') }}" class="menu-link">
                         <div data-i18n="Menus">Menus</div>
                     </a>
                 </li>
@@ -303,6 +303,11 @@
                 <li class="menu-item {{ request()->routeIs('admin.return-reasons.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.return-reasons.index') }}" class="menu-link">
                         <div data-i18n="Return Reasons">Return Reasons</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">
+                        <div data-i18n="Coupons">Coupons</div>
                     </a>
                 </li>
             </ul>
