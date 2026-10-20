@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\AttributeTypeController;
 use App\Http\Controllers\Admin\StatusController;
+use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
@@ -83,4 +84,6 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::resource('attributes', AttributeController::class)->except('show');
     Route::patch('statuses/{status}/status', [StatusController::class, 'updateStatus'])->name('statuses.status.update');
     Route::resource('statuses', StatusController::class)->except('show');
+    Route::patch('tags/{tag}/status', [TagController::class, 'updateStatus'])->name('tags.status.update');
+    Route::resource('tags', TagController::class)->except('show');
 });

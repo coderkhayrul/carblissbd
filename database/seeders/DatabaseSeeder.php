@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             AttributeTypeSeeder::class,
             AttributeSeeder::class,
             StatusSeeder::class,
+            TagSeeder::class,
         ]);
     }
 }

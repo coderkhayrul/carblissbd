@@ -101,7 +101,7 @@
         </li>
         <!-- Products -->
         <li
-            class="menu-item {{ request()->routeIs('admin.brands.*', 'admin.categories.*', 'admin.attribute-types.*', 'admin.attributes.*') ? 'active open' : '' }}">
+            class="menu-item {{ request()->routeIs('admin.brands.*', 'admin.categories.*', 'admin.attribute-types.*', 'admin.attributes.*', 'admin.tags.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-box"></i>
                 <div data-i18n="Products">Products</div>
@@ -137,8 +137,8 @@
                         <div data-i18n="Brand">Brand</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.tags.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.tags.index') }}" class="menu-link">
                         <div data-i18n="Tags">Tags</div>
                     </a>
                 </li>
@@ -271,7 +271,8 @@
             </ul>
         </li>
         <!-- Configuration -->
-        <li class="menu-item {{ request()->routeIs('admin.shipping-charge-settings.*', 'admin.statuses.*') ? 'open active' : '' }}">
+        <li
+            class="menu-item {{ request()->routeIs('admin.shipping-charge-settings.*', 'admin.statuses.*') ? 'open active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-cube"></i>
                 <div data-i18n="Configuration">Configuration</div>
@@ -286,6 +287,11 @@
                 <li class="menu-item {{ request()->routeIs('admin.statuses.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.statuses.index') }}" class="menu-link">
                         <div data-i18n="Status">Status</div>
+                    </a>
+
+                <li class="menu-item">
+                    <a href="#" class="menu-link">
+                        <div data-i18n="Return Reasons">Return Reasons</div>
                     </a>
                 </li>
             </ul>
