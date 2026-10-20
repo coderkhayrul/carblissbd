@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
             TagSeeder::class,
             SeasonSeeder::class,
             MenuSeeder::class,
+            CouponSeeder::class,
             ReturnReasonSeeder::class,
         ]);
     }
