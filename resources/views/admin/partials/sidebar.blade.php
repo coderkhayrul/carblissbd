@@ -101,7 +101,7 @@
         </li>
         <!-- Products -->
         <li
-            class="menu-item {{ request()->routeIs('admin.brands.*', 'admin.categories.*', 'admin.attribute-types.*') ? 'active open' : '' }}">
+            class="menu-item {{ request()->routeIs('admin.brands.*', 'admin.categories.*', 'admin.attribute-types.*', 'admin.attributes.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-box"></i>
                 <div data-i18n="Products">Products</div>
@@ -127,14 +127,19 @@
                         <div data-i18n="Attribute Type">Attribute Type</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.attributes.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.attributes.index') }}" class="menu-link">
                         <div data-i18n="Attribute">Attribute</div>
                     </a>
                 </li>
                 <li class="menu-item {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.brands.index') }}" class="menu-link">
                         <div data-i18n="Brand">Brand</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">
+                        <div data-i18n="Tags">Tags</div>
                     </a>
                 </li>
                 <li class="menu-item">
@@ -278,11 +283,11 @@
                     </a>
                 </li>
 
-                {{-- <li class="menu-item">
+                <li class="menu-item">
                     <a href="#" class="menu-link">
-                        <div data-i18n="System Setting">System Setting</div>
+                        <div data-i18n="Status">Status</div>
                     </a>
-                </li> --}}
+                </li>
             </ul>
         </li>
         <!-- Settings -->
