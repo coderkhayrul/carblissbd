@@ -100,7 +100,7 @@
             </ul>
         </li>
         <!-- Products -->
-        <li class="menu-item {{ request()->routeIs('admin.brands.*') ? 'active open' : '' }}">
+        <li class="menu-item {{ request()->routeIs('admin.brands.*', 'admin.categories.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-box"></i>
                 <div data-i18n="Products">Products</div>
@@ -117,7 +117,7 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="#" class="menu-link">
+                    <a href="{{ route('admin.categories.index') }}" class="menu-link">
                         <div data-i18n="Category">Category</div>
                     </a>
                 </li>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ShippingChargeSettingController;
@@ -70,4 +71,6 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
     Route::patch('brands/{brand}/status', [BrandController::class, 'updateStatus'])->name('brands.status.update');
     Route::resource('brands', BrandController::class)->except('show');
+    Route::patch('categories/{category}/status', [CategoryController::class, 'updateStatus'])->name('categories.status.update');
+    Route::resource('categories', CategoryController::class)->except('show');
 });

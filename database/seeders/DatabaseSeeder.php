@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             SocialLinkSeeder::class,
             CustomerSeeder::class,
             BrandSeeder::class,
+            CategorySeeder::class,
         ]);
     }
 }
