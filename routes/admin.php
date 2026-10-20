@@ -68,5 +68,6 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::resource('customers', CustomerController::class);
 
 
-    Route::resource('brands', BrandController::class);
+    Route::patch('brands/{brand}/status', [BrandController::class, 'updateStatus'])->name('brands.status.update');
+    Route::resource('brands', BrandController::class)->except('show');
 });

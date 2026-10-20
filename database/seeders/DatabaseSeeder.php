@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             ShippingChargeSettingSeeder::class,
             SocialLinkSeeder::class,
             CustomerSeeder::class,
+            BrandSeeder::class,
         ]);
     }
 }
