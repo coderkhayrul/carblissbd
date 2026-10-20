@@ -112,7 +112,8 @@
                         <div data-i18n="Add Product">Add Product</div>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->routeIs('admin.products.index', 'admin.products.edit') ? 'active' : '' }}">
+                <li
+                    class="menu-item {{ request()->routeIs('admin.products.index', 'admin.products.edit') ? 'active' : '' }}">
                     <a href="{{ route('admin.products.index') }}" class="menu-link">
                         <div data-i18n="Product">Product</div>
                     </a>
@@ -217,7 +218,7 @@
         </li>
         <!-- Website CMS -->
         <li
-            class="menu-item {{ request()->routeIs('admin.sliders.*') || request()->routeIs('admin.pages.*') || request()->routeIs('admin.social-links.*') || request()->routeIs('admin.popup-ads.*') ? 'active open' : '' }}">
+            class="menu-item {{ request()->routeIs('admin.sliders.*') || request()->routeIs('admin.pages.*') || request()->routeIs('admin.social-links.*') || request()->routeIs('admin.popup-ads.*') || request()->routeIs('admin.promo-ads.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-globe-alt"></i>
                 <div data-i18n="Website CMS">Website CMS</div>
@@ -241,6 +242,11 @@
                 <li class="menu-item {{ request()->routeIs('admin.popup-ads.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.popup-ads.edit') }}" class="menu-link">
                         <div data-i18n="PopUp Ads">PopUp Ads</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->routeIs('admin.promo-ads.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.promo-ads.index') }}" class="menu-link">
+                        <div data-i18n="Promo Ads">Promo Ads</div>
                     </a>
                 </li>
                 {{-- <li class="menu-item">

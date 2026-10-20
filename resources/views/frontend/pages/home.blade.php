@@ -1,118 +1,62 @@
 @extends('frontend.layouts.master')
 
 @section('front-content')
-    <!-- Swiper Hero Section Banner Updates Here -->
-    <section class="container-lg px-0 px-md-3">
-        <div
-            class="swiper hero-swiper hero-slider-container position-relative bg-white overflow-hidden my-md-4 rounded-0 rounded-md-4 shadow-sm">
+    @if ($slides->isNotEmpty())
+        <section class="container-lg px-0 px-md-3">
+            <div
+                class="swiper hero-swiper hero-slider-container position-relative bg-white overflow-hidden my-md-4 rounded-0 rounded-md-4 shadow-sm">
 
-            <div class="swiper-wrapper">
-                <!-- Slide 1 -->
-                <div class="swiper-slide position-relative w-100 h-100">
-                    <div class="position-absolute top-0 start-0 w-100 h-100 z-1"
-                        style="background: linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0.5), transparent);">
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=1200"
-                        alt="Premium Accessories" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
-                    <div
-                        class="position-relative z-2 h-100 container d-flex flex-column justify-content-center align-items-start text-white p-4 p-md-5">
-                        <span class="badge bg-primary rounded-pill text-uppercase mb-3 px-3 py-2 shadow-sm"
-                            style="font-size: 0.7rem; letter-spacing: 1px;">UP TO 35% DISCOUNT</span>
-                        <h1 class="display-6 display-md-4 fw-bolder lh-sm mb-3">Elevate Your Premium <br
-                                class="d-none d-sm-inline">Driving Experience</h1>
-                        <p class="d-none d-sm-block text-light mb-4" style="max-width: 500px; font-size: 0.9rem;">
-                            Explore
-                            high-quality, genuine carbon fiber steering covers, suspension kits, and customized audio
-                            systems with hassle-free fast home delivery.</p>
-                        <a href="#new-arrivals"
-                            class="btn btn-primary rounded-pill fw-bold px-4 py-2 px-md-5 py-md-3 shadow-lg transition-all"
-                            style="font-size: 0.9rem;">Shop Accessories Now</a>
-                    </div>
+                <div class="swiper-wrapper">
+                    @foreach ($slides as $slide)
+                        <div class="swiper-slide position-relative w-100 h-100">
+                            <div class="position-absolute top-0 start-0 w-100 h-100 z-1"
+                                style="background: linear-gradient(to right, rgba(0,0,0,.85), rgba(0,0,0,.5), transparent);">
+                            </div>
+                            @if ($slide->image)
+                                <img src="{{ asset($slide->image) }}" alt="{{ $slide->name }}"
+                                    class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
+                                    @if ($loop->first) fetchpriority="high" @else loading="lazy" @endif>
+                            @endif
+                            <div
+                                class="position-relative z-2 h-100 container d-flex flex-column justify-content-center align-items-start text-white p-4 p-md-5">
+                                @if ($slide->tagline)
+                                    <span class="badge bg-primary rounded-pill text-uppercase mb-3 px-3 py-2 shadow-sm"
+                                        style="font-size: .7rem; letter-spacing: 1px;">{{ $slide->tagline }}</span>
+                                @endif
+                                @if ($loop->first)
+                                    <h1 class="display-6 display-md-4 fw-bolder lh-sm mb-3" style="max-width: 650px;">
+                                        {{ $slide->name }}</h1>
+                                @else
+                                    <h2 class="display-6 display-md-4 fw-bolder lh-sm mb-3" style="max-width: 650px;">
+                                        {{ $slide->name }}</h2>
+                                @endif
+                                @if ($slide->short_description)
+                                    <p class="d-none d-sm-block text-light mb-4"
+                                        style="max-width: 500px; font-size: .9rem;">{{ $slide->short_description }}</p>
+                                @endif
+                                @if ($slide->button_status && $slide->button_title && preg_match('~^https?://~i', $slide->button_url ?? ''))
+                                    <a href="{{ $slide->button_url }}"
+                                        class="btn btn-primary rounded-pill fw-bold px-4 py-2 px-md-5 py-md-3 shadow-lg transition-all"
+                                        style="font-size: .9rem;">
+                                        {{ $slide->button_title }}
+                                        @if ($slide->button_icon)
+                                            <i class="{{ $slide->button_icon }} ms-2" aria-hidden="true"></i>
+                                        @endif
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
-
-                <!-- Slide 2 -->
-                <div class="swiper-slide position-relative w-100 h-100">
-                    <div class="position-absolute top-0 start-0 w-100 h-100 z-1"
-                        style="background: linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0.5), transparent);">
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=1200"
-                        alt="Car Engine Oil Care" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
-                    <div
-                        class="position-relative z-2 h-100 container d-flex flex-column justify-content-center align-items-start text-white p-4 p-md-5">
-                        <span class="badge bg-primary rounded-pill text-uppercase mb-3 px-3 py-2 shadow-sm"
-                            style="font-size: 0.7rem; letter-spacing: 1px;">GENUINE FLUIDS</span>
-                        <h2 class="display-6 display-md-4 fw-bolder lh-sm mb-3">Elite Grade Spare Parts <br
-                                class="d-none d-sm-inline">& Premium Engine Oils</h2>
-                        <p class="d-none d-sm-block text-light mb-4" style="max-width: 500px; font-size: 0.9rem;">Keep
-                            your engine young with premium engine oils, high-performance filters, and reliable brake pad
-                            assemblies curated for all car makes.</p>
-                        <a href="#parts"
-                            class="btn btn-primary rounded-pill fw-bold px-4 py-2 px-md-5 py-md-3 shadow-lg transition-all"
-                            style="font-size: 0.9rem;">View Parts Catalog</a>
-                    </div>
-                </div>
+                <!-- Bullet Pagination -->
+                @if ($slides->count() > 1)
+                    <div class="swiper-pagination mb-2"></div>
+                @endif
             </div>
-
-            <!-- Bullet Pagination -->
-            <div class="swiper-pagination mb-2"></div>
-        </div>
-    </section>
-    <!-- Promotion Section -->
-    <section class="container-lg px-3 py-5">
-        <div class="row g-4">
-            <!-- Promo 1 -->
-            <div class="col-12 col-md-4">
-                <div class="position-relative overflow-hidden rounded-4 shadow-sm group" style="height: 200px;">
-                    <div class="position-absolute top-0 start-0 w-100 h-100 z-1 promo-overlay"></div>
-                    <img src="https://images.unsplash.com/photo-1518182170546-07661fd94144?auto=format&fit=crop&q=80&w=600"
-                        class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover transition-all"
-                        style="transition-duration: 500ms;" alt="Rainy">
-                    <div class="position-relative z-2 h-100 p-4 d-flex flex-column justify-content-end text-white">
-                        <h3 class="h5 fw-bold mb-1">Rainy Day Essentials</h3>
-                        <p class="small text-light mb-3" style="font-size: 0.75rem;">High-performance silicone wiper
-                            blades & mudguards.</p>
-                        <a href="javascript:void(0)"
-                            class="btn btn-light rounded-pill btn-sm text-primary fw-bold d-inline-flex align-items-center gap-2 align-self-start">Shop
-                            Now <i class="fa-solid fa-circle-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-            <!-- Promo 2 -->
-            <div class="col-12 col-md-4">
-                <div class="position-relative overflow-hidden rounded-4 shadow-sm group" style="height: 200px;">
-                    <div class="position-absolute top-0 start-0 w-100 h-100 z-1 promo-overlay"></div>
-                    <img src="https://images.unsplash.com/photo-1506015391300-4802dc74de2e?auto=format&fit=crop&q=80&w=600"
-                        class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover transition-all"
-                        style="transition-duration: 500ms;" alt="Summer">
-                    <div class="position-relative z-2 h-100 p-4 d-flex flex-column justify-content-end text-white">
-                        <h3 class="h5 fw-bold mb-1">Summer Essentials</h3>
-                        <p class="small text-light mb-3" style="font-size: 0.75rem;">Premium dashboard shades & seat
-                            cooling fans.</p>
-                        <a href="javascript:void(0)"
-                            class="btn btn-light rounded-pill btn-sm text-primary fw-bold d-inline-flex align-items-center gap-2 align-self-start">Shop
-                            Now <i class="fa-solid fa-circle-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-            <!-- Promo 3 -->
-            <div class="col-12 col-md-4">
-                <div class="position-relative overflow-hidden rounded-4 shadow-sm group" style="height: 200px;">
-                    <div class="position-absolute top-0 start-0 w-100 h-100 z-1 promo-overlay"></div>
-                    <img src="https://images.unsplash.com/photo-1544263010-0934c99596c1?auto=format&fit=crop&q=80&w=600"
-                        class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover transition-all"
-                        style="transition-duration: 500ms;" alt="Winter">
-                    <div class="position-relative z-2 h-100 p-4 d-flex flex-column justify-content-end text-white">
-                        <h3 class="h5 fw-bold mb-1">Winter Protection</h3>
-                        <p class="small text-light mb-3" style="font-size: 0.75rem;">High strength fog lamps & engine
-                            coolants.</p>
-                        <a href="javascript:void(0)"
-                            class="btn btn-light rounded-pill btn-sm text-primary fw-bold d-inline-flex align-items-center gap-2 align-self-start">Shop
-                            Now <i class="fa-solid fa-circle-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
+    @endif
+    <!-- PROMOTIONAL ADS -->
+    @include('frontend.partials.promotion')
     <!-- Popular Categories Section -->
     <section class="bg-white py-5 border-top border-bottom border-light overflow-hidden">
         <div class="container-lg px-3">

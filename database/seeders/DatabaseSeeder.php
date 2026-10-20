@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             MenuSeeder::class,
             CouponSeeder::class,
             ProductSeeder::class,
+            PromoAdsSeeder::class,
             ReturnReasonSeeder::class,
         ]);
     }

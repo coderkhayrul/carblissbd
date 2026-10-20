@@ -8,22 +8,24 @@
 
     <script>
         // --- Initialize Swiper for Hero Section ---
-        var heroSwiper = new Swiper(".hero-swiper", {
-            loop: true,
+        const heroElement = document.querySelector('.hero-swiper');
+        const heroSlideCount = heroElement?.querySelectorAll('.swiper-slide').length ?? 0;
+        var heroSwiper = heroElement ? new Swiper(heroElement, {
+            loop: heroSlideCount > 1,
             grabCursor: true,
-            autoplay: {
+            autoplay: heroSlideCount > 1 ? {
                 delay: 5000,
                 disableOnInteraction: false,
-            },
+            } : false,
             pagination: {
-                el: ".swiper-pagination",
+                el: heroElement.querySelector('.swiper-pagination'),
                 clickable: true,
             },
             // navigation: {
             //     nextEl: ".swiper-button-next",
             //     prevEl: ".swiper-button-prev",
             // },
-        });
+        }) : null;
 
         // --- Initialize Swiper for the New Category Section ---
         var newCategorySwiper = new Swiper('.new-category-swiper', {
