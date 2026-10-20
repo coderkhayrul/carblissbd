@@ -100,7 +100,8 @@
             </ul>
         </li>
         <!-- Products -->
-        <li class="menu-item {{ request()->routeIs('admin.brands.*', 'admin.categories.*') ? 'active open' : '' }}">
+        <li
+            class="menu-item {{ request()->routeIs('admin.brands.*', 'admin.categories.*', 'admin.attribute-types.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-box"></i>
                 <div data-i18n="Products">Products</div>
@@ -116,13 +117,13 @@
                         <div data-i18n="Product">Product</div>
                     </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.categories.index') }}" class="menu-link">
                         <div data-i18n="Category">Category</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.attribute-types.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.attribute-types.index') }}" class="menu-link">
                         <div data-i18n="Attribute Type">Attribute Type</div>
                     </a>
                 </li>
