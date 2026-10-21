@@ -16,6 +16,7 @@ Route::middleware('guest')->group(function () {
 
 Route::get('/', [FrontendController::class, 'home'])->name('home');
 Route::get('/category', [FrontendController::class, 'category'])->name('category');
+Route::get('/new-arrivals', [FrontendController::class, 'newArrivals'])->name('new-arrivals');
 Route::get('/offers', [FrontendController::class, 'offers'])->name('offers');
 Route::get('/product-detail', [FrontendController::class, 'productDetail'])->name('product.detail');
 Route::get('/cart', [FrontendController::class, 'cart'])->name('cart');

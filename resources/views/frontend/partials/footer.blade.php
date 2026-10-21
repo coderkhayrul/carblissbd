@@ -66,7 +66,7 @@
                     spaceBetween: 15,
                 },
                 768: {
-                    slidesPerView: 4,
+                    slidesPerView: 3,
                     spaceBetween: 20,
                 },
                 992: {
@@ -77,29 +77,35 @@
         });
 
         // --- Initialize Swiper for New Arrivals Section ---
-        var newArrivalsSwiper = new Swiper('.new-arrivals-swiper', {
-            slidesPerView: 2, // 2 items on mobile
-            spaceBetween: 15,
+        const arrivalsElement = document.querySelector('#new-arrivals .new-arrivals-swiper');
+        var newArrivalsSwiper = arrivalsElement ? new Swiper(arrivalsElement, {
+            slidesPerView: 2,
+            spaceBetween: 12,
+            watchOverflow: true,
             grabCursor: true,
             navigation: {
-                nextEl: '.prod-next',
-                prevEl: '.prod-prev',
+                nextEl: '#new-arrivals .prod-next',
+                prevEl: '#new-arrivals .prod-prev',
             },
             breakpoints: {
                 576: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
+                    slidesPerView: 3,
+                    spaceBetween: 14,
                 },
                 768: {
-                    slidesPerView: 3,
-                    spaceBetween: 24,
+                    slidesPerView: 4,
+                    spaceBetween: 16,
                 },
                 992: {
-                    slidesPerView: 4,
-                    spaceBetween: 24,
+                    slidesPerView: 5,
+                    spaceBetween: 16,
+                },
+                1200: {
+                    slidesPerView: 5,
+                    spaceBetween: 16,
                 }
             }
-        });
+        }) : null;
 
         // --- Live Search Logic ---
         function handleSearchSuggestions(query) {
@@ -225,14 +231,17 @@
             if (emptyState) emptyState.classList.add('d-none');
 
             cart.forEach(item => {
+                const escapeCartHtml = value => String(value).replace(/[&<>"']/g, character => ({
+                    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+                })[character]);
                 const itemRow = document.createElement('div');
                 // Added position-relative for absolute delete button positioning
                 itemRow.className =
                     "cart-item-row d-flex align-items-center justify-content-between border-bottom border-light pb-3 gap-3 position-relative";
                 itemRow.innerHTML = `
-                    <img src="${item.img}" alt="${item.name}" class="rounded-3 object-fit-cover flex-shrink-0 border border-light" style="width: 65px; height: 65px;">
+                    <img src="${escapeCartHtml(item.img)}" alt="${escapeCartHtml(item.name)}" class="rounded-3 object-fit-cover flex-shrink-0 border border-light" style="width: 65px; height: 65px;">
                     <div class="flex-grow-1 pe-4"> <!-- Added padding-end to prevent text overlap with remove button -->
-                        <h5 class="fw-bold text-dark line-clamp-2 m-0" style="font-size: 0.8rem; line-height: 1.4;">${item.name}</h5>
+                        <h5 class="fw-bold text-dark line-clamp-2 m-0" style="font-size: 0.8rem; line-height: 1.4;">${escapeCartHtml(item.name)}</h5>
                         <p class="text-primary fw-bolder mt-1 mb-2" style="font-size: 0.85rem;">৳${(item.price * item.qty).toLocaleString()}</p>
 
                         <!-- Quantity Controls -->
