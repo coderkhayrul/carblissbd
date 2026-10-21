@@ -29,8 +29,9 @@
 
         // --- Initialize Swiper for the New Category Section ---
         var newCategorySwiper = new Swiper('.new-category-swiper', {
-            slidesPerView: 'auto', // Allows cards to take fixed widths
-            spaceBetween: 15,
+            slidesPerView: 2,
+            spaceBetween: 8,
+            watchOverflow: true,
             grabCursor: true,
             pagination: {
                 el: '.category-pagination',
@@ -38,10 +39,16 @@
             },
             breakpoints: {
                 576: {
-                    spaceBetween: 20,
+                    slidesPerView: 4,
+                    spaceBetween: 10,
                 },
                 768: {
-                    spaceBetween: 25,
+                    slidesPerView: 6,
+                    spaceBetween: 10,
+                },
+                992: {
+                    slidesPerView: 10,
+                    spaceBetween: 10,
                 }
             }
         });

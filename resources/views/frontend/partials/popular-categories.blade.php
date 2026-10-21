@@ -9,13 +9,13 @@
                 <div class="swiper new-category-swiper pb-5">
                     <div class="swiper-wrapper">
                         @foreach ($popularCategories as $category)
-                            <div class="swiper-slide" style="width: 210px;">
+                            <div class="swiper-slide h-auto">
                                 <a href="{{ route('category', ['category' => $category->slug]) }}" class="text-decoration-none d-flex flex-column bg-white rounded-3 border category-card overflow-hidden h-100">
-                                    <div class="p-3 d-flex align-items-center justify-content-center bg-white" style="height: 170px;">
+                                    <div class="p-2 d-flex align-items-center justify-content-center bg-white" style="height: 100px;">
                                         <img src="{{ asset($category->image ?: 'backend/assets/extra/preview-image.png') }}" alt="{{ $category->name }}" loading="lazy" class="w-100 h-100 object-fit-contain category-img-zoom">
                                     </div>
-                                    <div class="border-top p-3 bg-white mt-auto" style="border-color: rgba(241,90,41,.1) !important;">
-                                        <span class="fw-bolder text-dark text-center d-block" style="font-size: .85rem;">{{ $category->name }}</span>
+                                    <div class="border-top p-2 bg-white mt-auto" style="border-color: rgba(241,90,41,.1) !important;">
+                                        <span class="fw-bolder text-dark text-center d-block" style="font-size: .7rem; overflow-wrap: anywhere;">{{ $category->name }}</span>
                                     </div>
                                 </a>
                             </div>
