@@ -1,7 +1,7 @@
 @include('frontend.partials.header')
 
 <body>
-    @include('frontend.partials.topbar')
+    {{-- @include('frontend.partials.topbar') --}}
 
     <header class="site-header sticky-top bg-white shadow-sm z-index-highest">
         @include('frontend.partials.navigation')

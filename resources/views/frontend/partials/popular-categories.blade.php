@@ -1,6 +1,6 @@
 @if ($popularCategories->isNotEmpty())
-    <section class="bg-white py-5 border-top border-bottom border-light overflow-hidden">
-        <div class="container-lg px-3">
+    <section class="container-md px-3 my-4">
+        <div class="bg-white rounded-4 border border-light shadow-sm p-3 p-md-4 overflow-hidden" style="background-color: #FFFFFF;">
             <div class="text-center mb-4 pb-2">
                 <h2 class="h3 fw-bolder text-dark text-uppercase mb-1" style="letter-spacing: .5px;">Shop By Category</h2>
                 <p class="text-muted small mb-0">Choose your favorite products from our popular categories</p>
