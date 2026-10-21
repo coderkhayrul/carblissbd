@@ -216,9 +216,9 @@
             </button>
         </div>
         <div
-            class="flex-grow-1 overflow-auto bg-light pb-5 position-relative border-top d-md-none border-secondary border-opacity-10">
+            class="flex-grow-1 overflow-auto bg-light pb-5 position-relative border-top border-secondary border-opacity-10 category-drawer-content">
             <div id="main-cat-grid" class="p-3 row row-cols-3 g-2 m-0"></div>
-            <div id="sub-cat-list" class="d-none p-3 pb-5 bg-white min-vh-100">
+            <div id="sub-cat-list" class="d-none p-3 pb-5 bg-white">
                 <ul id="sub-cat-items" class="list-unstyled d-flex flex-column gap-2 m-0"></ul>
             </div>
         </div>

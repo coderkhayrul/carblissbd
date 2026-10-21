@@ -1,5 +1,5 @@
 @if ($promoAds->isNotEmpty())
-    <section class="container-lg px-3 py-5">
+    <section id="promotional-ads" class="container-lg px-3 py-5">
         <div class="row g-4">
             @foreach ($promoAds as $promoAd)
                 @php

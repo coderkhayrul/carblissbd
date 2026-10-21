@@ -291,42 +291,58 @@
         }
 
         // --- Mobile Category Modal Logic ---
-        const categoriesDataList = {
-            'interior': {
-                name: 'Car Interior',
-                img: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=200',
-                subs: ['Steering Covers', 'Seat Covers', 'Floor Mats']
-            },
-            'exterior': {
-                name: 'Car Exterior',
-                img: 'https://images.unsplash.com/photo-1603386329225-868f9b1ee6c9?auto=format&fit=crop&q=80&w=200',
-                subs: ['Body Kits', 'Mirrors', 'Mudguards']
-            },
-            'electronics': {
-                name: 'Electronics',
-                img: 'https://images.unsplash.com/photo-1583267746897-ea9cf3c46d9a?auto=format&fit=crop&q=80&w=200',
-                subs: ['Dash Cams', 'Android Players', 'Sound Systems']
-            }
-        };
+        @php
+            $mobileMenuData = $menuCategories->map(fn ($category) => [
+                'id' => $category->id,
+                'parent_id' => $category->parent_id,
+                'name' => $category->name,
+                'img' => asset($category->image ?: 'backend/assets/extra/preview-image.png'),
+                'url' => route('category', ['category' => $category->slug]),
+            ])->values();
+        @endphp
+        const categoriesDataList = {{ Illuminate\Support\Js::from($mobileMenuData) }};
 
         function renderMainCategories() {
             const grid = document.getElementById('main-cat-grid');
             if (!grid) return;
-            grid.innerHTML = '';
-            for (const [key, data] of Object.entries(categoriesDataList)) {
-                grid.innerHTML += `
-                    <div class="col">
-                        <div onclick="openSubCategory('${key}')" class="d-flex flex-column align-items-center bg-white p-3 rounded-4 shadow-sm border border-light cursor-pointer hover-text-primary transition-all h-100">
-                            <div class="rounded-circle overflow-hidden mb-2 border border-2 border-primary" style="width: 60px; height: 60px;">
-                                <img src="${data.img}" class="w-100 h-100 object-fit-cover">
-                            </div>
-                            <span class="fw-bold text-center text-dark" style="font-size: 0.7rem;">${data.name}</span>
-                        </div>
-                    </div>
-                `;
+            grid.replaceChildren();
+            if (!categoriesDataList.length) {
+                const empty = document.createElement('p');
+                empty.className = 'text-muted small w-100 text-center py-4';
+                empty.textContent = 'No categories available.';
+                grid.appendChild(empty);
+                return;
             }
+            categoriesDataList.forEach(data => {
+                const column = document.createElement('div');
+                column.className = 'col';
+                const hasChildren = categoriesDataList.some(item => item.parent_id === data.id);
+                const card = document.createElement(hasChildren ? 'button' : 'a');
+                card.className = 'mobile-category-card d-flex flex-column align-items-center bg-white p-3 rounded-4 shadow-sm border border-light text-decoration-none hover-text-primary h-100 w-100';
+                if (hasChildren) {
+                    card.type = 'button';
+                    card.addEventListener('click', () => openSubCategory(data.id));
+                } else {
+                    card.href = data.url;
+                }
+                const frame = document.createElement('div');
+                frame.className = 'rounded-circle overflow-hidden mb-2 border border-2 border-primary flex-shrink-0';
+                frame.style.cssText = 'width:60px;height:60px;';
+                const image = document.createElement('img');
+                image.src = data.img;
+                image.alt = data.name;
+                image.loading = 'lazy';
+                image.className = 'w-100 h-100 object-fit-contain';
+                frame.appendChild(image);
+                const name = document.createElement('span');
+                name.className = 'fw-bold text-center text-dark';
+                name.style.fontSize = '.7rem';
+                name.textContent = data.name;
+                card.append(frame, name);
+                column.appendChild(card);
+                grid.appendChild(column);
+            });
         }
-
         function toggleCategoryModal() {
             const drawer = document.getElementById('category-drawer');
             const overlay = document.getElementById('drawer-overlay');
@@ -343,23 +359,35 @@
         }
 
         function openSubCategory(key) {
-            const data = categoriesDataList[key];
-            document.getElementById('cat-modal-title').innerText = data.name;
+            const data = categoriesDataList.find(item => item.id === key);
+            if (!data) return;
+            document.getElementById('cat-modal-title').textContent = data.name;
             const backBtn = document.getElementById('cat-back-btn');
             backBtn.classList.remove('d-none');
             backBtn.classList.add('d-flex');
-
             const subItems = document.getElementById('sub-cat-items');
-            subItems.innerHTML = '';
-            data.subs.forEach(sub => {
-                subItems.innerHTML +=
-                    `<li><a href="#" onclick="toggleCategoryModal()" class="d-flex justify-content-between align-items-center p-3 bg-light rounded-3 fw-bold text-dark text-decoration-none hover-text-primary border">${sub} <i class="fa-solid fa-chevron-right small"></i></a></li>`;
+            subItems.replaceChildren();
+            const items = [{name: 'View all ' + data.name, url: data.url},
+                ...categoriesDataList.filter(item => item.parent_id === data.id)];
+            items.forEach(item => {
+                const row = document.createElement('li');
+                const link = document.createElement('a');
+                link.href = item.url;
+                link.className = 'd-flex justify-content-between align-items-center gap-2 p-3 bg-light rounded-3 fw-bold text-dark text-decoration-none hover-text-primary border';
+                const label = document.createElement('span');
+                label.textContent = item.name;
+                label.style.overflowWrap = 'anywhere';
+                const icon = document.createElement('i');
+                icon.className = 'fa-solid fa-chevron-right small flex-shrink-0';
+                icon.setAttribute('aria-hidden', 'true');
+                link.append(label, icon);
+                row.appendChild(link);
+                subItems.appendChild(row);
             });
             document.getElementById('main-cat-grid').classList.add('d-none');
             document.getElementById('sub-cat-list').classList.remove('d-none');
             document.getElementById('sub-cat-list').classList.add('d-block');
         }
-
         function showMainCategories() {
             document.getElementById('cat-modal-title').innerText = "All Categories";
             const backBtn = document.getElementById('cat-back-btn');
