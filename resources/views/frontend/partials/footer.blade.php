@@ -47,15 +47,18 @@
         });
 
         // --- Initialize Swiper for Brands Section ---
-        var brandsSwiper = new Swiper('.brands-swiper', {
+        const brandsElement = document.querySelector('#popular-brands .brands-swiper');
+        const brandCount = brandsElement?.querySelectorAll('.swiper-slide').length ?? 0;
+        var brandsSwiper = brandsElement ? new Swiper(brandsElement, {
             slidesPerView: 2,
             spaceBetween: 15,
             grabCursor: true,
-            loop: true, // Infinite loop for brands
-            autoplay: {
+            watchOverflow: true,
+            loop: brandCount > 6,
+            autoplay: brandCount > 1 ? {
                 delay: 2500, // Auto slides every 2.5 seconds
                 disableOnInteraction: false,
-            },
+            } : false,
             // navigation: {
             //     nextEl: '.brand-next',
             //     prevEl: '.brand-prev',
@@ -74,7 +77,7 @@
                     spaceBetween: 20,
                 }
             }
-        });
+        }) : null;
 
         // --- Initialize Swiper for New Arrivals Section ---
         const arrivalsElement = document.querySelector('#new-arrivals .new-arrivals-swiper');
