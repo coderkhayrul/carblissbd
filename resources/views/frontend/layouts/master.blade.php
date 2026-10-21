@@ -1,10 +1,9 @@
 @include('frontend.partials.header')
-@include('frontend.partials.topbar')
 
 <body>
-    @include('frontend.partials.header')
+    @include('frontend.partials.topbar')
 
-    <header class="sticky-top bg-white shadow-sm z-index-highest">
+    <header class="site-header sticky-top bg-white shadow-sm z-index-highest">
         @include('frontend.partials.navigation')
 
         @include('frontend.partials.navbar')

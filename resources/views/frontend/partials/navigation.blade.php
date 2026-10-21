@@ -1,8 +1,8 @@
 <!-- Top Main Bar -->
-<div class="container-lg py-3 d-flex align-items-center justify-content-between gap-3">
+<div class="site-header-main container-lg py-3 d-flex align-items-center justify-content-between gap-3">
 
     <!-- Brand Logo -->
-    <a href="#" class="text-decoration-none d-flex align-items-center flex-shrink-0">
+    <a href="{{ route('home') }}" class="site-header-logo text-decoration-none d-flex align-items-center flex-shrink-0">
         <span class="fs-4 fs-md-3 fw-bolder text-dark d-flex align-items-center">
             CAR<span class="text-primary d-flex align-items-center gap-1">BLISS<i
                     class="fa-solid fa-gauge-high"></i></span>BD
@@ -144,7 +144,7 @@
     </div>
 
     <!-- Header Action Utilities -->
-    <div class="d-flex align-items-center gap-3 gap-md-4">
+    <div class="site-header-actions d-flex align-items-center gap-3 gap-md-4">
 
         <!-- Search Button (Mobile Only) -->
         <button

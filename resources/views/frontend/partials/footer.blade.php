@@ -82,6 +82,9 @@
         // --- Initialize Swiper for New Arrivals Section ---
         const arrivalsElement = document.querySelector('#new-arrivals .new-arrivals-swiper');
         var newArrivalsSwiper = arrivalsElement ? new Swiper(arrivalsElement, {
+            threshold: 8,
+            touchAngle: 35,
+            touchStartPreventDefault: false,
             slidesPerView: 2,
             spaceBetween: 12,
             watchOverflow: true,

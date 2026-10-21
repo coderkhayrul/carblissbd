@@ -135,48 +135,34 @@ body {
     overflow: hidden;
 }
 
-/* Smooth scrolling (Disabled on mobile to prevent sticky header jitter) */
+/* Keep one sticky header without competing transform layers. */
+html, body { width: 100%; min-width: 0; }
+@supports (overflow: clip) {
+    html, body { overflow-x: clip; }
+}
+.site-header { top: 0; width: 100%; max-width: 100%; }
+.site-header-main, .site-header-actions { min-width: 0; }
+.site-header-actions { flex-shrink: 0; }
 @media (min-width: 768px) {
-    html {
-        scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 }
-
-/* Anti-jitter fix for mobile sticky header */
-@media (max-width: 767px) {
-    .sticky-top {
-        position: -webkit-sticky !important;
-        position: sticky !important;
-        top: 0;
-        -webkit-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-        -webkit-perspective: 1000;
-        perspective: 1000;
-        will-change: transform;
-    }
+@media (max-width: 767.98px) {
+    html { scroll-behavior: auto; }
+    .site-header { position: sticky; transform: none; perspective: none; will-change: auto; }
+    .site-header-main { gap: 8px !important; padding-inline: 12px; }
+    .site-header-logo > span { font-size: clamp(17px, 4.7vw, 24px) !important; }
+    .site-header-actions { gap: 8px !important; }
+    .site-header-actions .rounded-circle { width: 34px !important; height: 34px !important; }
+    .site-topbar { flex-wrap: wrap; gap: 6px 12px; font-size: .65rem !important; }
+    .site-topbar > div { gap: 8px !important; }
+    .site-topbar a { white-space: nowrap; }
+    .site-header input { font-size: 16px; }
+    .new-arrivals-swiper, .new-category-swiper, .brands-swiper { touch-action: pan-y pinch-zoom; }
 }
-
-/* Anti-jitter fix for mobile sticky header */
-@media (max-width: 767px) {
-    .sticky-top {
-        position: -webkit-sticky !important;
-        position: sticky !important;
-        top: 0;
-    }
-
-    html {
-        scroll-behavior: auto !important;
-    }
+@media (hover: none), (pointer: coarse) {
+    .product-card:hover, .category-card:hover { transform: none; }
+    .product-card:hover .product-img, .category-card:hover .category-img-zoom { transform: none; }
 }
-
-@media (min-width: 768px) {
-    html {
-        scroll-behavior: smooth;
-    }
-}
-
 /* Premium custom scrollbar */
 ::-webkit-scrollbar {
     width: 8px;

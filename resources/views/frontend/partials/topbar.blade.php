@@ -1,4 +1,4 @@
-<div class="bg-dark text-white py-2 px-3 border-bottom border-secondary d-flex justify-content-between align-items-center"
+<div class="site-topbar bg-dark text-white py-2 px-3 border-bottom border-secondary d-flex justify-content-between align-items-center"
     style="font-size: 0.75rem;">
     <div class="d-flex align-items-center gap-3">
         <span class="d-flex align-items-center gap-1"><i class="fa-solid fa-phone text-primary"></i> Hotline: +880
