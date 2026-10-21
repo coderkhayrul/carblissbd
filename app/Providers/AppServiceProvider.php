@@ -21,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
     {
         \Illuminate\Support\Facades\View::composer('frontend.layouts.master', function ($view) {
             $view->with('menuCategories', \App\Models\Category::where('status', true)
+                ->with(['children' => fn ($query) => $query->where('status', true)->where('show_on_menu', true)
+                    ->orderBy('menu_serial')->orderBy('id')])
                 ->where('show_on_menu', true)->orderBy('menu_serial')->orderBy('id')->get());
         });
         \Illuminate\Support\Facades\View::composer('frontend.partials.popup-ad', function ($view) {
