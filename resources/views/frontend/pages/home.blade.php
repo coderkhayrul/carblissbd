@@ -56,8 +56,8 @@
         </section>
     @endif
     <!-- PROMOTIONAL ADS -->
-    @include('frontend.partials.promotion')
     @include('frontend.partials.popular-categories')
+    @include('frontend.partials.promotion')
     @include('frontend.partials.new-arrivals')
     @include('frontend.partials.brands')
     @include('frontend.partials.recommended-products')

@@ -47,7 +47,7 @@
                     spaceBetween: 10,
                 },
                 992: {
-                    slidesPerView: 10,
+                    slidesPerView: 8,
                     spaceBetween: 10,
                 }
             }
