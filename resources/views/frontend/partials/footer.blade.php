@@ -5,6 +5,7 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script src="{{ asset('frontend/js/script.js') }}"></script>
+    <script src="{{ asset('frontend/js/search.js') }}" defer></script>
 
     <script>
         // --- Initialize Swiper for Hero Section ---
@@ -119,22 +120,6 @@
                 }
             }
         }) : null;
-
-        // --- Live Search Logic ---
-        function handleSearchSuggestions(query) {
-            const suggestionBox = document.getElementById('search-suggestions');
-
-            // যদি ২টির বেশি ক্যারেক্টার টাইপ করা হয়, তবে বক্সটি শো করবে
-            if (query.trim().length > 1) {
-                suggestionBox.style.display = 'block';
-
-                // এখানে আপনি ভবিষ্যতে AJAX / Fetch API দিয়ে সার্ভার থেকে ডাটা আনতে পারবেন
-                // উদাহরণ: fetch(`/api/search?q=${query}`).then(res => res.json()).then(data => showData(data));
-            } else {
-                suggestionBox.style.display = 'none';
-            }
-        }
-
 
         // Init logic on load
         window.onload = function() {

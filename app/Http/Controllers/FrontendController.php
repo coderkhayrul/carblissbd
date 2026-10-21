@@ -38,6 +38,40 @@ class FrontendController extends Controller
             ->orderByDesc('id');
     }
 
+    public function search(\Illuminate\Http\Request $request)
+    {
+        $data = $request->validate(['q' => ['nullable', 'string', 'max:120']]);
+        $term = trim($data['q'] ?? '');
+        $query = $this->recommendedProductsQuery();
+        if (mb_strlen($term) < 2) {
+            $query->whereRaw('1 = 0');
+        } else {
+            $query->where(function ($query) use ($term) {
+                $pattern = '%' . $term . '%';
+                $query->where('name', 'like', $pattern)->orWhere('bangla_name', 'like', $pattern)
+                    ->orWhere('sku', 'like', $pattern)
+                    ->orWhereHas('category', fn ($category) => $category->where('name', 'like', $pattern))
+                    ->orWhereHas('brand', fn ($brand) => $brand->where('name', 'like', $pattern));
+            });
+        }
+
+        if ($request->expectsJson()) {
+            $products = $query->limit(8)->get()->map(function ($product) {
+                $price = $product->is_variation ? ($product->variations->first()?->sale_price ?? $product->sale_price) : $product->sale_price;
+                return [
+                    'name' => $product->name,
+                    'price' => ($product->is_variation ? 'From ' : '') . '৳' . number_format((float) $price, 2),
+                    'image' => asset($product->thumbnail_image ?: 'backend/assets/extra/preview-image.png'),
+                    'url' => route('product.detail', ['product' => $product->slug]),
+                ];
+            });
+            return response()->json(['products' => $products, 'results_url' => route('products.search', ['q' => $term])]);
+        }
+
+        $products = $query->paginate(20)->withQueryString();
+        return view('frontend.pages.search', compact('products', 'term'));
+    }
+
     public function moreProducts(Request $request)
     {
         $data = $request->validate(['before' => ['required', 'integer', 'min:1']]);
