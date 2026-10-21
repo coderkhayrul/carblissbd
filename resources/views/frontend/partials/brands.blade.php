@@ -1,6 +1,6 @@
 @if ($topBrands->isNotEmpty())
-    <section id="popular-brands" class="bg-white py-5 border-top border-bottom border-light overflow-hidden">
-        <div class="container-lg px-3">
+    <section id="popular-brands" class="container-md px-3 my-4">
+        <div class="bg-white rounded-4 border border-light shadow-sm p-3 p-md-4 overflow-hidden" style="background-color: #FFFFFF;">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h2 class="h4 fw-bolder text-dark text-uppercase mb-1">Shop By Verified Brands</h2>

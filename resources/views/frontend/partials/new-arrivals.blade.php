@@ -1,5 +1,6 @@
 @if ($newArrivals->isNotEmpty())
-    <section id="new-arrivals" class="container-lg px-3 py-5">
+    <section id="new-arrivals" class="container-md px-3 my-4">
+        <div class="bg-white rounded-4 border border-light shadow-sm p-3 p-md-4" style="background-color: #FFFFFF;">
         <div class="d-flex align-items-center justify-content-between gap-3 mb-4">
             <div>
                 <h2 class="h4 fw-bolder text-dark text-uppercase d-flex align-items-center gap-2 mb-1">
@@ -58,6 +59,7 @@
                 </div>
             @endforeach
             </div>
+        </div>
         </div>
     </section>
 @endif

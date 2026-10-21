@@ -2,13 +2,13 @@
 
 @section('front-content')
     @if ($slides->isNotEmpty())
-        <section class="container-lg px-0 px-md-3">
+        <section class="container-lg px-3">
             <div
-                class="swiper hero-swiper hero-slider-container position-relative bg-white overflow-hidden my-md-4 rounded-0 rounded-md-4 shadow-sm">
+                class="swiper hero-swiper hero-slider-container position-relative bg-white overflow-hidden my-md-4 rounded-4 shadow-sm">
 
                 <div class="swiper-wrapper">
                     @foreach ($slides as $slide)
-                        <div class="swiper-slide position-relative w-100 h-100">
+                        <div class="swiper-slide position-relative w-100 h-100 rounded-4 overflow-hidden">
                             <div class="position-absolute top-0 start-0 w-100 h-100 z-1"
                                 style="background: linear-gradient(to right, rgba(0,0,0,.85), rgba(0,0,0,.5), transparent);">
                             </div>
