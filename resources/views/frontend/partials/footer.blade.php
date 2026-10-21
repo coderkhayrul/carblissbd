@@ -128,7 +128,7 @@
 
         // Init logic on load
         window.onload = function() {
-            loadYouMayLikeProducts();
+
         };
 
         // --- Drawer & Modal Management ---
@@ -288,57 +288,6 @@
                 toast.style.transform = 'translateY(-150%)';
                 toast.style.opacity = '0';
             }, 3000);
-        }
-
-        // --- Dynamic "You May Like" Generator ---
-        function loadYouMayLikeProducts() {
-            const grid = document.getElementById('you-may-like-grid');
-            if (!grid) return;
-            const placeholderImages = [
-                "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400",
-                "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=400",
-                "https://images.unsplash.com/photo-1554223090-7e482851df45?auto=format&fit=crop&q=80&w=400",
-                "https://images.unsplash.com/photo-1554223090-7e482851df45?auto=format&fit=crop&q=80&w=400",
-                "https://images.unsplash.com/photo-1554223090-7e482851df45?auto=format&fit=crop&q=80&w=400"
-            ];
-
-            grid.innerHTML = '';
-
-            // Generate 10 mock products with New Arrivals Design
-            for (let i = 101; i <= 110; i++) {
-                const img = placeholderImages[i % 5];
-                const price = i * 10;
-                grid.innerHTML += `
-                    <div class="col">
-                        <div class="card border-light shadow-sm rounded-4 h-100 product-card">
-                            <div class="position-absolute top-0 start-0 p-2 z-2 d-flex flex-column gap-1">
-                                <span class="badge bg-dark rounded-pill text-uppercase shadow-sm" style="font-size: 0.55rem;">Recommended</span>
-                            </div>
-                            <div class="position-relative bg-light rounded-top-4 overflow-hidden d-flex align-items-center justify-content-center" style="height: 150px;">
-                                <a href="#"><img src="${img}" alt="Recommended Item" class="w-100 h-100 object-fit-cover transition-all product-img"></a>
-                            </div>
-                            <div class="card-body d-flex flex-column p-2 p-sm-3">
-                                <div class="mb-auto">
-                                    <span class="text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 0.55rem; letter-spacing: 0.05em;">Exclusive</span>
-                                    <a href="#" class="text-decoration-none text-dark"><h3 class="h6 fw-bold line-clamp-2 mb-1 hover-text-primary transition-all" style="font-size: 0.75rem;">Premium Auto Part Model ${i}</h3></a>
-                                    <div class="d-flex text-warning mb-2" style="font-size: 0.6rem;">
-                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
-                                    </div>
-                                    <span class="fw-bolder text-primary mb-2 d-block" style="font-size: 0.9rem;">৳${price.toLocaleString()}</span>
-                                </div>
-                                <div class="d-flex gap-1 gap-sm-2 mt-auto">
-                                    <button onclick="addToCart(${i}, 'Premium Auto Part ${i}', ${price}, '${img}')" class="btn btn-outline-primary rounded-3 flex-shrink-0 d-flex align-items-center justify-content-center p-0" style="width: 32px; height: 32px;" title="Add to Cart">
-                                        <i class="fa-solid fa-cart-plus" style="font-size: 0.75rem;"></i>
-                                    </button>
-                                    <button onclick="buyNow(${i})" class="btn btn-primary rounded-3 flex-grow-1 fw-bold p-0" style="font-size: 0.75rem; height: 32px;">
-                                        Buy Now
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
         }
 
         // --- Mobile Category Modal Logic ---
