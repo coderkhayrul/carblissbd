@@ -102,6 +102,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::resource('coupons', CouponController::class)->except('show');
     Route::patch('products/{product}/status', [ProductController::class, 'updateStatus'])->name('products.status.update');
     Route::resource('products', ProductController::class)->except('show');
+    Route::get('orders/export', [OrderController::class, 'export'])->name('orders.export');
     Route::resource('orders', OrderController::class)->only(['index', 'show']);
     Route::patch('promo-ads/{promoAd}/status', [PromoAdsController::class, 'updateStatus'])->name('promo-ads.status.update');
     Route::resource('promo-ads', PromoAdsController::class)->parameters(['promo-ads' => 'promoAd'])->except('show');
