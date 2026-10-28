@@ -7,10 +7,10 @@
                     style="font-size: .75rem;">
                     <i class="fa-solid fa-tags text-muted" aria-hidden="true"></i> Brand
                 </a>
-                <a href="{{ route('home') }}#promotional-ads"
-                    class="btn bg-light text-dark fw-bold border border-secondary border-opacity-10 rounded-pill px-3 py-1 text-nowrap d-flex align-items-center gap-2 hover-bg-primary transition-all flex-shrink-0"
-                    style="font-size: .75rem;">
-                    <i class="fa-solid fa-percent text-muted" aria-hidden="true"></i> Offer
+                <a href="{{ route('offers') }}"
+                    class="btn {{ request()->routeIs('offers') ? 'btn-primary active' : 'bg-light text-dark border-secondary border-opacity-10 hover-bg-primary' }} fw-bold border rounded-pill px-3 py-1 text-nowrap d-flex align-items-center gap-2 transition-all flex-shrink-0"
+                    style="font-size: .75rem;" @if (request()->routeIs('offers')) aria-current="page" @endif>
+                    <i class="fa-solid fa-percent {{ request()->routeIs('offers') ? 'text-white' : 'text-muted' }}" aria-hidden="true"></i> Offer
                 </a>
                 @foreach ($menuCategories->whereNull('parent_id')->take(5) as $menuCategory)
                     <div class="navbar-category-item d-flex align-items-center flex-shrink-0">

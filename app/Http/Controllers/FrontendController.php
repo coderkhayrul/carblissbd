@@ -131,6 +131,14 @@ class FrontendController extends Controller
         return view('frontend.pages.brand', compact('brands', 'selectedBrand', 'products'));
     }
 
+    public function offers()
+    {
+        $products = $this->recommendedProductsQuery()->where('is_offer', true)
+            ->paginate(20)->withQueryString();
+
+        return view('frontend.pages.offers', compact('products'));
+    }
+
     public function newArrivals()
     {
         $newArrivals = Product::where('status', true)->where('publish', true)->where('is_new_arrival', true)

@@ -71,7 +71,7 @@
                             </select>
                             <div class="form-text">Optional. Select multiple tags with Ctrl / Command, or tap on mobile.</div>
                         </div>
-                        @foreach (['status' => 'Active', 'publish' => 'Published', 'is_refundable' => 'Refundable', 'is_new_arrival' => 'New Arrival'] as $field => $label)
+                        @foreach (['status' => 'Active', 'publish' => 'Published', 'is_refundable' => 'Refundable', 'is_new_arrival' => 'New Arrival', 'is_offer' => 'Show on Offers Page'] as $field => $label)
                             @include('admin.products.field', ['field' => $field, 'label' => $label, 'type' => 'boolean'])
                         @endforeach
                     </div>

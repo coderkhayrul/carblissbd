@@ -35,7 +35,7 @@ class ProductController extends Controller
     {
         return $this->form(new Product([
             'status' => true, 'publish' => true, 'is_variation' => false,
-            'is_refundable' => false, 'is_new_arrival' => false,
+            'is_refundable' => false, 'is_new_arrival' => false, 'is_offer' => false,
         ]));
     }
 
@@ -68,7 +68,7 @@ class ProductController extends Controller
         foreach (['purchase_price', 'sale_price', 'bangla_sale_price', 'mrp_price'] as $field) {
             $rules[$field] = ['required', 'numeric', 'decimal:0,2', 'min:0', 'max:99999999.99'];
         }
-        foreach (['is_variation', 'is_refundable', 'is_new_arrival', 'status', 'publish'] as $field) {
+        foreach (['is_variation', 'is_refundable', 'is_new_arrival', 'is_offer', 'status', 'publish'] as $field) {
             $rules[$field] = ['required', 'boolean'];
         }
         foreach (['thumbnail_image', 'size_chart_image'] as $field) {
