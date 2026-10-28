@@ -156,6 +156,16 @@
 
         // --- Shopping Cart Logic ---
         let cart = [];
+        try {
+            const storedCart = window.checkoutCartData ?? JSON.parse(localStorage.getItem('carbliss_cart') || 'null') ?? @json(session('checkout_cart_display', []));
+            if (Array.isArray(storedCart)) {
+                cart = storedCart.filter(item => Number.isSafeInteger(Number(item.id)) && Number(item.id) !== 0
+                    && Number.isInteger(Number(item.qty)) && Number(item.qty) > 0 && Number(item.qty) <= 99
+                    && Number.isFinite(Number(item.price)) && Number(item.price) >= 0)
+                    .slice(0, 100).map(item => ({...item, id: Number(item.id), qty: Number(item.qty), price: Number(item.price)}));
+            }
+        } catch (error) { cart = window.checkoutCartData || []; }
+        document.addEventListener('DOMContentLoaded', () => updateCartUI());
 
         function toggleCartDrawer() {
             const drawer = document.getElementById('cart-drawer');
@@ -172,6 +182,14 @@
 
         function addToCart(id, name, price, img) {
             const existingItem = cart.find(item => item.id === id);
+            if (!existingItem && cart.length >= 100) {
+                showToast('Cart limit', 'You can add up to 100 different items.');
+                return;
+            }
+            if (existingItem && existingItem.qty >= 99) {
+                showToast('Quantity limit', 'Maximum quantity is 99 per item.');
+                return;
+            }
             if (existingItem) existingItem.qty += 1;
             else cart.push({
                 id,
@@ -198,6 +216,7 @@
         }
 
         function updateCartUI() {
+            try { localStorage.setItem('carbliss_cart', JSON.stringify(cart)); } catch (error) {}
             const container = document.getElementById('cart-items-container');
             const emptyState = document.getElementById('empty-cart-state');
             const subtotalEl = document.getElementById('cart-subtotal');
@@ -209,8 +228,13 @@
             const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
             const subtotalValue = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
 
-            // Calculate shipping (Example: 60 Taka Flat Rate)
-            const shippingValue = subtotalValue > 0 ? 60 : 0;
+            @php
+                $drawerShipping = session('checkout.shipping_id')
+                    ? \App\Models\ShippingChargeSetting::where('status', true)->whereKey(session('checkout.shipping_id'))->first()
+                    : null;
+            @endphp
+            const selectedShippingCharge = @json($drawerShipping?->delivery_charge);
+            const shippingValue = subtotalValue > 0 && selectedShippingCharge !== null ? Number(selectedShippingCharge) : 0;
             const totalValue = subtotalValue + shippingValue;
 
             if (badge) badge.innerText = totalItems;
@@ -220,6 +244,8 @@
             if (shippingEl) shippingEl.innerText = `৳${shippingValue.toLocaleString()}`;
             if (totalEl) totalEl.innerText = `৳${totalValue.toLocaleString()}`;
 
+            if (shippingEl && cart.length && selectedShippingCharge === null) shippingEl.textContent = 'Calculated at checkout';
+            if (!container) return;
             container.querySelectorAll('.cart-item-row').forEach(el => el.remove());
 
             if (cart.length === 0) {
@@ -263,11 +289,11 @@
         function changeQty(id, modifier) {
             const item = cart.find(i => i.id === id);
             if (item) {
-                if (item.qty + modifier >= 1) { // কোয়ান্টিটি যেন ১ এর নিচে না যায়
+                if (item.qty + modifier >= 1 && item.qty + modifier <= 99) { // কোয়ান্টিটি যেন ১ এর নিচে না যায়
                     item.qty += modifier;
                     updateCartUI();
                 } else {
-                    showToast("Notice", "Minimum quantity must be 1.");
+                    showToast("Notice", "Quantity must be between 1 and 99.");
                 }
             }
         }
@@ -400,11 +426,24 @@
             showToast('Login Successful', 'Welcome back to CarBlissBD!');
         }
 
-        function proceedToCheckout() {
+        async function proceedToCheckout() {
             if (cart.length === 0) {
                 showToast('Cart is Empty', 'Please add items before checking out.');
             } else {
-                showToast('Redirecting...', 'Proceeding to secure checkout');
+                if (window.checkoutPending) return;
+                window.checkoutPending = true;
+                try {
+                    const response = await fetch(@json(route('checkout.update')), {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': @json(csrf_token())},
+                        body: JSON.stringify({items: cart.map(item => ({id: item.id, qty: item.qty}))})
+                    });
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.errors ? Object.values(result.errors).flat()[0] : 'Unable to open checkout. Please try again.');
+                    window.location.assign(result.url);
+                } catch (error) {
+                    showToast('Checkout', error.message || 'Unable to open checkout. Please try again.');
+                } finally { window.checkoutPending = false; }
             }
         }
 

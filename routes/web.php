@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\CustomerAuthController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -23,7 +24,8 @@ Route::get('/new-arrivals', [FrontendController::class, 'newArrivals'])->name('n
 Route::get('/offers', [FrontendController::class, 'offers'])->name('offers');
 Route::get('/product-detail', [FrontendController::class, 'productDetail'])->name('product.detail');
 Route::get('/cart', [FrontendController::class, 'cart'])->name('cart');
-Route::get('/checkout', [FrontendController::class, 'checkout'])->name('checkout');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout/cart', [CheckoutController::class, 'update'])->name('checkout.update');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [CustomerAuthController::class, 'profile'])->name('profile');

@@ -155,12 +155,16 @@ class FrontendController extends Controller
             ->with([
                 'category',
                 'brand',
+                'tags',
                 'variations' => fn($query) => $query->where('status', true)->orderBy('sale_price'),
                 'variations.variationAttributes.attribute',
                 'variations.variationAttributes.attributeType'
             ])
             ->firstOrFail();
 
-        return view('frontend.pages.product-detail', compact('product'));
+        $relatedProducts = $this->recommendedProductsQuery()->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)->limit(5)->get();
+
+        return view('frontend.pages.product-detail', compact('product', 'relatedProducts'));
     }
 }
