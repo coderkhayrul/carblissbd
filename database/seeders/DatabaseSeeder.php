@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
             MenuSeeder::class,
             CouponSeeder::class,
             ProductSeeder::class,
+            NextInvoiceNoSeeder::class,
             PromoAdsSeeder::class,
             ReturnReasonSeeder::class,
         ]);

@@ -162,7 +162,7 @@
             </ul>
         </li>
         <!-- Sales -->
-        <li class="menu-item">
+        <li class="menu-item {{ request()->routeIs('admin.orders.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-basket"></i>
                 <div data-i18n="Sales">Sales</div>
@@ -173,8 +173,8 @@
                         <div data-i18n="New Sale">New Sale</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.orders.index') }}" class="menu-link">
                         <div data-i18n="All Order List">All Order List</div>
                     </a>
                 </li>

@@ -26,6 +26,8 @@ Route::get('/product-detail', [FrontendController::class, 'productDetail'])->nam
 Route::get('/cart', [FrontendController::class, 'cart'])->name('cart');
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout/cart', [CheckoutController::class, 'update'])->name('checkout.update');
+Route::post('/checkout/order', [CheckoutController::class, 'placeOrder'])->middleware('throttle:10,1')->name('checkout.place-order');
+Route::get('/order-success/{token}', [CheckoutController::class, 'success'])->whereUuid('token')->name('order.success');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [CustomerAuthController::class, 'profile'])->name('profile');

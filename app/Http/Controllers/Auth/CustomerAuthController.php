@@ -16,32 +16,30 @@ class CustomerAuthController extends Controller
 
     public function login(Request $request)
     {
-        // return $request->all();
-        $credentials = $request->only('email_or_phone', 'password');
-
-        // Attempt to log in using email or phone number
-        if (
-            Auth::attempt([
-                'email' => $credentials['email_or_phone'],
-                'password' => $credentials['password'],
-                'role' => 'customer' // কাস্টমার রোল চেক
-            ]) ||
-            Auth::attempt([
-                'mobile' => $credentials['email_or_phone'],
-                'password' => $credentials['password'],
-                'role' => 'customer' // কাস্টমার রোল চেক
-            ])
-        ) {
-            // লগইন সফল হলে
+        $credentials = $request->validate([
+            'email_or_phone' => ['required', 'string', 'max:255'],
+            'password' => ['required', 'string'],
+        ]);
+        $identity = trim($credentials['email_or_phone']);
+        $authenticated = Auth::attempt([
+            'email' => $identity, 'password' => $credentials['password'], 'role' => 'customer',
+        ]);
+        if (!$authenticated) {
+            foreach (\App\Support\BangladeshPhone::variants($identity) as $mobile) {
+                $authenticated = Auth::attempt([
+                    'mobile' => $mobile, 'password' => $credentials['password'], 'role' => 'customer',
+                ]);
+                if ($authenticated) break;
+            }
+        }
+        if ($authenticated) {
+            $request->session()->regenerate();
             return redirect()->intended(route('home'));
         }
-
-        // Authentication failed...
         return back()->withErrors([
             'email_or_phone' => 'The provided credentials do not match our records.',
-        ]);
+        ])->onlyInput('email_or_phone');
     }
-
     public function showRegisterForm()
     {
         return view('frontend.auth.register');

@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('order_customer_infos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('order_id')->nullable()->unique()->constrained('orders')->cascadeOnDelete();
+            $table->string('name')->nullable();
+            $table->string('phone', 30)->nullable();
+            $table->string('email')->nullable();
+            $table->text('address')->nullable();
+            $table->text('order_note')->nullable();
             $table->timestamps();
         });
     }

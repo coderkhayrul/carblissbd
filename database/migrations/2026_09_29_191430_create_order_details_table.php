@@ -15,6 +15,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->unsignedBigInteger('product_variation_id')->nullable()->index();
+            $table->decimal('purchase_price', 10, 2)->default(0);
+            $table->decimal('sale_price', 10, 2)->default(0);
+            $table->decimal('mrp_price', 10, 2)->default(0);
+            $table->unsignedInteger('quantity')->default(1);
+            $table->decimal('total_cost', 12, 2)->default(0);
+            $table->decimal('total_amount', 12, 2)->default(0);
+            $table->unsignedInteger('returned_qty')->default(0);
+            $table->boolean('exist_in_return')->default(false);
 
             $table->timestamps();
         });

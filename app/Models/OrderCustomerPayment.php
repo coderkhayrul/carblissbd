@@ -6,5 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderCustomerPayment extends Model
 {
-    //
+    protected $guarded = [];
+    protected $casts = ['amount' => 'decimal:2'];
 }

@@ -29,6 +29,7 @@ class CheckoutService
             $subtotal += $unit * $qty;
             $lines[] = [
                 'id' => $id, 'product_id' => $product->id, 'variation_id' => $variation?->id,
+                'product_name' => $product->name,
                 'name' => $variation ? $product->name . ' — ' . $variation->name : $product->name,
                 'sku' => $variation?->sku ?? $product->sku, 'qty' => $qty,
                 'price' => $unit / 100, 'line_total' => ($unit * $qty) / 100,

@@ -136,14 +136,25 @@
             const productImage = @json(asset($product->thumbnail_image ?: 'backend/assets/extra/preview-image.png'));
             const hasVariations = @json((bool) $product->is_variation);
 
-            function addSelectedProduct(openCart) {
+            async function addSelectedProduct(checkoutNow) {
+                if (window.checkoutPending) return;
                 const variation = selector ? variations.find(item => String(item.id) === selector.value) : null;
                 if (hasVariations && !variation) return;
                 // Negative keys keep variation items separate from ordinary product IDs.
                 const key = variation ? -Number(variation.id) : Number(productId);
                 const name = variation ? productName + ' — ' + variation.name : productName;
-                addToCart(key, name, variation ? variation.price : productPrice, productImage);
-                if (openCart) toggleCartDrawer();
+                if (addToCart(key, name, variation ? variation.price : productPrice, productImage) === false) return;
+                if (checkoutNow) {
+                    const button = document.getElementById('detail-order-now');
+                    button.disabled = true;
+                    button.setAttribute('aria-busy', 'true');
+                    try {
+                        await proceedToCheckout();
+                    } finally {
+                        button.disabled = false;
+                        button.removeAttribute('aria-busy');
+                    }
+                }
             }
             document.getElementById('detail-add-cart').addEventListener('click', () => addSelectedProduct(false));
             document.getElementById('detail-order-now').addEventListener('click', () => addSelectedProduct(true));

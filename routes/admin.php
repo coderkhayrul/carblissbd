@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\PopupAdsController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PromoAdsController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ReturnReasonController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -101,6 +102,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::resource('coupons', CouponController::class)->except('show');
     Route::patch('products/{product}/status', [ProductController::class, 'updateStatus'])->name('products.status.update');
     Route::resource('products', ProductController::class)->except('show');
+    Route::resource('orders', OrderController::class)->only(['index', 'show']);
     Route::patch('promo-ads/{promoAd}/status', [PromoAdsController::class, 'updateStatus'])->name('promo-ads.status.update');
     Route::resource('promo-ads', PromoAdsController::class)->parameters(['promo-ads' => 'promoAd'])->except('show');
     Route::get('popup-ads', [PopupAdsController::class, 'edit'])->name('popup-ads.edit');

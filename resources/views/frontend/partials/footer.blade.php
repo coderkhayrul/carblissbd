@@ -184,11 +184,11 @@
             const existingItem = cart.find(item => item.id === id);
             if (!existingItem && cart.length >= 100) {
                 showToast('Cart limit', 'You can add up to 100 different items.');
-                return;
+                return false;
             }
             if (existingItem && existingItem.qty >= 99) {
                 showToast('Quantity limit', 'Maximum quantity is 99 per item.');
-                return;
+                return false;
             }
             if (existingItem) existingItem.qty += 1;
             else cart.push({
@@ -200,6 +200,7 @@
             });
             updateCartUI();
             showToast("Added to Cart", name);
+            return true;
         }
 
         // নতুন: রিমুভ ফাংশন
