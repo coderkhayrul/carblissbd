@@ -482,3 +482,7 @@ html, body { width: 100%; min-width: 0; }
     #mobile-search-container .product-search-results { max-height: 48dvh; }
     .product-search-item { padding: 10px 12px; gap: 10px; }
 }
+.customer-care-content { line-height: 1.8; }
+.customer-care-content img, .customer-care-content video, .customer-care-content iframe { max-width: 100%; }
+.customer-care-content img, .customer-care-content video { height: auto; }
+.customer-care-content { overflow-x: auto; }

@@ -11,6 +11,13 @@ use Illuminate\Http\Request;
 
 class FrontendController extends Controller
 {
+    public function page(\App\Models\Page $page)
+    {
+        abort_unless($page->status, 404);
+
+        return view('frontend.pages.page', compact('page'));
+    }
+
     public function home()
     {
         $slides = Slider::where('status', true)->orderBy('orderBy')->orderBy('id')->get();

@@ -20,6 +20,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         \Illuminate\Support\Facades\View::composer('frontend.layouts.master', function ($view) {
+            $view->with('footerSocialLinks', \App\Models\WebSocialLink::where('status', true)->orderBy('id')->get());
+            $view->with('footerCompany', \App\Models\CompanySetting::orderBy('id')->first());
+            $view->with('informationPages', \App\Models\Page::where('status', true)
+                ->where('group_name', 'Information')->where('show_in_quick_links', true)
+                ->orderBy('orderBy')->orderBy('id')->get());
+            $view->with('customerCarePages', \App\Models\Page::where('status', true)
+                ->where('group_name', 'Customer Care')->where('show_in_quick_links', true)
+                ->orderBy('orderBy')->orderBy('id')->get());
             $view->with('menuCategories', \App\Models\Category::where('status', true)
                 ->with(['children' => fn ($query) => $query->where('status', true)->where('show_on_menu', true)
                     ->orderBy('menu_serial')->orderBy('id')])

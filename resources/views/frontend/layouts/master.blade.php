@@ -15,24 +15,32 @@
         <div class="container-lg px-3">
             <div class="row g-5">
                 <div class="col-12 col-md-3">
-                    <span class="fs-4 fw-bolder text-white d-block mb-3">
-                        CAR<span class="text-primary">BLISS<i class="fa-solid fa-gauge-high"></i></span>BD
-                    </span>
-                    <p class="small mb-4 lh-base" style="font-size: 0.8rem;">
-                        Bangladesh's most reliable premium car accessory & genuine spare parts store. Offering
-                        durability, performance, and luxurious aesthetic upgrades for your vehicle at unbeatable
-                        pricing.
-                    </p>
-                    <div class="d-flex gap-2">
-                        <a href="#"
-                            class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center border-0 bg-secondary bg-opacity-25 text-white hover-text-primary transition-all"
-                            style="width: 35px; height: 35px;"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#"
-                            class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center border-0 bg-secondary bg-opacity-25 text-white hover-text-primary transition-all"
-                            style="width: 35px; height: 35px;"><i class="fa-brands fa-youtube"></i></a>
-                        <a href="#"
-                            class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center border-0 bg-secondary bg-opacity-25 text-white hover-text-primary transition-all"
-                            style="width: 35px; height: 35px;"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="{{ route('home') }}" class="d-inline-block text-decoration-none mb-3" aria-label="{{ $footerCompany?->name ?: 'Home' }}">
+                        @if ($footerCompany?->logo)
+                            <img src="{{ asset($footerCompany->logo) }}" alt="{{ $footerCompany->name ?: 'Company logo' }}" loading="lazy" class="img-fluid" style="max-width: 200px; max-height: 80px; object-fit: contain;">
+                        @else
+                            <span class="fs-4 fw-bolder text-white">{{ $footerCompany?->name ?: 'CarBlissBD' }}</span>
+                        @endif
+                    </a>
+                    @if ($footerCompany?->footer_description)
+                        <p class="small mb-4 lh-base" style="font-size: .8rem; white-space: pre-line; overflow-wrap: anywhere;">{{ $footerCompany->footer_description }}</p>
+                    @endif
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach ($footerSocialLinks as $socialLink)
+                            @php
+                                $socialUrl = trim($socialLink->url ?? '');
+                                $background = preg_match('/^#(?:[a-fA-F0-9]{3}|[a-fA-F0-9]{6}|[a-fA-F0-9]{8})$/', $socialLink->background_color ?? '') ? $socialLink->background_color : '#ffffff1a';
+                                $foreground = preg_match('/^#(?:[a-fA-F0-9]{3}|[a-fA-F0-9]{6}|[a-fA-F0-9]{8})$/', $socialLink->foreground_color ?? '') ? $socialLink->foreground_color : '#FFFFFF';
+                            @endphp
+                            @if (filter_var($socialUrl, FILTER_VALIDATE_URL) && preg_match('~^https?://~i', $socialUrl))
+                                <a href="{{ $socialUrl }}" target="_blank" rel="noopener noreferrer"
+                                    aria-label="{{ $socialLink->name }}" title="{{ $socialLink->name }}"
+                                    class="btn rounded-circle d-flex align-items-center justify-content-center border-0 hover-text-primary transition-all flex-shrink-0"
+                                    style="width: 35px; height: 35px; background-color: {{ $background }}; color: {{ $foreground }};">
+                                    <i class="{{ $socialLink->icon ?: 'fa-solid fa-link' }}" aria-hidden="true"></i>
+                                </a>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
 
@@ -40,22 +48,10 @@
                     <h5 class="text-white fw-bold text-uppercase mb-4" style="font-size: 0.9rem; letter-spacing: 1px;">
                         Customer Care</h5>
                     <ul class="list-unstyled small d-flex flex-column gap-2" style="font-size: 0.8rem;">
-                        <li><a href="#"
-                                class="text-secondary text-decoration-none hover-text-primary transition-all">About
-                                Us</a></li>
-                        <li><a href="#"
-                                class="text-secondary text-decoration-none hover-text-primary transition-all">Contact
-                                Support</a></li>
-                        <li><a href="#"
-                                class="text-secondary text-decoration-none hover-text-primary transition-all">Returns
-                                &
-                                Refunds Policy</a></li>
-                        <li><a href="#"
-                                class="text-secondary text-decoration-none hover-text-primary transition-all">Privacy
-                                Policy</a></li>
-                        <li><a href="#"
-                                class="text-secondary text-decoration-none hover-text-primary transition-all">Terms of
-                                Service</a></li>
+                        @foreach ($customerCarePages as $carePage)
+                            <li><a href="{{ route('pages.show', $carePage) }}"
+                                class="text-secondary text-decoration-none hover-text-primary transition-all">{{ $carePage->name }}</a></li>
+                        @endforeach
                     </ul>
                 </div>
 
@@ -63,36 +59,28 @@
                     <h5 class="text-white fw-bold text-uppercase mb-4" style="font-size: 0.9rem; letter-spacing: 1px;">
                         Information</h5>
                     <ul class="list-unstyled small d-flex flex-column gap-2" style="font-size: 0.8rem;">
-                        <li><a href="#"
-                                class="text-secondary text-decoration-none hover-text-primary transition-all">High End
-                                Car Cover Collection</a></li>
-                        <li><a href="#"
-                                class="text-secondary text-decoration-none hover-text-primary transition-all">Car
-                                Detailing Packages</a></li>
-                        <li><a href="#"
-                                class="text-secondary text-decoration-none hover-text-primary transition-all">Performance
-                                Air Filters</a></li>
-                        <li><a href="#"
-                                class="text-secondary text-decoration-none hover-text-primary transition-all">Universal
-                                Brake Accessories</a></li>
-                        <li><a href="#"
-                                class="text-secondary text-decoration-none hover-text-primary transition-all">Exclusive
-                                LED Lights</a></li>
+                        @foreach ($informationPages as $informationPage)
+                            <li><a href="{{ route('pages.show', $informationPage) }}"
+                                class="text-secondary text-decoration-none hover-text-primary transition-all">{{ $informationPage->name }}</a></li>
+                        @endforeach
                     </ul>
                 </div>
 
                 <div class="col-12 col-md-3">
                     <h5 class="text-white fw-bold text-uppercase mb-4" style="font-size: 0.9rem; letter-spacing: 1px;">
                         Our Showroom Location</h5>
+                    @if ($footerCompany?->address)
                     <div class="d-flex align-items-start gap-2 mb-3 small" style="font-size: 0.8rem;">
                         <i class="fa-solid fa-location-dot text-primary mt-1"></i>
-                        <span>Flagship Outlet: 220/D/04 Begum Rokeya Sarani, Metro Pillar 328, Mirpur Shewrapara,
-                            Dhaka</span>
+                        <span style="white-space: pre-line; overflow-wrap: anywhere;">{{ $footerCompany->address }}</span>
                     </div>
+                    @endif
+                    @if ($footerCompany?->hotline || $footerCompany?->phone)
                     <div class="d-flex align-items-center gap-2 small" style="font-size: 0.8rem;">
                         <i class="fa-solid fa-phone text-primary"></i>
-                        <span>09613821382, 01999906676</span>
+                        <span style="overflow-wrap: anywhere;">{{ collect([$footerCompany->hotline, $footerCompany->phone])->filter()->unique()->implode(', ') }}</span>
                     </div>
+                    @endif
                 </div>
             </div>
 
