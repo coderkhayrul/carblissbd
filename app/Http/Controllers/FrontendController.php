@@ -86,9 +86,31 @@ class FrontendController extends Controller
         ]);
     }
 
-    public function category()
+    public function category(Request $request)
     {
-        return view('frontend.pages.category');
+        $data = $request->validate(['category' => ['nullable', 'string', 'max:255']]);
+        $categories = Category::where('status', true)->orderBy('menu_serial')->orderBy('name')->get();
+        $selectedCategory = !empty($data['category'])
+            ? $categories->firstWhere('slug', $data['category'])
+            : null;
+        if (!empty($data['category']) && !$selectedCategory) abort(404);
+
+        $categoryIds = $categories->pluck('id')->all();
+        if ($selectedCategory) {
+            $categoryIds = [$selectedCategory->id];
+            $frontier = [$selectedCategory->id];
+            // Traverse active descendants without looping on invalid circular parent data.
+            while ($frontier) {
+                $frontier = $categories->whereIn('parent_id', $frontier)
+                    ->whereNotIn('id', $categoryIds)->pluck('id')->all();
+                $categoryIds = array_merge($categoryIds, $frontier);
+            }
+        }
+
+        $products = $this->recommendedProductsQuery()->whereIn('category_id', $categoryIds)
+            ->paginate(20)->withQueryString();
+
+        return view('frontend.pages.category', compact('categories', 'selectedCategory', 'products'));
     }
 
     public function newArrivals()

@@ -153,11 +153,11 @@
                         <div data-i18n="Menus">Menus</div>
                     </a>
                 </li>
-                <li class="menu-item">
+                {{-- <li class="menu-item">
                     <a href="#" class="menu-link">
                         <div data-i18n="Customer Report">Profit Loss</div>
                     </a>
-                </li>
+                </li> --}}
 
             </ul>
         </li>
