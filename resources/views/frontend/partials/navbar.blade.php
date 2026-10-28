@@ -2,7 +2,7 @@
         aria-label="Product categories">
         <div class="container-md px-3">
             <div class="category-navbar-items d-flex align-items-center gap-2 overflow-x-auto no-scrollbar py-2">
-                <a href="{{ route('home') }}#popular-brands"
+                <a href="{{ route('brand') }}"
                     class="btn bg-light text-dark fw-bold border border-secondary border-opacity-10 rounded-pill px-3 py-1 text-nowrap d-flex align-items-center gap-2 hover-bg-primary transition-all flex-shrink-0"
                     style="font-size: .75rem;">
                     <i class="fa-solid fa-tags text-muted" aria-hidden="true"></i> Brand

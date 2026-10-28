@@ -113,6 +113,24 @@ class FrontendController extends Controller
         return view('frontend.pages.category', compact('categories', 'selectedCategory', 'products'));
     }
 
+    public function brand(Request $request)
+    {
+        $data = $request->validate(['brand' => ['nullable', 'string', 'max:255']]);
+        $brands = Brand::where('status', true)->orderBy('serial')->orderBy('name')->get();
+        $selectedBrand = !empty($data['brand']) ? $brands->firstWhere('slug', $data['brand']) : null;
+        if (!empty($data['brand']) && !$selectedBrand) abort(404);
+
+        $query = $this->recommendedProductsQuery();
+        if ($selectedBrand) {
+            $query->where('brand_id', $selectedBrand->id);
+        } else {
+            $query->whereIn('brand_id', $brands->pluck('id'));
+        }
+        $products = $query->paginate(20)->withQueryString();
+
+        return view('frontend.pages.brand', compact('brands', 'selectedBrand', 'products'));
+    }
+
     public function newArrivals()
     {
         $newArrivals = Product::where('status', true)->where('publish', true)->where('is_new_arrival', true)
