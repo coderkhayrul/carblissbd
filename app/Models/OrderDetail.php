@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class OrderDetail extends Model
 {
     protected $guarded = [];
+    public function product() { return $this->belongsTo(Product::class); }
+    public function variation() { return $this->belongsTo(ProductVariation::class, 'product_variation_id'); }
     protected $casts = [
         'attributes' => 'array', 'quantity' => 'integer', 'returned_qty' => 'integer', 'exist_in_return' => 'boolean',
         'purchase_price' => 'decimal:2', 'sale_price' => 'decimal:2', 'mrp_price' => 'decimal:2',

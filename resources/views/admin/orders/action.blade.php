@@ -17,6 +17,7 @@
                     <option value="">Select Status</option>
                     @foreach ($statuses as $status)<option value="{{ $status->id }}" @selected(old('status_id', $order->current_status) == $status->id)>{{ $status->name }}</option>@endforeach
                 </select>
+                @include('admin.orders.cancellation-field')
                 <p class="small text-muted">The change will also be added to the order's status history.</p>
             @elseif ($action === 'complaint')
                 <div class="mb-4"><label class="form-label" for="subject">Subject</label><input class="form-control" id="subject" name="subject" value="{{ old('subject') }}" required maxlength="255"></div>

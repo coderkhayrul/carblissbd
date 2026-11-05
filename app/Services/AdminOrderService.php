@@ -91,7 +91,7 @@ class AdminOrderService
                 'amount' => ($total - $paid) / 100,
             ]);
             $order->update(['paid_amount' => $paid / 100, 'due_amount' => ($total - $paid) / 100]);
-            $order->statusHistory()->create(['status_id' => $data['status_id']]);
+            $order->statusHistory()->create(['status_id' => $data['status_id'], 'cancel_reason' => $order->cancel_reason]);
             DB::table('next_invoice_nos')->where('id', $sequence->id)->update(['next_id' => $next, 'updated_at' => now()]);
             return $order;
         }, 3);
@@ -184,7 +184,10 @@ class AdminOrderService
             if ($grand < $paid) throw ValidationException::withMessages(['items' => 'The new total cannot be less than the amount already paid. Record the payment adjustment first.']);
             $statusId = (int) $data['status_id'];
             $statusChanged = $statusId !== (int) $current->current_status;
-            if ($statusChanged) Status::whereKey($statusId)->where('status', true)->firstOrFail();
+            $status = Status::whereKey($statusId)->firstOrFail();
+            if ($statusChanged && !$status->status) throw ValidationException::withMessages(['status_id' => 'Select an active status.']);
+            $cancelReason = $this->cancellationReason($status, $data['cancel_reason'] ?? null);
+            $reasonChanged = $current->cancel_reason !== $cancelReason;
             $shippingId = !empty($data['shipping_id']) ? (int) $data['shipping_id'] : null;
             if ($shippingId && $shippingId !== (int) $current->shipping_charge_setting_id) {
                 $area = ShippingChargeSetting::whereKey($shippingId)->where('status', true)->firstOrFail();
@@ -202,6 +205,7 @@ class AdminOrderService
                 'grand_total' => $grand / 100,
                 'due_amount' => ($grand - $paid) / 100,
                 'current_status' => $statusId,
+                'cancel_reason' => $cancelReason,
                 'notes' => $data['notes'] ?? null,
             ]);
             $current->saveOrFail();
@@ -213,7 +217,7 @@ class AdminOrderService
                 'address' => $data['address'],
                 'order_note' => $data['notes'] ?? null,
             ]);
-            if ($statusChanged) $current->statusHistory()->create(['status_id' => $statusId]);
+            if ($logEdit && ($statusChanged || $reasonChanged)) $current->statusHistory()->create(['status_id' => $statusId, 'cancel_reason' => $cancelReason]);
             $pending = $current->payments()->where('payment_status', 'Pending')
                 ->whereNull('transaction_id')->whereNull('payment_tnx_no')->get();
             if ($pending->count() === 1) $pending->first()->update(['amount' => ($grand - $paid) / 100]);
@@ -235,15 +239,27 @@ class AdminOrderService
         return (int) round((float) ($amount ?? 0) * 100);
     }
 
-    public function status(Order $order, int $statusId): void
+    private function cancellationReason(Status $status, ?string $reason): ?string
     {
-        DB::transaction(function () use ($order, $statusId) {
+        if (!in_array(strtolower(trim($status->name)), ['cancelled', 'canceled', 'cancel'], true)) return null;
+        $reason = trim($reason ?? '');
+        if (!preg_match('/\S/u', $reason) || mb_strlen($reason) > 2000) {
+            throw ValidationException::withMessages(['cancel_reason' => 'Explain why the customer cancelled the order (maximum 2000 characters).']);
+        }
+        return $reason;
+    }
+
+    public function status(Order $order, int $statusId, ?string $reason = null): void
+    {
+        DB::transaction(function () use ($order, $statusId, $reason) {
             $current = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
-            Status::whereKey($statusId)->where('status', true)->firstOrFail();
-            if ((int) $current->current_status === $statusId) return;
+            $status = Status::whereKey($statusId)->where('status', true)->firstOrFail();
+            $cancelReason = $this->cancellationReason($status, $reason);
+            if ((int) $current->current_status === $statusId && $current->cancel_reason === $cancelReason) return;
             $current->current_status = $statusId;
+            $current->cancel_reason = $cancelReason;
             $current->saveOrFail();
-            $current->statusHistory()->create(['status_id' => $statusId]);
+            $current->statusHistory()->create(['status_id' => $statusId, 'cancel_reason' => $cancelReason]);
         });
     }
 
@@ -307,6 +323,7 @@ class AdminOrderService
                 $status = Status::firstOrCreate(['name' => 'Returned'], ['status' => true]);
                 if ($status->status && (int) $current->current_status !== (int) $status->id) {
                     $current->current_status = $status->id;
+                    $current->cancel_reason = null;
                     $current->saveOrFail();
                     $current->statusHistory()->create(['status_id' => $status->id]);
                 }

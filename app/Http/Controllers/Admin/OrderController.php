@@ -169,6 +169,7 @@ class OrderController extends Controller
             'address' => ['required', 'string', 'max:2000'],
             'notes' => ['nullable', 'string', 'max:2000'],
             'status_id' => ['required', 'integer', 'exists:statuses,id'],
+            'cancel_reason' => ['nullable', 'string', 'max:2000'],
             'shipping_id' => [$creating ? 'required' : 'nullable', 'integer', 'exists:shipping_charge_settings,id'],
             'shipping_cost' => $money, 'extra_discount_amount' => $money,
         ]);
@@ -235,7 +236,7 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        $order->load(['customer', 'customerInfo', 'details', 'payments', 'statusHistory.status', 'currentStatus', 'createdBy']);
+        $order->load(['customer', 'customerInfo', 'details.product', 'details.variation', 'payments', 'statusHistory.status', 'currentStatus', 'createdBy']);
         $complaints = DB::table('order_complaints')->where('order_id', $order->id)->latest('id')->get();
         $returns = DB::table('order_return_records')->join('return_reasons', 'return_reasons.id', '=', 'order_return_records.return_reason_id')
             ->where('order_return_records.order_id', $order->id)->select('order_return_records.*', 'return_reasons.title as reason')->latest('order_return_records.id')->get();
@@ -266,7 +267,7 @@ class OrderController extends Controller
     public function performAction(Request $request, Order $order, string $action, AdminOrderService $service)
     {
         $rules = match ($action) {
-            'status' => ['status_id' => ['required', 'integer', Rule::exists('statuses', 'id')->where('status', true)]],
+            'status' => ['status_id' => ['required', 'integer', Rule::exists('statuses', 'id')->where('status', true)], 'cancel_reason' => ['nullable', 'string', 'max:2000']],
             'complaint' => ['subject' => ['required', 'string', 'max:255'], 'message' => ['required', 'string', 'max:10000']],
             'duplicate' => ['request_token' => ['required', 'uuid'], 'confirm' => ['accepted']],
             'return' => [
@@ -286,7 +287,7 @@ class OrderController extends Controller
                 return redirect()->route('admin.orders.show', $copy)->with('success', 'Order duplicated with a new invoice number.');
             }
             match ($action) {
-                'status' => $service->status($order, (int) $data['status_id']),
+                'status' => $service->status($order, (int) $data['status_id'], $data['cancel_reason'] ?? null),
                 'complaint' => $service->complaint($order, $data, $request->user()->id),
                 'return' => $service->recordReturn($order, $data, $request->user()->id),
             };

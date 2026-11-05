@@ -9,9 +9,13 @@
             <div class="card mb-4">
                 <h5 class="card-header">Products</h5>
                 <div class="table-responsive"><table class="table table-bordered align-middle">
-                    <thead><tr><th>Product / Variation</th><th>SKU</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead>
+                    <thead><tr><th>Image</th><th>Product / Variation</th><th>SKU</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead>
                     <tbody>@foreach ($order->details as $item)
-                        <tr><td>{{ $item->product_name }}
+                        @php
+                            $productImage = $item->product?->thumbnail_image ?: (($item->product?->gallery_images ?? [])[0] ?? 'backend/assets/extra/preview-image.png');
+                            $orderedImage = $item->variation?->image ?: ($item->image ?: $productImage);
+                        @endphp
+                        <tr><td><img class="rounded border" src="{{ asset($orderedImage) }}" width="72" height="72" style="object-fit:contain;min-width:72px" alt="{{ $item->product_name }} {{ $item->variation_name }}" onerror="this.onerror=null;this.src='{{ asset('backend/assets/extra/preview-image.png') }}'"></td><td>{{ $item->product_name }}
                             @if ($item->variation_name)<div class="small text-muted">{{ $item->variation_name }}</div>@endif
                             @foreach ($item->attributes ?? [] as $attribute)<div class="small">{{ $attribute['type'] ?? '' }}: {{ $attribute['value'] ?? '' }}</div>@endforeach
                         </td><td>{{ $item->sku }}</td><td>{{ $item->quantity }}</td><td>{{ number_format((float) $item->sale_price, 2) }}</td><td>{{ number_format((float) $item->total_amount, 2) }}</td></tr>
@@ -33,6 +37,9 @@
             </div>
         </div>
         <div class="col-12 col-lg-4">
+            @if ($order->cancel_reason)
+                <div class="card mb-4 border border-danger"><h5 class="card-header text-danger">Cancellation Reason</h5><div class="card-body" style="white-space:pre-line;overflow-wrap:anywhere">{{ $order->cancel_reason }}</div></div>
+            @endif
             <div class="card mb-4"><h5 class="card-header">Customer & Delivery</h5><div class="card-body">
                 <h6>{{ $order->customerInfo?->name ?? $order->customer?->name }}</h6>
                 <p class="mb-1">{{ $order->customerInfo?->phone ?? $order->customer?->mobile }}</p>
@@ -45,7 +52,7 @@
                 @if ($order->customer)<a class="btn btn-sm btn-label-primary mt-3" href="{{ route('admin.customers.show', $order->customer) }}">Customer Profile</a>@endif
             </div></div>
             <div class="card"><h5 class="card-header">Status History</h5><div class="card-body">
-                @foreach ($order->statusHistory as $history)<div class="mb-3"><strong>{{ $history->status?->name }}</strong><br><small class="text-muted">{{ $history->created_at?->timezone('Asia/Dhaka')->format('d M Y h:i A') }}</small></div>@endforeach
+                @foreach ($order->statusHistory as $history)<div class="mb-3"><strong>{{ $history->status?->name }}</strong><br><small class="text-muted">{{ $history->created_at?->timezone('Asia/Dhaka')->format('d M Y h:i A') }}</small>@if ($history->cancel_reason)<p class="small mt-2 mb-0 text-danger" style="white-space:pre-line;overflow-wrap:anywhere">Reason: {{ $history->cancel_reason }}</p>@endif</div>@endforeach
             </div></div>
         </div>
     </div>
