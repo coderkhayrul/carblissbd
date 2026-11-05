@@ -168,31 +168,33 @@
                 <div data-i18n="Sales">Sales</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item {{ request()->routeIs('admin.orders.create', 'admin.orders.store') ? 'active' : '' }}">
+                <li
+                    class="menu-item {{ request()->routeIs('admin.orders.create', 'admin.orders.store') ? 'active' : '' }}">
                     <a href="{{ route('admin.orders.create') }}" class="menu-link">
                         <div data-i18n="New Sale">New Sale</div>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->routeIs('admin.orders.*') && !request()->routeIs('admin.orders.create', 'admin.orders.store') ? 'active' : '' }}">
+                <li
+                    class="menu-item {{ request()->routeIs('admin.orders.*') && !request()->routeIs('admin.orders.create', 'admin.orders.store') ? 'active' : '' }}">
                     <a href="{{ route('admin.orders.index') }}" class="menu-link">
                         <div data-i18n="All Order List">All Order List</div>
                     </a>
                 </li>
-                <li class="menu-item">
+                {{-- <li class="menu-item">
                     <a href="#" class="menu-link">
                         <div data-i18n="Product Replacement">Product Replacement</div>
                     </a>
-                </li>
-                <li class="menu-item">
+                </li> --}}
+                {{-- <li class="menu-item">
                     <a href="#" class="menu-link">
                         <div data-i18n="Attribute Type">Sale/Order Return</div>
                     </a>
-                </li>
-                <li class="menu-item">
+                </li> --}}
+                {{-- <li class="menu-item">
                     <a href="#" class="menu-link">
                         <div data-i18n="Attribute">Order Request</div>
                     </a>
-                </li>
+                </li> --}}
 
             </ul>
         </li>

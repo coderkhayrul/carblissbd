@@ -28,9 +28,19 @@ class AdminController extends Controller
     | ADMIN DASHBOARD FUNCTION
     |--------------------------------------------------------------------------
     */
-    public function dashboard()
+    public function dashboard(Request $request, \App\Services\DashboardService $dashboardService)
     {
-        return view('admin.dashboard');
+        $filters = $request->validate([
+            'period' => ['nullable', \Illuminate\Validation\Rule::in(array_keys(\App\Services\DashboardService::PERIODS))],
+            'from' => ['nullable', 'required_with:to', 'date_format:Y-m-d', 'after_or_equal:1900-01-01', 'before_or_equal:2100-12-31'],
+            'to' => ['nullable', 'required_with:from', 'date_format:Y-m-d', 'after_or_equal:from', 'before_or_equal:2100-12-31'],
+            'source' => ['nullable', \Illuminate\Validation\Rule::in(['Website', 'GSale', 'App'])],
+            'staff' => ['nullable', 'integer', \Illuminate\Validation\Rule::exists('users', 'id')->where('role', 'admin')],
+        ]);
+        $report = $dashboardService->report($filters);
+        $periods = \App\Services\DashboardService::PERIODS;
+        $staff = \App\Models\User::where('role', 'admin')->orderBy('name')->get(['id', 'name']);
+        return view('admin.dashboard', compact('report', 'periods', 'staff', 'filters'));
     }
 
     /*

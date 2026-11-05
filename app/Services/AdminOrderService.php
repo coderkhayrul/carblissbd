@@ -12,8 +12,12 @@ class AdminOrderService
 {
     public const COURIERS = ['Pathao', 'Steadfast', 'eCourier', 'Paperfly', 'RedX'];
     public const COPIES = [
-        'customer' => 'Customer Copy', 'accounts' => 'Accounts Copy', 'store' => 'Store Copy',
-        'delivery' => 'Delivery Man Copy', 'office-challan' => 'Office Challan Copy', 'customer-challan' => 'Customer Challan Copy',
+        'customer' => 'Customer Copy',
+        'accounts' => 'Accounts Copy',
+        'store' => 'Store Copy',
+        'delivery' => 'Delivery Man Copy',
+        'office-challan' => 'Office Challan Copy',
+        'customer-challan' => 'Customer Challan Copy',
     ];
 
     public function editSnapshot(Order $order): array
@@ -21,9 +25,9 @@ class AdminOrderService
         $order->loadMissing(['details', 'customerInfo', 'payments']);
         return [
             'order' => $order->getRawOriginal(),
-            'details' => $order->details->sortBy('id')->map(fn ($line) => $line->getRawOriginal())->values()->all(),
+            'details' => $order->details->sortBy('id')->map(fn($line) => $line->getRawOriginal())->values()->all(),
             'customer_info' => $order->customerInfo?->getRawOriginal(),
-            'payments' => $order->payments->sortBy('id')->map(fn ($payment) => $payment->getRawOriginal())->values()->all(),
+            'payments' => $order->payments->sortBy('id')->map(fn($payment) => $payment->getRawOriginal())->values()->all(),
         ];
     }
 
@@ -47,13 +51,23 @@ class AdminOrderService
             Status::whereKey($data['status_id'])->where('status', true)->firstOrFail();
             ShippingChargeSetting::whereKey($data['shipping_id'])->where('status', true)->firstOrFail();
             $next = max(1, (int) $sequence->next_id);
-            do { $invoice = 'ORD-' . $year . '-' . str_pad((string) $next++, 6, '0', STR_PAD_LEFT); }
-            while (Order::where('order_no', $invoice)->exists());
+            do {
+                $invoice = 'ORD-' . $year . '-' . str_pad((string) $next++, 6, '0', STR_PAD_LEFT);
+            } while (Order::where('order_no', $invoice)->exists());
             $order = Order::create([
-                'customer_id' => $customer->id, 'created_by' => $userId, 'order_no' => $invoice,
-                'order_source' => 'GSale', 'date' => $data['date'], 'payment_type' => $data['payment_type'],
-                'shipping_method' => 'Regular Shipping', 'grand_total' => 0, 'paid_amount' => 0, 'due_amount' => 0,
-                'current_status' => $data['status_id'], 'checkout_token' => $data['checkout_token'], 'public_token' => (string) Str::uuid(),
+                'customer_id' => $customer->id,
+                'created_by' => $userId,
+                'order_no' => $invoice,
+                'order_source' => 'GSale',
+                'date' => $data['date'],
+                'payment_type' => $data['payment_type'],
+                'shipping_method' => 'Regular Shipping',
+                'grand_total' => 0,
+                'paid_amount' => 0,
+                'due_amount' => 0,
+                'current_status' => $data['status_id'],
+                'checkout_token' => $data['checkout_token'],
+                'public_token' => (string) Str::uuid(),
             ]);
             $order->refresh();
             $data['edit_version'] = $this->editVersion($order);
@@ -63,12 +77,18 @@ class AdminOrderService
             $total = $this->cents($order->grand_total);
             if ($paid > $total) throw ValidationException::withMessages(['paid_amount' => 'Received payment cannot exceed the order total.']);
             if ($paid > 0) $order->payments()->create([
-                'customer_id' => $customer->id, 'payment_method' => $data['payment_method'], 'payment_status' => 'Completed',
-                'amount' => $paid / 100, 'transaction_id' => $data['transaction_id'] ?? null, 'payment_tnx_no' => $data['transaction_id'] ?? null,
+                'customer_id' => $customer->id,
+                'payment_method' => $data['payment_method'],
+                'payment_status' => 'Completed',
+                'amount' => $paid / 100,
+                'transaction_id' => $data['transaction_id'] ?? null,
+                'payment_tnx_no' => $data['transaction_id'] ?? null,
             ]);
             if ($total > $paid || $paid === 0) $order->payments()->create([
-                'customer_id' => $customer->id, 'payment_method' => $data['payment_type'] === 'COD' ? 'Cash' : $data['payment_method'],
-                'payment_status' => 'Pending', 'amount' => ($total - $paid) / 100,
+                'customer_id' => $customer->id,
+                'payment_method' => $data['payment_type'] === 'COD' ? 'Cash' : $data['payment_method'],
+                'payment_status' => 'Pending',
+                'amount' => ($total - $paid) / 100,
             ]);
             $order->update(['paid_amount' => $paid / 100, 'due_amount' => ($total - $paid) / 100]);
             $order->statusHistory()->create(['status_id' => $data['status_id']]);
@@ -117,8 +137,10 @@ class AdminOrderService
                 $combinations[$key] = true;
                 $qty = (int) $item['quantity'];
                 $sale = $this->cents($item['sale_price']);
-                if ($line && ((int) $line->returned_qty > 0 || DB::table('order_return_records')->where('order_detail_id', $line->id)->exists())
-                    && (!$same || $qty !== (int) $line->quantity || $sale !== $this->cents($line->sale_price))) {
+                if (
+                    $line && ((int) $line->returned_qty > 0 || DB::table('order_return_records')->where('order_detail_id', $line->id)->exists())
+                    && (!$same || $qty !== (int) $line->quantity || $sale !== $this->cents($line->sale_price))
+                ) {
                     throw ValidationException::withMessages(['items' => 'A returned product’s identity, quantity and sale price must remain unchanged.']);
                 }
                 $purchase = $same ? $this->cents($line->purchase_price) : $this->cents($variation?->purchase_price ?? $product->purchase_price);
@@ -128,14 +150,20 @@ class AdminOrderService
                 $mrp = $same ? $line->mrp_price : ($variation?->mrp_price ?? $product->mrp_price);
                 $image = $same ? $line->image : asset($variation?->image ?: ($product->thumbnail_image ?: (($product->gallery_images ?? [])[0] ?? 'backend/assets/extra/preview-image.png')));
                 $values = [
-                    'product_id' => $product->id, 'product_variation_id' => $variationId,
+                    'product_id' => $product->id,
+                    'product_variation_id' => $variationId,
                     'product_name' => $same ? $line->product_name : $product->name,
                     'variation_name' => $same ? $line->variation_name : $variation?->optionLabel($product->name),
-                    'sku' => $same ? $line->sku : ($variation?->sku ?? $product->sku), 'image' => $image,
-                    'attributes' => $same ? $line->attributes : $variation?->variationAttributes->map(fn ($pair) => ['type' => $pair->attributeType?->name, 'value' => $pair->attribute?->name])->all(),
-                    'quantity' => $qty, 'sale_price' => $sale / 100, 'unit_price' => $sale / 100,
-                    'purchase_price' => $purchase / 100, 'mrp_price' => $mrp,
-                    'total_cost' => ($purchase * $qty) / 100, 'total_amount' => ($sale * $qty) / 100,
+                    'sku' => $same ? $line->sku : ($variation?->sku ?? $product->sku),
+                    'image' => $image,
+                    'attributes' => $same ? $line->attributes : $variation?->variationAttributes->map(fn($pair) => ['type' => $pair->attributeType?->name, 'value' => $pair->attribute?->name])->all(),
+                    'quantity' => $qty,
+                    'sale_price' => $sale / 100,
+                    'unit_price' => $sale / 100,
+                    'purchase_price' => $purchase / 100,
+                    'mrp_price' => $mrp,
+                    'total_cost' => ($purchase * $qty) / 100,
+                    'total_amount' => ($sale * $qty) / 100,
                     'line_total' => ($sale * $qty) / 100,
                 ];
                 if ($line) $line->update($values);
@@ -165,15 +193,25 @@ class AdminOrderService
                 $current->delivery_time = $area->delivery_time;
             }
             $current->fill([
-                'subtotal' => $subtotal / 100, 'total_quantity' => $quantity, 'shipping_cost' => $shipping / 100,
-                'total_shipping_cost' => ($shipping + $extraShipping) / 100, 'extra_discount_amount' => $discount / 100,
-                'total_discount_amount' => $totalDiscount / 100, 'grand_total' => $grand / 100,
-                'due_amount' => ($grand - $paid) / 100, 'current_status' => $statusId, 'notes' => $data['notes'] ?? null,
+                'subtotal' => $subtotal / 100,
+                'total_quantity' => $quantity,
+                'shipping_cost' => $shipping / 100,
+                'total_shipping_cost' => ($shipping + $extraShipping) / 100,
+                'extra_discount_amount' => $discount / 100,
+                'total_discount_amount' => $totalDiscount / 100,
+                'grand_total' => $grand / 100,
+                'due_amount' => ($grand - $paid) / 100,
+                'current_status' => $statusId,
+                'notes' => $data['notes'] ?? null,
             ]);
             $current->saveOrFail();
             $current->customerInfo()->updateOrCreate(['order_id' => $current->id], [
-                'customer_id' => $current->customer_id, 'name' => $data['name'], 'phone' => BangladeshPhone::normalize($data['phone']),
-                'email' => $data['email'] ?? null, 'address' => $data['address'], 'order_note' => $data['notes'] ?? null,
+                'customer_id' => $current->customer_id,
+                'name' => $data['name'],
+                'phone' => BangladeshPhone::normalize($data['phone']),
+                'email' => $data['email'] ?? null,
+                'address' => $data['address'],
+                'order_note' => $data['notes'] ?? null,
             ]);
             if ($statusChanged) $current->statusHistory()->create(['status_id' => $statusId]);
             $pending = $current->payments()->where('payment_status', 'Pending')
@@ -182,14 +220,20 @@ class AdminOrderService
             $current->unsetRelations();
             $current->refresh();
             if ($logEdit) DB::table('order_edit_logs')->insert([
-                'order_id' => $current->id, 'edited_by' => $userId,
-                'before' => json_encode($before, JSON_THROW_ON_ERROR), 'after' => json_encode($this->editSnapshot($current), JSON_THROW_ON_ERROR),
-                'created_at' => now(), 'updated_at' => now(),
+                'order_id' => $current->id,
+                'edited_by' => $userId,
+                'before' => json_encode($before, JSON_THROW_ON_ERROR),
+                'after' => json_encode($this->editSnapshot($current), JSON_THROW_ON_ERROR),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }, 3);
     }
 
-    private function cents($amount): int { return (int) round((float) ($amount ?? 0) * 100); }
+    private function cents($amount): int
+    {
+        return (int) round((float) ($amount ?? 0) * 100);
+    }
 
     public function status(Order $order, int $statusId): void
     {
@@ -217,8 +261,13 @@ class AdminOrderService
     public function complaint(Order $order, array $data, int $userId): void
     {
         DB::table('order_complaints')->insert([
-            'order_id' => $order->id, 'created_by' => $userId, 'subject' => $data['subject'],
-            'message' => $data['message'], 'status' => 'Open', 'created_at' => now(), 'updated_at' => now(),
+            'order_id' => $order->id,
+            'created_by' => $userId,
+            'subject' => $data['subject'],
+            'message' => $data['message'],
+            'status' => 'Open',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 
@@ -237,11 +286,16 @@ class AdminOrderService
                     throw ValidationException::withMessages(["items.$index.quantity" => 'The return quantity exceeds the remaining ordered quantity.']);
                 }
                 DB::table('order_return_records')->insert([
-                    'order_id' => $order->id, 'order_detail_id' => $detail->id,
-                    'return_reason_id' => $data['return_reason_id'], 'created_by' => $userId,
-                    'request_token' => $data['request_token'], 'quantity' => $qty,
+                    'order_id' => $order->id,
+                    'order_detail_id' => $detail->id,
+                    'return_reason_id' => $data['return_reason_id'],
+                    'created_by' => $userId,
+                    'request_token' => $data['request_token'],
+                    'quantity' => $qty,
                     'amount' => (int) round((float) $detail->sale_price * 100) * $qty / 100,
-                    'note' => $data['note'] ?? null, 'created_at' => now(), 'updated_at' => now(),
+                    'note' => $data['note'] ?? null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
                 $detail->returned_qty += $qty;
                 $detail->exist_in_return = true;
@@ -249,7 +303,7 @@ class AdminOrderService
                 $count += $qty;
             }
             if (!$count) throw ValidationException::withMessages(['items' => 'Enter a return quantity for at least one product.']);
-            if ($details->isNotEmpty() && $details->every(fn ($detail) => (int) $detail->returned_qty >= (int) $detail->quantity)) {
+            if ($details->isNotEmpty() && $details->every(fn($detail) => (int) $detail->returned_qty >= (int) $detail->quantity)) {
                 $status = Status::firstOrCreate(['name' => 'Returned'], ['status' => true]);
                 if ($status->status && (int) $current->current_status !== (int) $status->id) {
                     $current->current_status = $status->id;
@@ -274,16 +328,26 @@ class AdminOrderService
             $pending = Status::firstOrCreate(['name' => 'Pending'], ['status' => true]);
             if (!$pending->status) throw ValidationException::withMessages(['order' => 'The Pending status must be active to duplicate an order.']);
             $next = max(1, (int) $sequence->next_id);
-            do { $invoice = 'ORD-' . $year . '-' . str_pad((string) $next++, 6, '0', STR_PAD_LEFT); }
-            while (Order::where('order_no', $invoice)->exists());
+            do {
+                $invoice = 'ORD-' . $year . '-' . str_pad((string) $next++, 6, '0', STR_PAD_LEFT);
+            } while (Order::where('order_no', $invoice)->exists());
             $copy = $original->replicate();
             $copy->fill([
-                'order_no' => $invoice, 'date' => now('Asia/Dhaka')->toDateString(), 'delivery_date' => null,
-                'order_source' => 'GSale', 'payment_type' => 'COD', 'paid_amount' => 0,
-                'due_amount' => $original->grand_total, 'current_status' => $pending->id,
-                'checkout_token' => $token, 'public_token' => (string) Str::uuid(),
-                'courier_name' => null, 'courier_status' => null, 'is_courier_assigned' => false,
-                'cancel_reason' => null, 'draft_source' => 'Duplicate of ' . $original->order_no,
+                'order_no' => $invoice,
+                'date' => now('Asia/Dhaka')->toDateString(),
+                'delivery_date' => null,
+                'order_source' => 'GSale',
+                'payment_type' => 'COD',
+                'paid_amount' => 0,
+                'due_amount' => $original->grand_total,
+                'current_status' => $pending->id,
+                'checkout_token' => $token,
+                'public_token' => (string) Str::uuid(),
+                'courier_name' => null,
+                'courier_status' => null,
+                'is_courier_assigned' => false,
+                'cancel_reason' => null,
+                'draft_source' => 'Duplicate of ' . $original->order_no,
             ]);
             $copy->saveOrFail();
             foreach ($original->details as $detail) {
