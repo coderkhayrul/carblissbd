@@ -31,7 +31,7 @@ class FrontendLayoutData
                     'social_links' => WebSocialLink::where('status', true)->orderBy('id')->get()->toArray(),
                     'company' => CompanySetting::orderBy('id')->first()?->toArray(),
                     'categories' => Category::where('status', true)->where('show_on_menu', true)
-                        ->with(['children' => fn ($query) => $query->where('status', true)->where('show_on_menu', true)
+                        ->with(['children' => fn($query) => $query->where('status', true)->where('show_on_menu', true)
                             ->orderBy('menu_serial')->orderBy('id')])
                         ->orderBy('menu_serial')->orderBy('id')->get()->toArray(),
                     'popup' => PopupAds::orderBy('id')->first()?->toArray(),

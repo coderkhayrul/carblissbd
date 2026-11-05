@@ -28,12 +28,16 @@ class FrontendController extends Controller
             ->orderBy('menu_serial')->orderBy('id')->get();
 
         $newArrivals = Product::where('status', true)->where('publish', true)->where('is_new_arrival', true)
-            ->with(['category', 'brand', 'variations' => fn($query) => $query->where('status', true)->orderBy('sale_price')])
+            ->with(['category', 'variations' => fn($query) => $query->where('status', true)->orderBy('sale_price')])
             ->latest('id')->get();
 
-        $recommendedProducts = $this->recommendedProductsQuery()->limit(16)->get();
+        $recommendedProducts = $this->recommendedProductsQuery()->without('brand')->limit(16)->get();
         $hasMoreProducts = $recommendedProducts->count() > 15;
         $recommendedProducts = $recommendedProducts->take(15);
+
+        // Match brands onto both sets of product instances with one eager-load query.
+        // Keep overlapping instances so neither section falls back to lazy loading.
+        $newArrivals->concat($recommendedProducts)->load('brand');
 
         return view('frontend.pages.home', compact('slides', 'promoAds', 'popularCategories', 'newArrivals', 'topBrands', 'recommendedProducts', 'hasMoreProducts'));
     }
