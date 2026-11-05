@@ -7,6 +7,7 @@ use App\Services\ProductService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\{DB, File};
 use Illuminate\Support\Str;
+use Database\Seeders\Support\DemoProductImages;
 
 class ProductSeeder extends Seeder
 {
@@ -76,9 +77,12 @@ class ProductSeeder extends Seeder
                 }
                 $product = Product::where('slug', $slug)->first();
                 if ($product) {
+                    if (!str_starts_with($product->sku, 'CB-DEMO-')) continue;
                     $missing = [];
                     if (!$product->thumbnail_image) $missing['thumbnail_image'] = $image;
                     if (!$product->size_chart_image) $missing['size_chart_image'] = $chart;
+                    $gallery = DemoProductImages::gallery($slug, $index + 1);
+                    if (!$product->gallery_images) $missing['gallery_images'] = $gallery;
                     if ($missing) $product->update($missing);
                     continue;
                 }
@@ -113,8 +117,12 @@ class ProductSeeder extends Seeder
                 }
                 $product = new Product;
                 $service->save($product, $data);
-                $product->update(['thumbnail_image' => $image, 'size_chart_image' => $chart]);
+                $product->update([
+                    'thumbnail_image' => $image, 'size_chart_image' => $chart,
+                    'gallery_images' => DemoProductImages::gallery($slug, $index + 1),
+                ]);
             }
         });
+        $this->call(ProductVariationSeeder::class);
     }
 }
