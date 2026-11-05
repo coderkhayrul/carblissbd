@@ -11,6 +11,15 @@ use Illuminate\Http\Request;
 
 class FrontendController extends Controller
 {
+    public function cart(Request $request)
+    {
+        $shipping = $request->session()->get('checkout.shipping_id')
+            ? \App\Models\ShippingChargeSetting::where('status', true)
+                ->whereKey($request->session()->get('checkout.shipping_id'))->first()
+            : null;
+        return view('frontend.pages.cart', compact('shipping'));
+    }
+
     public function page(\App\Models\Page $page)
     {
         abort_unless($page->status, 404);

@@ -225,6 +225,7 @@
 
         function updateCartUI() {
             try { localStorage.setItem('carbliss_cart', JSON.stringify(cart)); } catch (error) {}
+            document.dispatchEvent(new CustomEvent('cart:updated', {detail: {items: cart.map(item => ({...item}))}}));
             const container = document.getElementById('cart-items-container');
             const emptyState = document.getElementById('empty-cart-state');
             const subtotalEl = document.getElementById('cart-subtotal');
