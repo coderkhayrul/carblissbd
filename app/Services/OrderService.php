@@ -66,7 +66,7 @@ class OrderService
                 $mrpPrice = (float) ($variant?->mrp_price ?? $products->get($item['product_id'])->mrp_price);
                 $order->details()->create([
                     'product_id' => $item['product_id'], 'product_variation_id' => $item['variation_id'],
-                    'product_name' => $item['product_name'], 'variation_name' => $variant?->name,
+                    'product_name' => $item['product_name'], 'variation_name' => $variant?->optionLabel($item['product_name']),
                     'sku' => $item['sku'], 'image' => $item['img'], 'quantity' => $item['qty'],
                     'unit_price' => $item['price'], 'line_total' => $item['line_total'],
                     'purchase_price' => $purchasePrice, 'sale_price' => $item['price'], 'mrp_price' => $mrpPrice,

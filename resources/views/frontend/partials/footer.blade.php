@@ -180,7 +180,7 @@
             }
         }
 
-        function addToCart(id, name, price, img) {
+        function addToCart(id, name, price, img, details = {}) {
             const existingItem = cart.find(item => item.id === id);
             if (!existingItem && cart.length >= 100) {
                 showToast('Cart limit', 'You can add up to 100 different items.');
@@ -190,13 +190,20 @@
                 showToast('Quantity limit', 'Maximum quantity is 99 per item.');
                 return false;
             }
-            if (existingItem) existingItem.qty += 1;
+            if (existingItem) {
+                existingItem.qty += 1;
+                Object.assign(existingItem, {name, price, img}, details);
+            }
             else cart.push({
                 id,
                 name,
                 price,
                 img,
-                qty: 1
+                qty: 1,
+                product_name: details.product_name || name,
+                variation_label: details.variation_label || '',
+                product_id: details.product_id || null,
+                variation_id: details.variation_id || null
             });
             updateCartUI();
             showToast("Added to Cart", name);
@@ -266,7 +273,8 @@
                 itemRow.innerHTML = `
                     <img src="${escapeCartHtml(item.img)}" alt="${escapeCartHtml(item.name)}" class="rounded-3 object-fit-cover flex-shrink-0 border border-light" style="width: 65px; height: 65px;">
                     <div class="flex-grow-1 pe-4"> <!-- Added padding-end to prevent text overlap with remove button -->
-                        <h5 class="fw-bold text-dark line-clamp-2 m-0" style="font-size: 0.8rem; line-height: 1.4;">${escapeCartHtml(item.name)}</h5>
+                        <h5 class="fw-bold text-dark line-clamp-2 m-0" style="font-size: 0.8rem; line-height: 1.4;">${escapeCartHtml(item.product_name || item.name)}</h5>
+                        ${item.variation_label ? '<p class="small text-secondary mt-1 mb-0">Variation: ' + escapeCartHtml(item.variation_label) + '</p>' : ''}
                         <p class="text-primary fw-bolder mt-1 mb-2" style="font-size: 0.85rem;">৳${(item.price * item.qty).toLocaleString()}</p>
 
                         <!-- Quantity Controls -->

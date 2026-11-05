@@ -13,7 +13,7 @@ class CheckoutService
         $subtotal = 0;
         $products = Product::whereIn('id', collect($items)->pluck('id')->filter(fn ($id) => $id > 0))
             ->where('status', true)->where('publish', true)->get()->keyBy('id');
-        $variations = ProductVariation::with('product')->whereIn('id', collect($items)->pluck('id')->filter(fn ($id) => $id < 0)->map(fn ($id) => abs($id)))
+        $variations = ProductVariation::with(['product', 'variationAttributes.attribute'])->whereIn('id', collect($items)->pluck('id')->filter(fn ($id) => $id < 0)->map(fn ($id) => abs($id)))
             ->where('status', true)->get()->keyBy('id');
 
         foreach ($items as $item) {
@@ -30,7 +30,8 @@ class CheckoutService
             $lines[] = [
                 'id' => $id, 'product_id' => $product->id, 'variation_id' => $variation?->id,
                 'product_name' => $product->name,
-                'name' => $variation ? $product->name . ' — ' . $variation->name : $product->name,
+                'name' => $variation ? $product->name . ' — ' . $variation->optionLabel($product->name) : $product->name,
+                'variation_label' => $variation?->optionLabel($product->name),
                 'sku' => $variation?->sku ?? $product->sku, 'qty' => $qty,
                 'price' => $unit / 100, 'line_total' => ($unit * $qty) / 100,
                 'img' => asset($variation?->image ?: ($product->thumbnail_image ?: (($product->gallery_images ?? [])[0] ?? 'backend/assets/extra/preview-image.png'))),

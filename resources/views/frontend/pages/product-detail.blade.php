@@ -11,6 +11,7 @@
         $galleryUrls = collect([$initialImage, $defaultImage])->merge(collect($product->gallery_images ?? [])->map(fn ($image) => asset($image)))->unique()->values();
         $variationData = $product->is_variation ? $product->variations->map(fn ($variation) => [
             'id' => $variation->id, 'name' => $variation->name, 'sku' => $variation->sku,
+            'label' => $variation->optionLabel($product->name),
             'price' => (float) $variation->sale_price, 'mrp' => (float) $variation->mrp_price,
             'image' => $variation->image ? asset($variation->image) : null,
             'attributes' => $variation->variationAttributes->map(fn ($pair) => [
@@ -66,12 +67,17 @@
                     @if ($product->is_variation)
                         @if ($product->variations->isNotEmpty())
                             <div class="border rounded-3 p-3 mb-4">
-                                <label class="form-label fw-bold" for="detail-variation">Choose a Variation</label>
+                                <label class="form-label fw-bold" id="detail-variation-label" for="detail-variation">Choose a Variation</label>
                                 <select class="form-select" id="detail-variation" aria-describedby="detail-variation-help">
                                     @foreach ($product->variations as $variation)
-                                        <option value="{{ $variation->id }}" @selected($selectedVariation?->id === $variation->id)>{{ $variation->name }}@if ($variation->variationAttributes->isNotEmpty()) — {{ $variation->variationAttributes->map(fn ($pair) => ($pair->attributeType?->name ?? 'Attribute') . ': ' . ($pair->attribute?->name ?? '—'))->implode(', ') }}@endif</option>
+                                        <option value="{{ $variation->id }}" @selected($selectedVariation?->id === $variation->id)>{{ $variation->optionLabel($product->name) }}</option>
                                     @endforeach
                                 </select>
+                                <div id="detail-variation-options" class="flex-wrap gap-2" role="group" aria-labelledby="detail-variation-label" hidden>
+                                    @foreach ($product->variations as $variation)
+                                        <button type="button" class="detail-variation-option btn {{ $selectedVariation?->id === $variation->id ? 'btn-primary' : 'btn-light border' }} fw-semibold" data-variation-id="{{ $variation->id }}" aria-pressed="{{ $selectedVariation?->id === $variation->id ? 'true' : 'false' }}">{{ $variation->optionLabel($product->name) }}</button>
+                                    @endforeach
+                                </div>
                                 <div id="detail-variation-help" class="form-text">Select an option to see its price, SKU and attributes.</div>
                                 <dl id="detail-attributes" class="row small mt-3 mb-0" aria-live="polite">
                                     @foreach ($selectedVariation->variationAttributes as $pair)
@@ -91,7 +97,7 @@
                         </div>
                         <div class="col-12 col-sm-6">
                             <button type="button" id="detail-order-now" class="btn btn-primary rounded-3 w-100 fw-bold py-3" @disabled($unavailable)>
-                                <i class="fa-solid fa-bolt me-2" aria-hidden="true"></i>Order Now
+                                <i class="fa-solid fa-bolt me-2" aria-hidden="true"></i>Buy Now
                             </button>
                         </div>
                     </div>
@@ -169,8 +175,11 @@
                 if (hasVariations && !variation) return;
                 // Negative keys keep variation items separate from ordinary product IDs.
                 const key = variation ? -Number(variation.id) : Number(productId);
-                const name = variation ? productName + ' — ' + variation.name : productName;
-                if (addToCart(key, name, variation ? variation.price : productPrice, variation?.image || productImage) === false) return;
+                const name = variation ? productName + ' — ' + variation.label : productName;
+                if (addToCart(key, name, variation ? variation.price : productPrice, variation?.image || productImage, {
+                    product_name: productName, variation_label: variation?.label || '',
+                    product_id: productId, variation_id: variation?.id || null
+                }) === false) return;
                 if (checkoutNow) {
                     const button = document.getElementById('detail-order-now');
                     button.disabled = true;
@@ -187,10 +196,27 @@
             document.getElementById('detail-order-now').addEventListener('click', () => addSelectedProduct(true));
 
             if (!selector) return;
+            const optionGroup = document.getElementById('detail-variation-options');
+            selector.hidden = true;
+            optionGroup.hidden = false;
+            optionGroup.classList.add('d-flex');
+            optionGroup.querySelectorAll('.detail-variation-option').forEach(button => {
+                button.addEventListener('click', () => {
+                    selector.value = button.dataset.variationId;
+                    selector.dispatchEvent(new Event('change', {bubbles: true}));
+                });
+            });
             const money = value => '\u09f3' + Number(value).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             selector.addEventListener('change', () => {
                 const variation = variations.find(item => String(item.id) === selector.value);
                 if (!variation) return;
+                optionGroup.querySelectorAll('.detail-variation-option').forEach(button => {
+                    const selected = button.dataset.variationId === selector.value;
+                    button.classList.toggle('btn-primary', selected);
+                    button.classList.toggle('btn-light', !selected);
+                    button.classList.toggle('border', !selected);
+                    button.setAttribute('aria-pressed', String(selected));
+                });
                 showProductImage(variation.image || productImage);
                 document.getElementById('detail-sku').textContent = variation.sku;
                 document.getElementById('detail-price').textContent = money(variation.price);

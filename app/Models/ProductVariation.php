@@ -15,4 +15,16 @@ class ProductVariation extends Model
 
     public function product() { return $this->belongsTo(Product::class); }
     public function variationAttributes() { return $this->hasMany(ProductVariationAttribute::class); }
+
+    public function optionLabel(?string $productName = null): string
+    {
+        $label = $this->variationAttributes->map(fn ($pair) => $pair->attribute?->name)
+            ->filter()->unique()->implode(' / ');
+        if ($label !== '') return $label;
+        $label = trim($this->name);
+        if ($productName && str_starts_with($label, $productName)) {
+            $label = preg_replace('/^[\s\-–—\/|:]+|[\s\-–—\/|:]+$/u', '', substr($label, strlen($productName)));
+        }
+        return $label !== '' ? $label : 'Variation #' . $this->id;
+    }
 }
