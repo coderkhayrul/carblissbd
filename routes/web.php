@@ -32,5 +32,7 @@ Route::get('/order-success/{token}', [CheckoutController::class, 'success'])->wh
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [CustomerAuthController::class, 'profile'])->name('profile');
+    Route::get('/profile/orders/{order}', [CustomerAuthController::class, 'orderDetail'])->whereNumber('order')->name('profile.orders.show');
+    Route::patch('/profile/account-settings', [CustomerAuthController::class, 'updateProfile'])->middleware('throttle:10,1')->name('profile.settings.update');
     Route::post('logout', [CustomerAuthController::class, 'destroy'])->name('logout');
 });

@@ -7,9 +7,57 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Support\BangladeshPhone;
+use Illuminate\Validation\ValidationException;
 
 class CustomerService
 {
+    public function updateAccount(User $user, array $data): void
+    {
+        DB::transaction(function () use ($user, $data) {
+            $current = User::whereKey($user->id)->lockForUpdate()->firstOrFail();
+            abort_unless($current->role === 'customer', 403);
+            $customer = Customer::where('user_id', $current->id)->lockForUpdate()->first();
+            if (!$customer) {
+                $customer = Customer::whereNull('user_id')->whereIn('mobile', BangladeshPhone::variants($current->mobile))
+                    ->lockForUpdate()->first() ?? new Customer;
+            }
+            $mobile = BangladeshPhone::normalize($data['mobile']);
+            $email = $data['email'] ?? null;
+            $sensitive = $mobile !== BangladeshPhone::normalize($current->mobile)
+                || $email !== ($current->email ? strtolower($current->email) : null) || !empty($data['password']);
+            if ($sensitive && !Hash::check($data['current_password'] ?? '', $current->password)) {
+                throw ValidationException::withMessages(['current_password' => 'Enter your current password to change your email, phone or password.']);
+            }
+            if (User::whereIn('mobile', BangladeshPhone::variants($mobile))->where('id', '!=', $current->id)->exists()
+                || Customer::whereIn('mobile', BangladeshPhone::variants($mobile))
+                    ->when($customer->exists, fn ($query) => $query->where('id', '!=', $customer->id))->exists()) {
+                throw ValidationException::withMessages(['mobile' => 'This mobile number belongs to another account.']);
+            }
+            $current->name = trim($data['first_name'] . ' ' . ($data['last_name'] ?? ''));
+            if ($email !== $current->email) $current->email_verified_at = null;
+            $current->email = $email;
+            $current->mobile = $mobile;
+            $current->address = $data['address'] ?? null;
+            if (!empty($data['password'])) {
+                $current->password = Hash::make($data['password']);
+                $current->remember_token = Str::random(60);
+            }
+            $current->saveOrFail();
+            if (!$customer->exists) {
+                $customer->register_from = 'Website';
+                $customer->status = (bool) $current->status;
+            }
+            $customer->user_id = $current->id;
+            $customer->name = $current->name;
+            $customer->email = $current->email;
+            $customer->mobile = $current->mobile;
+            $customer->address = $current->address;
+            $customer->password = $current->password;
+            $customer->saveOrFail();
+        });
+    }
+
     public function updateStatus(Customer $customer, bool $status): void
     {
         $customer->status = $status;

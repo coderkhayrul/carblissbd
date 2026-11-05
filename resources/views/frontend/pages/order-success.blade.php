@@ -3,11 +3,16 @@
 @section('front-content')
     <main class="container-md px-3 py-4 py-md-5">
         <section class="bg-white rounded-4 border shadow-sm p-3 p-md-5 mb-4 text-center">
-            <i class="fa-solid fa-circle-check text-success display-3 mb-3" aria-hidden="true"></i>
-            <h1 class="h3 fw-bold">Your order is confirmed!</h1>
-            <p class="text-muted">Thank you, {{ $order->customerInfo?->name }}. We have received your order.</p>
+            <i class="fa-solid {{ ($orderHistory ?? false) ? 'fa-box-open text-primary' : 'fa-circle-check text-success' }} display-3 mb-3" aria-hidden="true"></i>
+            <h1 class="h3 fw-bold">{{ ($orderHistory ?? false) ? 'Order Details' : 'Your order is confirmed!' }}</h1>
+            @if ($orderHistory ?? false)
+                <p class="text-muted">Placed on {{ $order->date?->format('d M Y') }} · {{ $order->currentStatus?->name ?? 'Pending' }}</p>
+                <a href="{{ route('profile', ['tab' => 'orders']) }}" class="btn btn-sm btn-outline-primary mb-3">Back to My Orders</a>
+            @else
+                <p class="text-muted">Thank you, {{ $order->customerInfo?->name }}. We have received your order.</p>
+            @endif
             <p class="fs-5 fw-bold text-primary mb-2">Invoice: {{ $order->order_no }}</p>
-            <p class="small mb-0">{{ $order->currentStatus?->name ?? 'Pending' }} · Cash on Delivery · Pay &#2547;{{ number_format((float) $order->grand_total, 2) }} when delivered.</p>
+            <p class="small mb-0">{{ $order->currentStatus?->name ?? 'Pending' }} · {{ $order->payment_type === 'COD' ? 'Cash on Delivery' : 'Online Payment' }} · Total: &#2547;{{ number_format((float) $order->grand_total, 2) }}</p>
         </section>
         <div class="row g-4">
             <div class="col-12 col-lg-7">

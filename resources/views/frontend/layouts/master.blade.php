@@ -127,12 +127,12 @@
                 style="font-size: 0.5rem; margin-top: -5px; margin-left: 10px;">0</span>
             <span class="fw-bold" style="font-size: 0.65rem;">Cart</span>
         </button>
-        <button onclick="toggleModal('user-modal')"
+        <a href="{{ auth()->check() ? (auth()->user()->role === 'admin' ? route('admin.dashboard') : route('profile')) : route('login') }}"
             class="btn btn-link text-decoration-none text-muted hover-text-primary p-0 d-flex flex-column align-items-center text-center transition-all"
             style="width: 20%;">
             <i class="fa-regular fa-user fs-5 mb-1"></i>
             <span class="fw-bold" style="font-size: 0.65rem;">Profile</span>
-        </button>
+        </a>
     </div>
 
     <!-- Drawer Overlay -->

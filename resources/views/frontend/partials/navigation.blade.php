@@ -36,7 +36,7 @@
         </button>
 
         <!-- User Profile -->
-        <a href="{{ Auth::check() ? route('profile') : route('login') }}"
+        <a href="{{ Auth::check() ? (Auth::user()->role === 'admin' ? route('admin.dashboard') : route('profile')) : route('login') }}"
             class="text-decoration-none text-dark hover-text-primary d-flex align-items-center gap-2 transition-all">
             <div class="bg-orange-50 rounded-circle d-flex align-items-center justify-content-center transition-all"
                 style="width: 40px; height: 40px;">
