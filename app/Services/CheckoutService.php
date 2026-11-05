@@ -33,7 +33,7 @@ class CheckoutService
                 'name' => $variation ? $product->name . ' — ' . $variation->name : $product->name,
                 'sku' => $variation?->sku ?? $product->sku, 'qty' => $qty,
                 'price' => $unit / 100, 'line_total' => ($unit * $qty) / 100,
-                'img' => asset($product->thumbnail_image ?: 'backend/assets/extra/preview-image.png'),
+                'img' => asset($variation?->image ?: ($product->thumbnail_image ?: (($product->gallery_images ?? [])[0] ?? 'backend/assets/extra/preview-image.png'))),
                 'url' => route('product.detail', ['product' => $product->slug]),
             ];
         }

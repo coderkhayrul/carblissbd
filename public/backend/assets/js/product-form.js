@@ -68,6 +68,12 @@
                 <div class="col-12 col-md-6 mb-3"><label class="form-label" for="${key}-sku">Unique Variation SKU</label><input id="${key}-sku" class="form-control" data-field="sku" maxlength="255" required></div>
             </div><div class="variation-prices row"></div>
             <div class="mb-4"><label class="form-label" for="${key}-status">Variation Status</label><select id="${key}-status" class="form-select" data-field="status"><option value="1">Active</option><option value="0">Inactive</option></select></div>
+            <div class="mb-4"><label class="form-label" for="${key}-image">Variation Image</label>
+                <img class="variation-image-preview img-fluid d-block rounded mb-2" alt="Variation image preview" style="max-height: 150px;" hidden>
+                <input class="form-control" type="file" id="${key}-image" data-field="image" accept="image/jpeg,image/png,image/webp,image/gif">
+                <div class="form-text">Optional. Maximum 5 MB. Leave empty to keep the current image. Without a variation image, the product image is used.</div>
+                <label class="small mt-2" for="${key}-remove-image"><input type="checkbox" id="${key}-remove-image" class="form-check-input me-1" data-field="remove_image" value="1"> Remove saved image on save</label>
+            </div>
             <h6>Attribute combination</h6><div class="attribute-pairs"></div><button class="btn btn-sm btn-label-secondary add-pair" type="button">+ Add Attribute Type</button>`;
         container.append(card);
         const prices = {purchase_price: 'Purchase Price', sale_price: 'Sale Price', bangla_sale_price: 'Bangla Sale Price', mrp_price: 'MRP Price'};
@@ -79,7 +85,42 @@
         });
         card.querySelectorAll('[data-field]').forEach(input => {
             const field = input.dataset.field;
+            if (input.type === 'file') return;
+            if (input.type === 'checkbox') { input.checked = Number(initial[field]) === 1; return; }
             input.value = initial[field] ?? (field === 'status' ? 1 : (prices[field] ? document.getElementById(field).value : ''));
+        });
+        const imageInput = card.querySelector('[data-field="image"]');
+        const removeImage = card.querySelector('[data-field="remove_image"]');
+        const preview = card.querySelector('.variation-image-preview');
+        const savedImage = data.savedVariationImages?.[initial.id] || '';
+        let variationImageUrl;
+        function showVariationImage(url) {
+            preview.classList.toggle('d-none', !url);
+            preview.classList.toggle('d-block', Boolean(url));
+            preview.hidden = !url;
+            if (url) preview.src = url;
+            else preview.removeAttribute('src');
+        }
+        showVariationImage(removeImage.checked ? '' : savedImage);
+        imageInput.addEventListener('change', () => {
+            if (variationImageUrl) URL.revokeObjectURL(variationImageUrl);
+            imageInput.setCustomValidity('');
+            const file = imageInput.files[0];
+            if (!file) { showVariationImage(removeImage.checked ? '' : savedImage); return; }
+            if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type) || file.size > 5 * 1024 * 1024) {
+                imageInput.value = '';
+                imageInput.setCustomValidity('Choose a JPG, PNG, WebP or GIF up to 5 MB.');
+                imageInput.reportValidity();
+                showVariationImage(savedImage);
+                return;
+            }
+            removeImage.checked = false;
+            variationImageUrl = URL.createObjectURL(file);
+            showVariationImage(variationImageUrl);
+        });
+        removeImage.addEventListener('change', () => {
+            if (removeImage.checked) { imageInput.value = ''; imageInput.setCustomValidity(''); }
+            showVariationImage(removeImage.checked ? '' : savedImage);
         });
         const pairs = Object.values(initial.attributes || {});
         (pairs.length ? pairs : [{}]).forEach(pair => addPair(card, pair));
@@ -87,6 +128,7 @@
         card.querySelector('.remove-variation').addEventListener('click', () => {
             if (card.querySelector('[data-field="id"]').value && !window.confirm('Remove this saved variation when the product is saved?')) return;
             card.remove();
+            if (variationImageUrl) URL.revokeObjectURL(variationImageUrl);
             reindex();
         });
         reindex();
@@ -148,6 +190,35 @@
         const panel = input?.closest?.('.tab-pane') || (parts[0] === 'variations' ? document.getElementById('panel-variations') : null);
         if (panel) { showTab(document.querySelector(`[data-bs-target="#${panel.id}"]`)); break; }
     }
+    const galleryInput = document.getElementById('gallery_images');
+    const galleryPreviews = document.getElementById('newGalleryPreviews');
+    let galleryUrls = [];
+    galleryInput.addEventListener('change', () => {
+        galleryUrls.forEach(url => URL.revokeObjectURL(url));
+        galleryUrls = [];
+        galleryPreviews.replaceChildren();
+        galleryInput.setCustomValidity('');
+        const files = [...galleryInput.files];
+        if (files.length > 20 || files.some(file => !['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type) || file.size > 5 * 1024 * 1024)) {
+            galleryInput.value = '';
+            galleryInput.setCustomValidity('Choose up to 20 JPG, PNG, WebP or GIF images, each up to 5 MB.');
+            galleryInput.reportValidity();
+            return;
+        }
+        files.forEach(file => {
+            const column = document.createElement('div');
+            column.className = 'col-6 col-sm-4 col-xl-3';
+            const image = document.createElement('img');
+            image.className = 'img-fluid rounded border';
+            image.style.cssText = 'height:110px;width:100%;object-fit:contain';
+            image.alt = file.name;
+            const url = URL.createObjectURL(file);
+            galleryUrls.push(url);
+            image.src = url;
+            column.append(image);
+            galleryPreviews.append(column);
+        });
+    });
     document.querySelectorAll('.product-image').forEach(input => {
         const preview = document.getElementById(input.dataset.preview);
         const original = preview.src;

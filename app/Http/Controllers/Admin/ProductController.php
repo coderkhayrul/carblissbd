@@ -74,12 +74,18 @@ class ProductController extends Controller
         foreach (['thumbnail_image', 'size_chart_image'] as $field) {
             $rules[$field] = ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:5120'];
         }
+        $rules['gallery_images'] = ['nullable', 'array', 'max:20'];
+        $rules['gallery_images.*'] = ['required', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:5120'];
+        $rules['remove_gallery_images'] = ['nullable', 'array', 'max:20'];
+        $rules['remove_gallery_images.*'] = ['string', 'max:255', 'distinct'];
         if ($request->boolean('is_variation')) {
             $rules['variations'] = ['required', 'array', 'min:1', 'max:100'];
             $rules['variations.*.id'] = ['nullable', 'integer', 'distinct'];
             $rules['variations.*.name'] = ['required', 'string', 'max:255'];
             $rules['variations.*.sku'] = ['required', 'string', 'max:255', 'distinct:ignore_case'];
             $rules['variations.*.status'] = ['required', 'boolean'];
+            $rules['variations.*.image'] = ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:5120'];
+            $rules['variations.*.remove_image'] = ['nullable', 'boolean'];
             foreach (['purchase_price', 'sale_price', 'bangla_sale_price', 'mrp_price'] as $field) {
                 $rules['variations.*.' . $field] = ['required', 'numeric', 'decimal:0,2', 'min:0', 'max:99999999.99'];
             }

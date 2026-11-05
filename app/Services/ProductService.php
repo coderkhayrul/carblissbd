@@ -17,8 +17,22 @@ class ProductService
                 if ($product->exists) Product::whereKey($product->id)->lockForUpdate()->firstOrFail();
                 $rows = !empty($data['is_variation']) ? ($data['variations'] ?? []) : [];
                 $tags = $data['tags'] ?? [];
+                $newGallery = $data['gallery_images'] ?? [];
+                $removeGallery = $data['remove_gallery_images'] ?? [];
+                $currentGallery = $product->gallery_images ?? [];
+                if (array_diff($removeGallery, $currentGallery)) {
+                    throw ValidationException::withMessages(['remove_gallery_images' => 'Only this product’s gallery images can be removed.']);
+                }
+                $gallery = array_values(array_diff($currentGallery, $removeGallery));
+                if (count($gallery) + count($newGallery) > 20) {
+                    throw ValidationException::withMessages(['gallery_images' => 'A product can have up to 20 gallery images. Remove some before adding more.']);
+                }
+                unset($data['gallery_images'], $data['remove_gallery_images']);
                 unset($data['variations'], $data['tags']);
                 $this->validateVariations($product, $rows);
+                foreach ($newGallery as $file) $gallery[] = $this->uploadImage($file, $uploaded);
+                $data['gallery_images'] = $gallery;
+                array_push($oldImages, ...$removeGallery);
 
                 foreach (['thumbnail_image', 'size_chart_image'] as $field) {
                     $file = $data[$field] ?? null;
@@ -44,6 +58,7 @@ class ProductService
                         throw ValidationException::withMessages(['variations' => 'A removed variation is used by other records and cannot be deleted.']);
                     }
                     $removed->variationAttributes()->delete();
+                    $oldImages[] = $removed->image;
                     $removed->delete();
                 }
 
@@ -56,6 +71,13 @@ class ProductService
                     $variation->fill(array_intersect_key($row, array_flip([
                         'name', 'sku', 'purchase_price', 'sale_price', 'bangla_sale_price', 'mrp_price', 'status',
                     ])));
+                    if (!empty($row['image'])) {
+                        $oldImages[] = $variation->image;
+                        $variation->image = $this->uploadImage($row['image'], $uploaded);
+                    } elseif (!empty($row['remove_image'])) {
+                        $oldImages[] = $variation->image;
+                        $variation->image = null;
+                    }
                     $variation->saveOrFail();
                     $variation->variationAttributes()->delete();
                     foreach ($attributes as $pair) {
@@ -124,7 +146,7 @@ class ProductService
             }
             if (!$product->delete()) throw new \RuntimeException('Unable to delete product.');
         });
-        foreach ([$product->thumbnail_image, $product->size_chart_image] as $image) $this->deleteImage($image);
+        foreach (array_merge([$product->thumbnail_image, $product->size_chart_image], $product->gallery_images ?? []) as $image) $this->deleteImage($image);
     }
 
     private function hasReferences(string $target, string $conventionalColumn, int $id, array $ignore = []): bool
@@ -145,11 +167,23 @@ class ProductService
         return false;
     }
 
+    private function uploadImage(\Illuminate\Http\UploadedFile $image, array &$uploaded): string
+    {
+        $directory = public_path('uploads/products');
+        File::ensureDirectoryExists($directory);
+        $filename = $image->hashName();
+        $image->move($directory, $filename);
+        return $uploaded[] = 'uploads/products/' . $filename;
+    }
+
     private function deleteImage(?string $image): void
     {
         $directory = realpath(public_path('uploads/products'));
         $path = $image ? realpath(public_path($image)) : false;
         if ($directory && $path && is_file($path)
-            && str_starts_with(strtolower($path), strtolower($directory . DIRECTORY_SEPARATOR))) File::delete($path);
+            && str_starts_with(strtolower($path), strtolower($directory . DIRECTORY_SEPARATOR))) {
+            // Keep images already captured in an order's historical product snapshot.
+            if (!DB::table('order_details')->whereIn('image', [$image, asset($image)])->exists()) File::delete($path);
+        }
     }
 }

@@ -95,6 +95,22 @@
                                 <div class="form-text">JPG, PNG, WebP or GIF, maximum 5 MB.</div>
                             </div>
                         @endforeach
+                        <div class="col-12 mb-4">
+                            <label class="form-label" for="gallery_images">Product Gallery Images</label>
+                            <input class="form-control" type="file" id="gallery_images" name="gallery_images[]" multiple accept="image/jpeg,image/png,image/webp,image/gif">
+                            <div class="form-text">Add up to 20 gallery images. Each image: JPG, PNG, WebP or GIF, maximum 5 MB. New images are added to the saved gallery.</div>
+                            <div class="row g-3 mt-2">
+                                @foreach ($product->gallery_images ?? [] as $galleryImage)
+                                    <div class="col-6 col-sm-4 col-xl-3">
+                                        <label class="border rounded p-2 d-block h-100">
+                                            <img src="{{ asset($galleryImage) }}" class="img-fluid rounded d-block mb-2" alt="Saved gallery image {{ $loop->iteration }}" style="height: 110px; width: 100%; object-fit: contain;">
+                                            <span class="small"><input type="checkbox" class="form-check-input me-1" name="remove_gallery_images[]" value="{{ $galleryImage }}" @checked(in_array($galleryImage, old('remove_gallery_images', [])))> Remove on save</span>
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div class="row g-3 mt-2" id="newGalleryPreviews" aria-live="polite"></div>
+                        </div>
                         @include('admin.products.field', ['field' => 'video_link', 'label' => 'Video URL', 'type' => 'url'])
                     </div>
                 </div>
@@ -148,7 +164,8 @@
     <script>
         window.productFormData = {
             types: @json($attributeTypes), attributes: @json($attributes),
-            variations: @json($initialVariations), errors: @json($errors->keys())
+            variations: @json($initialVariations), errors: @json($errors->keys()),
+            savedVariationImages: @json($product->variations->mapWithKeys(fn ($variation) => [$variation->id => $variation->image ? asset($variation->image) : null]))
         };
     </script>
     <script src="{{ asset('backend/assets/js/product-form.js') }}"></script>

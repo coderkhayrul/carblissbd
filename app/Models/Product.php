@@ -12,10 +12,11 @@ class Product extends Model
         'is_refundable', 'is_new_arrival', 'is_offer', 'barcode', 'status', 'publish', 'features', 'bangla_features',
         'short_description', 'bangla_short_description', 'description', 'bangla_description',
         'landing_page_title', 'landing_page_feature', 'landing_short_description', 'landing_long_description',
-        'landing_youtube_link', 'meta_title', 'meta_description', 'meta_keywords',
+        'landing_youtube_link', 'meta_title', 'meta_description', 'meta_keywords', 'gallery_images',
     ];
 
     protected $casts = [
+        'gallery_images' => 'array',
         'purchase_price' => 'decimal:2', 'sale_price' => 'decimal:2', 'bangla_sale_price' => 'decimal:2',
         'mrp_price' => 'decimal:2', 'is_variation' => 'boolean', 'is_refundable' => 'boolean',
         'is_new_arrival' => 'boolean', 'is_offer' => 'boolean', 'status' => 'boolean', 'publish' => 'boolean',

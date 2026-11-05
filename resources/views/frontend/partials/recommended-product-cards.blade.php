@@ -8,7 +8,7 @@
     <div class="col">
         <article class="card border-light shadow-sm rounded-4 h-100 product-card">
             <a href="{{ $productUrl }}" class="position-relative d-block bg-light rounded-top-4 overflow-hidden" style="height: 150px; flex: 0 0 150px;" aria-label="View {{ $product->name }}">
-                <img src="{{ asset($product->thumbnail_image ?: 'backend/assets/extra/preview-image.png') }}" alt="{{ $product->name }}" loading="lazy" class="position-absolute top-0 start-0 w-100 h-100 object-fit-contain transition-all product-img">
+                <img src="{{ asset($product->thumbnail_image ?: (($product->gallery_images ?? [])[0] ?? 'backend/assets/extra/preview-image.png')) }}" alt="{{ $product->name }}" loading="lazy" class="position-absolute top-0 start-0 w-100 h-100 object-fit-contain transition-all product-img">
             </a>
             <div class="card-body d-flex flex-column p-2 p-sm-3">
                 <div class="mb-auto">

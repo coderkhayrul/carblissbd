@@ -6,9 +6,13 @@
         $unavailable = $product->is_variation && !$selectedVariation;
         $salePrice = (float) ($selectedVariation?->sale_price ?? $product->sale_price);
         $mrpPrice = (float) ($selectedVariation?->mrp_price ?? $product->mrp_price);
+        $defaultImage = asset($product->thumbnail_image ?: (($product->gallery_images ?? [])[0] ?? 'backend/assets/extra/preview-image.png'));
+        $initialImage = $selectedVariation?->image ? asset($selectedVariation->image) : $defaultImage;
+        $galleryUrls = collect([$initialImage, $defaultImage])->merge(collect($product->gallery_images ?? [])->map(fn ($image) => asset($image)))->unique()->values();
         $variationData = $product->is_variation ? $product->variations->map(fn ($variation) => [
             'id' => $variation->id, 'name' => $variation->name, 'sku' => $variation->sku,
             'price' => (float) $variation->sale_price, 'mrp' => (float) $variation->mrp_price,
+            'image' => $variation->image ? asset($variation->image) : null,
             'attributes' => $variation->variationAttributes->map(fn ($pair) => [
                 'type' => $pair->attributeType?->name ?? 'Attribute',
                 'value' => $pair->attribute?->name ?? '—',
@@ -28,9 +32,18 @@
         <section class="bg-white rounded-4 border border-light shadow-sm p-3 p-md-4 mb-4">
             <div class="row g-4 g-lg-5">
                 <div class="col-12 col-lg-6">
-                    <a class="d-flex align-items-center justify-content-center bg-light rounded-4 p-3" href="{{ asset($product->thumbnail_image ?: 'backend/assets/extra/preview-image.png') }}" target="_blank" rel="noopener" aria-label="Open full product image">
-                        <img class="img-fluid w-100 object-fit-contain" src="{{ asset($product->thumbnail_image ?: 'backend/assets/extra/preview-image.png') }}" alt="{{ $product->name }}" fetchpriority="high" style="height: clamp(240px, 50vw, 460px);">
+                    <a id="detail-image-link" class="d-flex align-items-center justify-content-center bg-light rounded-4 p-3" href="{{ $initialImage }}" target="_blank" rel="noopener" aria-label="Open full product image">
+                        <img id="detail-main-image" class="img-fluid w-100 object-fit-contain" src="{{ $initialImage }}" alt="{{ $product->name }}" fetchpriority="high" style="height: clamp(240px, 50vw, 460px);">
                     </a>
+                    @if ($galleryUrls->count() > 1)
+                        <div class="d-flex gap-2 overflow-auto py-3" aria-label="Product gallery">
+                            @foreach ($galleryUrls as $imageUrl)
+                                <button type="button" class="detail-gallery-thumb btn p-1 rounded-3 border flex-shrink-0 {{ $loop->first ? 'border-primary' : '' }}" data-image="{{ $imageUrl }}" aria-pressed="{{ $loop->first ? 'true' : 'false' }}" aria-label="Show product image {{ $loop->iteration }}">
+                                    <img src="{{ $imageUrl }}" alt="Product image {{ $loop->iteration }}" width="64" height="64" class="object-fit-contain rounded" loading="lazy">
+                                </button>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
                 <div class="col-12 col-lg-6" style="min-width: 0;">
                     <div class="d-flex flex-wrap gap-2 mb-3">
@@ -133,7 +146,21 @@
             const productId = @json($product->id);
             const productName = @json($product->name);
             const productPrice = @json((float) $product->sale_price);
-            const productImage = @json(asset($product->thumbnail_image ?: 'backend/assets/extra/preview-image.png'));
+            const productImage = @json($defaultImage);
+            const mainImage = document.getElementById('detail-main-image');
+            const mainImageLink = document.getElementById('detail-image-link');
+            function showProductImage(url) {
+                mainImage.src = url;
+                mainImageLink.href = url;
+                document.querySelectorAll('.detail-gallery-thumb').forEach(button => {
+                    const active = button.dataset.image === url;
+                    button.classList.toggle('border-primary', active);
+                    button.setAttribute('aria-pressed', String(active));
+                });
+            }
+            document.querySelectorAll('.detail-gallery-thumb').forEach(button => {
+                button.addEventListener('click', () => showProductImage(button.dataset.image));
+            });
             const hasVariations = @json((bool) $product->is_variation);
 
             async function addSelectedProduct(checkoutNow) {
@@ -143,7 +170,7 @@
                 // Negative keys keep variation items separate from ordinary product IDs.
                 const key = variation ? -Number(variation.id) : Number(productId);
                 const name = variation ? productName + ' — ' + variation.name : productName;
-                if (addToCart(key, name, variation ? variation.price : productPrice, productImage) === false) return;
+                if (addToCart(key, name, variation ? variation.price : productPrice, variation?.image || productImage) === false) return;
                 if (checkoutNow) {
                     const button = document.getElementById('detail-order-now');
                     button.disabled = true;
@@ -164,6 +191,7 @@
             selector.addEventListener('change', () => {
                 const variation = variations.find(item => String(item.id) === selector.value);
                 if (!variation) return;
+                showProductImage(variation.image || productImage);
                 document.getElementById('detail-sku').textContent = variation.sku;
                 document.getElementById('detail-price').textContent = money(variation.price);
                 const mrp = document.getElementById('detail-mrp');
