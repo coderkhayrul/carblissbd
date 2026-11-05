@@ -103,6 +103,10 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::patch('products/{product}/status', [ProductController::class, 'updateStatus'])->name('products.status.update');
     Route::resource('products', ProductController::class)->except('show');
     Route::get('orders/export', [OrderController::class, 'export'])->name('orders.export');
+    Route::get('orders/{order}/invoice/{copy}', [OrderController::class, 'invoice'])->name('orders.invoice');
+    Route::get('orders/{order}/actions/{action}', [OrderController::class, 'action'])->whereIn('action', ['status', 'return', 'complaint', 'duplicate'])->name('orders.action');
+    Route::post('orders/{order}/actions/{action}', [OrderController::class, 'performAction'])->whereIn('action', ['status', 'return', 'complaint', 'duplicate'])->name('orders.action.store');
+    Route::patch('orders/{order}/courier', [OrderController::class, 'assignCourier'])->name('orders.courier.assign');
     Route::resource('orders', OrderController::class)->only(['index', 'show']);
     Route::patch('promo-ads/{promoAd}/status', [PromoAdsController::class, 'updateStatus'])->name('promo-ads.status.update');
     Route::resource('promo-ads', PromoAdsController::class)->parameters(['promo-ads' => 'promoAd'])->except('show');

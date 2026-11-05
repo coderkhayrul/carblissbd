@@ -2,7 +2,7 @@
 
 <html lang="en" class="layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr" data-skin="default"
     data-assets-path="{{ asset('backend') }}/assets/" data-template="vertical-menu-template-no-customizer"
-    data-bs-theme="dark">
+    data-bs-theme="light">
 
 <head>
     <meta charset="utf-8" />

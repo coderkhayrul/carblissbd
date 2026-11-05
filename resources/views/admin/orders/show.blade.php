@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="card mb-4">
-                <h5 class="card-header">Payment Records</h5>
+                <h5 class="card-header" id="order-payments">Payment Records</h5>
                 <div class="table-responsive"><table class="table"><thead><tr><th>Method</th><th>Status</th><th>Amount</th><th>Transaction</th></tr></thead><tbody>
                     @foreach ($order->payments as $payment)<tr><td>{{ $payment->payment_method }}</td><td>{{ $payment->payment_status }}</td><td>&#2547;{{ number_format((float) $payment->amount, 2) }}</td><td>{{ $payment->transaction_id ?? '—' }}</td></tr>@endforeach
                 </tbody></table></div>
@@ -48,4 +48,5 @@
             </div></div>
         </div>
     </div>
+    @include('admin.orders.action-history')
 @endsection

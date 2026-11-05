@@ -1,4 +1,4 @@
-﻿@extends('admin.layouts.app')
+@extends('admin.layouts.app')
 @push('backend_style')
     <style>
         .sale-list-heading {
@@ -113,7 +113,8 @@
                 font-size: 1.1rem;
             }
         }
-    </style>
+    .order-action-menu[hidden] { display: none !important; } .order-action-menu { min-width: 220px; max-width: calc(100vw - 16px); max-height: 360px; overflow-y: auto; z-index: 2100; } .order-action-menu .dropdown-item { font-size: .82rem; padding: .6rem .9rem; } .order-action-buttons { flex-shrink: 0; } .sale-courier { min-width: 320px; }
+</style>
 @endpush
 @section('admin-content')
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
@@ -168,7 +169,7 @@
                     <label class="form-label" for="filter-courier">Courier</label>
                     <select class="form-select" id="filter-courier" name="courier">
                         <option value="">All Courier</option>
-                        @foreach (['unassigned' => 'Not Assigned', 'Pathao' => 'Pathao', 'Steadfast' => 'Steadfast', 'RedX' => 'RedX'] as $value => $label)
+                        @foreach (['unassigned' => 'Not Assigned', 'Pathao' => 'Pathao', 'Steadfast' => 'Steadfast', 'eCourier' => 'eCourier', 'Paperfly' => 'Paperfly', 'RedX' => 'RedX'] as $value => $label)
                             <option value="{{ $value }}" @selected(request('courier') === $value)>{{ $label }}</option>
                         @endforeach
                     </select>
@@ -269,16 +270,14 @@
                             <td class="sale-courier">
                                 <div class="d-flex justify-content-between align-items-center gap-3">
                                     <div>
-                                        <span
-                                            class="badge {{ $order->is_courier_assigned ? 'bg-label-primary' : 'bg-warning text-white' }}">{{ $order->is_courier_assigned ? trim($order->courier_name ?? 'Assigned') : 'Not Assigned' }}</span>
-                                        @if ($order->courier_status)
-                                            <div class="small text-muted mt-1">{{ $order->courier_status }}</div>
-                                        @endif
-                                        <div class="small text-muted mt-2">{{ $order->order_source }}</div>
+                                        <span class="badge {{ $order->is_courier_assigned ? 'bg-label-primary' : 'bg-warning text-white' }}">{{ $order->is_courier_assigned ? trim($order->courier_name ?? 'Assigned') : 'Not Assigned' }}</span>
+                                        @if ($order->courier_status)<div class="small text-muted mt-1">{{ $order->courier_status }}</div>@endif
                                     </div>
-                                    <a class="btn btn-sm btn-label-primary"
-                                        href="{{ route('admin.orders.show', $order) }}"><i class="bx bx-show me-1"
-                                            aria-hidden="true"></i>View</a>
+                                    <div class="border-start border-end px-3 text-center small">
+                                        <strong class="text-muted">{{ $order->order_source }}</strong>
+                                        @if ($order->draft_source)<div class="small text-muted" style="max-width:120px;white-space:normal;overflow-wrap:anywhere">{{ $order->draft_source }}</div>@endif
+                                    </div>
+                                    @include('admin.orders.actions-menu')
                                 </div>
                             </td>
                         </tr>
@@ -330,4 +329,5 @@
             }
         });
     </script>
+    <script src="{{ asset('backend/assets/js/order-actions.js') }}"></script>
 @endpush
