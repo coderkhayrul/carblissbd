@@ -18,4 +18,5 @@ class Order extends Model
     public function payments() { return $this->hasMany(OrderCustomerPayment::class); }
     public function statusHistory() { return $this->hasMany(OrderStatus::class); }
     public function currentStatus() { return $this->belongsTo(Status::class, 'current_status'); }
+    public function createdBy() { return $this->belongsTo(User::class, 'created_by'); }
 }

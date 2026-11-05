@@ -40,6 +40,7 @@
                 <p style="white-space: pre-line; overflow-wrap: anywhere;">{{ $order->customerInfo?->address }}</p>
                 <p class="small">Area: {{ $order->delivery_area }}<br>Delivery Time: {{ $order->delivery_time }}</p>
                 <p class="small">Payment: {{ $order->payment_type }}<br>Current Status: {{ $order->currentStatus?->name }}</p>
+                @if ($order->createdBy)<p class="small">Created By: {{ $order->createdBy->name }}<br>Source: {{ $order->order_source }}</p>@endif
                 @if ($order->customerInfo?->order_note ?? $order->notes)<div class="small" style="white-space: pre-line; overflow-wrap: anywhere;">Notes: {{ $order->customerInfo?->order_note ?? $order->notes }}</div>@endif
                 @if ($order->customer)<a class="btn btn-sm btn-label-primary mt-3" href="{{ route('admin.customers.show', $order->customer) }}">Customer Profile</a>@endif
             </div></div>

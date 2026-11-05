@@ -17,6 +17,73 @@ use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
+    public function create(Request $request)
+    {
+        $isCreate = true;
+        $order = new Order(['paid_amount' => 0, 'shipping_cost' => 0, 'extra_discount_amount' => 0]);
+        $order->setRelation('details', collect());
+        $order->setRelation('customerInfo', null);
+        $order->setRelation('customer', null);
+        $statuses = Status::where('status', true)->orderBy('id')->get();
+        $order->current_status = $statuses->first(fn ($status) => strtolower(trim($status->name)) === 'pending')?->id ?? $statuses->first()?->id;
+        $shippingOptions = ShippingChargeSetting::where('status', true)->orderBy('id')->get();
+        $initialItems = $request->old('items', []);
+        if (!is_array($initialItems)) $initialItems = [];
+        $ids = collect($initialItems)->filter(fn ($item) => is_array($item))->pluck('product_id')->filter(fn ($id) => is_numeric($id));
+        $catalog = $this->productCatalog(Product::whereIn('id', $ids)->with('variations.variationAttributes.attribute')->get());
+        $selectedCustomer = Customer::find(is_numeric($request->old('customer_id')) ? $request->old('customer_id') : 0);
+        $checkoutToken = (string) Str::uuid();
+        $tokens = $request->session()->get('admin_sale_tokens', []);
+        $tokens[] = $checkoutToken;
+        $request->session()->put('admin_sale_tokens', array_slice($tokens, -30));
+        return view('admin.orders.edit', compact('isCreate', 'order', 'statuses', 'shippingOptions', 'initialItems', 'catalog', 'selectedCustomer', 'checkoutToken'));
+    }
+
+    public function searchCustomers(Request $request)
+    {
+        $term = trim($request->validate(['q' => ['required', 'string', 'max:120']])['q']);
+        if (mb_strlen($term) < 2) return response()->json(['customers' => []]);
+        $phone = preg_replace('/[^0-9]/', '', BangladeshPhone::normalize($term));
+        $customers = Customer::where('status', true)->where(function ($query) use ($term, $phone) {
+            $query->where('name', 'like', '%' . $term . '%')->orWhere('mobile', 'like', '%' . $term . '%');
+            if (strlen($phone) >= 4) $query->orWhere('mobile', 'like', '%' . substr($phone, -11) . '%');
+        })->orderBy('name')->limit(20)->get(['id', 'name', 'mobile', 'email', 'address', 'shipping_address']);
+        return response()->json(['customers' => $customers]);
+    }
+
+    public function createCustomer(Request $request, \App\Services\OrderService $service)
+    {
+        if (is_string($request->input('phone'))) $request->merge(['phone' => BangladeshPhone::normalize($request->input('phone'))]);
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'], 'phone' => ['required', 'string', 'regex:/^\+8801[0-9]{9}$/'],
+            'email' => ['nullable', 'email', 'max:255'], 'address' => ['required', 'string', 'max:255'],
+        ]);
+        try {
+            $customer = $service->registerAdminCustomer($data);
+        } catch (ValidationException $exception) { throw $exception;
+        } catch (\Throwable $exception) {
+            report($exception);
+            return response()->json(['message' => 'Unable to save customer. Please retry or search the mobile number for an existing account.'], 500);
+        }
+        return response()->json(['customer' => $customer->only(['id', 'name', 'mobile', 'email', 'address', 'shipping_address']), 'message' => 'Customer selected successfully. Existing phone accounts are reused.']);
+    }
+
+    public function store(Request $request, AdminOrderService $service)
+    {
+        $data = $this->validateOrderInput($request, true);
+        if (!in_array($data['checkout_token'], $request->session()->get('admin_sale_tokens', []), true)) {
+            throw ValidationException::withMessages(['order' => 'This sale form has expired. Open New Sale again.']);
+        }
+        try {
+            $order = $service->create($data, $request->user()->id);
+        } catch (ValidationException $exception) { throw $exception;
+        } catch (\Throwable $exception) {
+            report($exception);
+            return back()->withInput()->with('error', 'Unable to create the order. No order or payment was saved.');
+        }
+        return redirect()->route('admin.orders.show', $order)->with('success', 'New sale created successfully. Invoice: ' . $order->order_no);
+    }
+
     private function productCatalog($products): array
     {
         return $products->map(fn ($product) => [
@@ -65,12 +132,33 @@ class OrderController extends Controller
 
     public function update(Request $request, Order $order, AdminOrderService $service)
     {
+        $data = $this->validateOrderInput($request);
+        try {
+            $service->update($order, $data, $request->user()->id);
+        } catch (ValidationException $exception) {
+            throw $exception;
+        } catch (\Throwable $exception) {
+            report($exception);
+            return back()->withInput()->with('error', 'Unable to update the order. No changes were saved.');
+        }
+        return redirect()->route('admin.orders.show', $order)->with('success', 'Order updated successfully.');
+    }
+
+    private function validateOrderInput(Request $request, bool $creating = false): array
+    {
         if (is_string($request->input('phone'))) $request->merge(['phone' => BangladeshPhone::normalize($request->input('phone'))]);
         $money = ['required', 'numeric', 'decimal:0,2', 'min:0', 'max:99999999.99'];
-        $data = $request->validate([
-            'edit_version' => ['required', 'string', 'size:64'],
+        return $request->validate([
+            'edit_version' => [$creating ? 'exclude' : 'required', 'string', 'size:64'],
+            'checkout_token' => [$creating ? 'required' : 'exclude', 'uuid'],
+            'customer_id' => [$creating ? 'required' : 'exclude', 'integer', Rule::exists('customers', 'id')->where('status', true)],
+            'date' => [$creating ? 'required' : 'exclude', 'date_format:Y-m-d'],
+            'payment_type' => [$creating ? 'required' : 'exclude', Rule::in(['COD', 'Online'])],
+            'payment_method' => [$creating ? 'required' : 'exclude', Rule::in(['Cash', 'Bkash', 'Nagad', 'Rocket', 'Bank Transfer'])],
+            'paid_amount' => $creating ? $money : ['exclude'],
+            'transaction_id' => [$creating ? 'nullable' : 'exclude', 'string', 'max:255', 'required_if:payment_type,Online'],
             'items' => ['required', 'array', 'min:1', 'max:100'],
-            'items.*.id' => ['nullable', 'integer', 'distinct'],
+            'items.*.id' => $creating ? ['prohibited'] : ['nullable', 'integer', 'distinct'],
             'items.*.product_id' => ['required', 'integer', 'exists:products,id'],
             'items.*.product_variation_id' => ['nullable', 'integer', 'exists:product_variations,id'],
             'items.*.quantity' => ['required', 'integer', 'min:1', 'max:99999'],
@@ -81,18 +169,9 @@ class OrderController extends Controller
             'address' => ['required', 'string', 'max:2000'],
             'notes' => ['nullable', 'string', 'max:2000'],
             'status_id' => ['required', 'integer', 'exists:statuses,id'],
-            'shipping_id' => ['nullable', 'integer', 'exists:shipping_charge_settings,id'],
+            'shipping_id' => [$creating ? 'required' : 'nullable', 'integer', 'exists:shipping_charge_settings,id'],
             'shipping_cost' => $money, 'extra_discount_amount' => $money,
         ]);
-        try {
-            $service->update($order, $data, $request->user()->id);
-        } catch (ValidationException $exception) {
-            throw $exception;
-        } catch (\Throwable $exception) {
-            report($exception);
-            return back()->withInput()->with('error', 'Unable to update the order. No changes were saved.');
-        }
-        return redirect()->route('admin.orders.show', $order)->with('success', 'Order updated successfully.');
     }
 
     private function filteredOrders(Request $request)
@@ -107,7 +186,7 @@ class OrderController extends Controller
             'date_to' => array_merge(['nullable', 'date_format:Y-m-d'], $request->filled('date_from') ? ['after_or_equal:date_from'] : []),
             'order_no' => ['nullable', 'string', 'max:255'],
         ]);
-        $query = Order::with(['customerInfo', 'customer', 'currentStatus'])->latest('id');
+        $query = Order::with(['customerInfo', 'customer', 'currentStatus', 'createdBy'])->latest('id');
         foreach (['customer_id' => 'customer_id', 'order_source' => 'order_source', 'payment_type' => 'payment_type', 'status_id' => 'current_status'] as $filter => $column) {
             if (isset($filters[$filter]) && $filters[$filter] !== '') $query->where($column, $filters[$filter]);
         }
@@ -156,7 +235,7 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        $order->load(['customer', 'customerInfo', 'details', 'payments', 'statusHistory.status', 'currentStatus']);
+        $order->load(['customer', 'customerInfo', 'details', 'payments', 'statusHistory.status', 'currentStatus', 'createdBy']);
         $complaints = DB::table('order_complaints')->where('order_id', $order->id)->latest('id')->get();
         $returns = DB::table('order_return_records')->join('return_reasons', 'return_reasons.id', '=', 'order_return_records.return_reason_id')
             ->where('order_return_records.order_id', $order->id)->select('order_return_records.*', 'return_reasons.title as reason')->latest('order_return_records.id')->get();

@@ -119,10 +119,11 @@
 @section('admin-content')
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <h4 class="sale-list-heading mb-0"><i class="bx bx-list-ul me-1" aria-hidden="true"></i>Sale / Order List</h4>
+        <div class="d-flex gap-2 flex-wrap"><a class="btn btn-sm btn-primary" href="{{ route('admin.orders.create') }}"><i class="bx bx-plus me-1" aria-hidden="true"></i>New Sale</a>
         <a class="btn btn-sm btn-primary"
             href="{{ route('admin.orders.export', request()->only(['customer_id', 'order_source', 'payment_type', 'courier', 'status_id', 'date_from', 'date_to', 'order_no'])) }}">
             <i class="bx bx-download me-1" aria-hidden="true"></i>Excel CSV
-        </a>
+        </a></div>
     </div>
     @if ($errors->any())
         <div class="alert alert-danger" role="alert">
@@ -275,6 +276,7 @@
                                     </div>
                                     <div class="border-start border-end px-3 text-center small">
                                         <strong class="text-muted">{{ $order->order_source }}</strong>
+                                        @if ($order->createdBy)<div class="small text-muted" style="max-width:120px;white-space:normal;overflow-wrap:anywhere">{{ $order->createdBy->name }}</div>@endif
                                         @if ($order->draft_source)<div class="small text-muted" style="max-width:120px;white-space:normal;overflow-wrap:anywhere">{{ $order->draft_source }}</div>@endif
                                     </div>
                                     @include('admin.orders.actions-menu')

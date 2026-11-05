@@ -11,6 +11,8 @@
     const cancel = document.getElementById('cancel-product-replacement');
     const shipping = document.getElementById('shipping_cost');
     const discount = document.getElementById('extra_discount_amount');
+    const received = document.getElementById('paid_amount');
+    const paidCents = () => cents(received ? received.value : data.paid);
     let replacement = null, timer, request, generation = 0;
     const cents = value => Math.round((Number(value) || 0) * 100);
     const money = value => 'BDT ' + (value / 100).toLocaleString('en-BD', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -38,8 +40,10 @@
         const discounts = cents(discount.value) + cents(data.fixedDiscount);
         const total = subtotal + delivery + cents(data.vat) - discounts;
         document.getElementById('edit-quantity').textContent = quantity;
-        Object.entries({subtotal, shipping: delivery, discount: discounts, total, due: total - cents(data.paid)}).forEach(([key, value]) => document.getElementById('edit-' + key).textContent = money(value));
-        const error = !rows.length ? 'Add at least one product.' : total < cents(data.paid) ? 'The total cannot be less than the amount already paid.' : total < 0 ? 'Discount exceeds the total.' : total > 9999999999 || subtotal > 9999999999 ? 'The order total exceeds the supported range.' : '';
+        Object.entries({subtotal, shipping: delivery, discount: discounts, total, due: total - paidCents()}).forEach(([key, value]) => document.getElementById('edit-' + key).textContent = money(value));
+        const paidDisplay = document.getElementById('edit-paid');
+        if (paidDisplay) paidDisplay.textContent = money(paidCents());
+        const error = !rows.length ? 'Add at least one product.' : total < paidCents() ? 'The total cannot be less than the amount already paid.' : total < 0 ? 'Discount exceeds the total.' : total > 9999999999 || subtotal > 9999999999 ? 'The order total exceeds the supported range.' : '';
         const notice = document.getElementById('edit-total-error');
         notice.textContent = error; notice.hidden = !error;
         document.getElementById('order-edit-empty').hidden = rows.length > 0;
@@ -130,6 +134,7 @@
         }, 300);
     });
     shipping.addEventListener('input', recalculate); discount.addEventListener('input', recalculate);
+    received?.addEventListener('input', recalculate);
     document.getElementById('shipping_id').addEventListener('change', event => {
         const charge = event.target.selectedOptions[0]?.dataset.charge;
         if (charge !== undefined) shipping.value = Number(charge).toFixed(2);

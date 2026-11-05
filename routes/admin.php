@@ -104,11 +104,13 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::resource('products', ProductController::class)->except('show');
     Route::get('orders/export', [OrderController::class, 'export'])->name('orders.export');
     Route::get('orders/products/search', [OrderController::class, 'searchProducts'])->name('orders.products.search');
+    Route::get('orders/customers/search', [OrderController::class, 'searchCustomers'])->name('orders.customers.search');
+    Route::post('orders/customers', [OrderController::class, 'createCustomer'])->name('orders.customers.store');
     Route::get('orders/{order}/invoice/{copy}', [OrderController::class, 'invoice'])->name('orders.invoice');
     Route::get('orders/{order}/actions/{action}', [OrderController::class, 'action'])->whereIn('action', ['status', 'return', 'complaint', 'duplicate'])->name('orders.action');
     Route::post('orders/{order}/actions/{action}', [OrderController::class, 'performAction'])->whereIn('action', ['status', 'return', 'complaint', 'duplicate'])->name('orders.action.store');
     Route::patch('orders/{order}/courier', [OrderController::class, 'assignCourier'])->name('orders.courier.assign');
-    Route::resource('orders', OrderController::class)->only(['index', 'show', 'edit', 'update']);
+    Route::resource('orders', OrderController::class)->only(['index', 'show', 'edit', 'update', 'create', 'store']);
     Route::patch('promo-ads/{promoAd}/status', [PromoAdsController::class, 'updateStatus'])->name('promo-ads.status.update');
     Route::resource('promo-ads', PromoAdsController::class)->parameters(['promo-ads' => 'promoAd'])->except('show');
     Route::get('popup-ads', [PopupAdsController::class, 'edit'])->name('popup-ads.edit');

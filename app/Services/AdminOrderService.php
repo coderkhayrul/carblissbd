@@ -32,9 +32,54 @@ class AdminOrderService
         return hash('sha256', json_encode($this->editSnapshot($order), JSON_THROW_ON_ERROR));
     }
 
-    public function update(Order $order, array $data, int $userId): void
+    public function create(array $data, int $userId): Order
     {
-        DB::transaction(function () use ($order, $data, $userId) {
+        return DB::transaction(function () use ($data, $userId) {
+            $year = now('Asia/Dhaka')->format('Y');
+            DB::table('next_invoice_nos')->insertOrIgnore(['type' => 'Order', 'year' => $year, 'next_id' => 1, 'created_at' => now(), 'updated_at' => now()]);
+            $sequence = DB::table('next_invoice_nos')->where('type', 'Order')->where('year', $year)->lockForUpdate()->first();
+            if ($existing = Order::where('checkout_token', $data['checkout_token'])->first()) {
+                abort_unless((int) $existing->created_by === $userId && $existing->order_source === 'GSale', 403);
+                return $existing;
+            }
+            $customer = \App\Models\Customer::whereKey($data['customer_id'])->lockForUpdate()->firstOrFail();
+            if (!$customer->status) throw ValidationException::withMessages(['customer_id' => 'Select an active customer.']);
+            Status::whereKey($data['status_id'])->where('status', true)->firstOrFail();
+            ShippingChargeSetting::whereKey($data['shipping_id'])->where('status', true)->firstOrFail();
+            $next = max(1, (int) $sequence->next_id);
+            do { $invoice = 'ORD-' . $year . '-' . str_pad((string) $next++, 6, '0', STR_PAD_LEFT); }
+            while (Order::where('order_no', $invoice)->exists());
+            $order = Order::create([
+                'customer_id' => $customer->id, 'created_by' => $userId, 'order_no' => $invoice,
+                'order_source' => 'GSale', 'date' => $data['date'], 'payment_type' => $data['payment_type'],
+                'shipping_method' => 'Regular Shipping', 'grand_total' => 0, 'paid_amount' => 0, 'due_amount' => 0,
+                'current_status' => $data['status_id'], 'checkout_token' => $data['checkout_token'], 'public_token' => (string) Str::uuid(),
+            ]);
+            $order->refresh();
+            $data['edit_version'] = $this->editVersion($order);
+            $this->update($order, $data, $userId, false);
+            $order->refresh();
+            $paid = $this->cents($data['paid_amount']);
+            $total = $this->cents($order->grand_total);
+            if ($paid > $total) throw ValidationException::withMessages(['paid_amount' => 'Received payment cannot exceed the order total.']);
+            if ($paid > 0) $order->payments()->create([
+                'customer_id' => $customer->id, 'payment_method' => $data['payment_method'], 'payment_status' => 'Completed',
+                'amount' => $paid / 100, 'transaction_id' => $data['transaction_id'] ?? null, 'payment_tnx_no' => $data['transaction_id'] ?? null,
+            ]);
+            if ($total > $paid || $paid === 0) $order->payments()->create([
+                'customer_id' => $customer->id, 'payment_method' => $data['payment_type'] === 'COD' ? 'Cash' : $data['payment_method'],
+                'payment_status' => 'Pending', 'amount' => ($total - $paid) / 100,
+            ]);
+            $order->update(['paid_amount' => $paid / 100, 'due_amount' => ($total - $paid) / 100]);
+            $order->statusHistory()->create(['status_id' => $data['status_id']]);
+            DB::table('next_invoice_nos')->where('id', $sequence->id)->update(['next_id' => $next, 'updated_at' => now()]);
+            return $order;
+        }, 3);
+    }
+
+    public function update(Order $order, array $data, int $userId, bool $logEdit = true): void
+    {
+        DB::transaction(function () use ($order, $data, $userId, $logEdit) {
             $current = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
             $current->load(['details', 'customerInfo', 'payments']);
             if (!hash_equals($this->editVersion($current), $data['edit_version'])) {
@@ -131,12 +176,12 @@ class AdminOrderService
                 'email' => $data['email'] ?? null, 'address' => $data['address'], 'order_note' => $data['notes'] ?? null,
             ]);
             if ($statusChanged) $current->statusHistory()->create(['status_id' => $statusId]);
-            $pending = $current->payments()->where('payment_method', 'Cash')->where('payment_status', 'Pending')
+            $pending = $current->payments()->where('payment_status', 'Pending')
                 ->whereNull('transaction_id')->whereNull('payment_tnx_no')->get();
             if ($pending->count() === 1) $pending->first()->update(['amount' => ($grand - $paid) / 100]);
             $current->unsetRelations();
             $current->refresh();
-            DB::table('order_edit_logs')->insert([
+            if ($logEdit) DB::table('order_edit_logs')->insert([
                 'order_id' => $current->id, 'edited_by' => $userId,
                 'before' => json_encode($before, JSON_THROW_ON_ERROR), 'after' => json_encode($this->editSnapshot($current), JSON_THROW_ON_ERROR),
                 'created_at' => now(), 'updated_at' => now(),

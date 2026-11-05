@@ -10,6 +10,12 @@ use App\Support\BangladeshPhone;
 
 class OrderService
 {
+    public function registerAdminCustomer(array $data): Customer
+    {
+        $data['phone'] = BangladeshPhone::normalize($data['phone']);
+        $data['register_from'] = 'Shop';
+        return DB::transaction(fn () => $this->customer($data, null), 3);
+    }
     public function place(array $data, ?User $authenticatedUser): Order
     {
         $data['phone'] = BangladeshPhone::normalize($data['phone']);
@@ -150,7 +156,7 @@ class OrderService
             'mobile' => BangladeshPhone::normalize($user->mobile), 'email' => $user->email,
             'address' => Str::limit($data['address'], 255, ''),
             'shipping_address' => Str::limit($data['address'], 255, ''),
-            'password' => $user->password, 'register_from' => 'Website', 'status' => true,
+            'password' => $user->password, 'register_from' => $data['register_from'] ?? 'Website', 'status' => true,
         ]);
         $customer->saveOrFail();
         return $customer;
