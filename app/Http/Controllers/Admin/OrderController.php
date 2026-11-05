@@ -7,6 +7,9 @@ use App\Models\{Order, Customer, Status};
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\ReturnReason;
+use App\Models\Product;
+use App\Models\ShippingChargeSetting;
+use App\Support\BangladeshPhone;
 use App\Services\AdminOrderService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -14,6 +17,84 @@ use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
+    private function productCatalog($products): array
+    {
+        return $products->map(fn ($product) => [
+            'id' => $product->id, 'name' => $product->name, 'sku' => $product->sku,
+            'sale_price' => (float) $product->sale_price, 'is_variation' => (bool) $product->is_variation,
+            'active' => (bool) $product->status,
+            'image' => asset($product->thumbnail_image ?: (($product->gallery_images ?? [])[0] ?? 'backend/assets/extra/preview-image.png')),
+            'variations' => $product->variations->map(fn ($variation) => [
+                'id' => $variation->id, 'label' => $variation->optionLabel($product->name),
+                'sku' => $variation->sku, 'sale_price' => (float) $variation->sale_price,
+                'active' => (bool) $variation->status, 'image' => $variation->image ? asset($variation->image) : null,
+            ])->values()->all(),
+        ])->values()->all();
+    }
+
+    public function searchProducts(Request $request)
+    {
+        $data = $request->validate(['q' => ['nullable', 'string', 'max:120']]);
+        $term = trim($data['q'] ?? '');
+        if (mb_strlen($term) < 2) return response()->json(['products' => []]);
+        $products = Product::where('status', true)->where(function ($query) use ($term) {
+            $query->where('name', 'like', '%' . $term . '%')->orWhere('sku', 'like', '%' . $term . '%')
+                ->orWhere('bangla_name', 'like', '%' . $term . '%')
+                ->orWhereHas('variations', fn ($query) => $query->where('status', true)->where(fn ($query) => $query->where('sku', 'like', '%' . $term . '%')->orWhere('name', 'like', '%' . $term . '%')));
+        })->with(['variations' => fn ($query) => $query->where('status', true), 'variations.variationAttributes.attribute'])
+            ->orderBy('name')->limit(15)->get();
+        return response()->json(['products' => $this->productCatalog($products)]);
+    }
+
+    public function edit(Request $request, Order $order, AdminOrderService $service)
+    {
+        $order->load(['details', 'customerInfo', 'customer', 'currentStatus', 'payments']);
+        $defaults = $order->details->map(fn ($line) => [
+            'id' => $line->id, 'product_id' => $line->product_id, 'product_variation_id' => $line->product_variation_id,
+            'quantity' => $line->quantity, 'sale_price' => $line->sale_price,
+        ])->all();
+        $initialItems = $request->session()->getOldInput('items', $defaults);
+        if (!is_array($initialItems)) $initialItems = $defaults;
+        $ids = collect($initialItems)->filter(fn ($item) => is_array($item))->pluck('product_id')->filter(fn ($id) => is_numeric($id))->unique();
+        $catalog = $this->productCatalog(Product::whereIn('id', $ids)->with(['variations.variationAttributes.attribute'])->get());
+        $statuses = Status::where('status', true)->orWhere('id', $order->current_status)->orderBy('id')->get();
+        $shippingOptions = ShippingChargeSetting::where('status', true)->orWhere('id', $order->shipping_charge_setting_id)->orderBy('id')->get();
+        $editVersion = $service->editVersion($order);
+        return view('admin.orders.edit', compact('order', 'initialItems', 'catalog', 'statuses', 'shippingOptions', 'editVersion'));
+    }
+
+    public function update(Request $request, Order $order, AdminOrderService $service)
+    {
+        if (is_string($request->input('phone'))) $request->merge(['phone' => BangladeshPhone::normalize($request->input('phone'))]);
+        $money = ['required', 'numeric', 'decimal:0,2', 'min:0', 'max:99999999.99'];
+        $data = $request->validate([
+            'edit_version' => ['required', 'string', 'size:64'],
+            'items' => ['required', 'array', 'min:1', 'max:100'],
+            'items.*.id' => ['nullable', 'integer', 'distinct'],
+            'items.*.product_id' => ['required', 'integer', 'exists:products,id'],
+            'items.*.product_variation_id' => ['nullable', 'integer', 'exists:product_variations,id'],
+            'items.*.quantity' => ['required', 'integer', 'min:1', 'max:99999'],
+            'items.*.sale_price' => $money,
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'regex:/^\+8801[0-9]{9}$/'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'address' => ['required', 'string', 'max:2000'],
+            'notes' => ['nullable', 'string', 'max:2000'],
+            'status_id' => ['required', 'integer', 'exists:statuses,id'],
+            'shipping_id' => ['nullable', 'integer', 'exists:shipping_charge_settings,id'],
+            'shipping_cost' => $money, 'extra_discount_amount' => $money,
+        ]);
+        try {
+            $service->update($order, $data, $request->user()->id);
+        } catch (ValidationException $exception) {
+            throw $exception;
+        } catch (\Throwable $exception) {
+            report($exception);
+            return back()->withInput()->with('error', 'Unable to update the order. No changes were saved.');
+        }
+        return redirect()->route('admin.orders.show', $order)->with('success', 'Order updated successfully.');
+    }
+
     private function filteredOrders(Request $request)
     {
         $filters = $request->validate([
@@ -79,7 +160,10 @@ class OrderController extends Controller
         $complaints = DB::table('order_complaints')->where('order_id', $order->id)->latest('id')->get();
         $returns = DB::table('order_return_records')->join('return_reasons', 'return_reasons.id', '=', 'order_return_records.return_reason_id')
             ->where('order_return_records.order_id', $order->id)->select('order_return_records.*', 'return_reasons.title as reason')->latest('order_return_records.id')->get();
-        return view('admin.orders.show', compact('order', 'complaints', 'returns'));
+        $editLogs = DB::table('order_edit_logs')->leftJoin('users', 'users.id', '=', 'order_edit_logs.edited_by')
+            ->where('order_edit_logs.order_id', $order->id)->select('order_edit_logs.*', 'users.name as editor')
+            ->latest('order_edit_logs.id')->limit(20)->get();
+        return view('admin.orders.show', compact('order', 'complaints', 'returns', 'editLogs'));
     }
 
     public function invoice(Order $order, string $copy)

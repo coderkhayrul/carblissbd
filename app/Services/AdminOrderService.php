@@ -2,7 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\{Order, Status};
+use App\Models\{Order, Status, Product, ProductVariation, ShippingChargeSetting};
+use App\Support\BangladeshPhone;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -14,6 +15,136 @@ class AdminOrderService
         'customer' => 'Customer Copy', 'accounts' => 'Accounts Copy', 'store' => 'Store Copy',
         'delivery' => 'Delivery Man Copy', 'office-challan' => 'Office Challan Copy', 'customer-challan' => 'Customer Challan Copy',
     ];
+
+    public function editSnapshot(Order $order): array
+    {
+        $order->loadMissing(['details', 'customerInfo', 'payments']);
+        return [
+            'order' => $order->getRawOriginal(),
+            'details' => $order->details->sortBy('id')->map(fn ($line) => $line->getRawOriginal())->values()->all(),
+            'customer_info' => $order->customerInfo?->getRawOriginal(),
+            'payments' => $order->payments->sortBy('id')->map(fn ($payment) => $payment->getRawOriginal())->values()->all(),
+        ];
+    }
+
+    public function editVersion(Order $order): string
+    {
+        return hash('sha256', json_encode($this->editSnapshot($order), JSON_THROW_ON_ERROR));
+    }
+
+    public function update(Order $order, array $data, int $userId): void
+    {
+        DB::transaction(function () use ($order, $data, $userId) {
+            $current = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
+            $current->load(['details', 'customerInfo', 'payments']);
+            if (!hash_equals($this->editVersion($current), $data['edit_version'])) {
+                throw ValidationException::withMessages(['order' => 'This order changed after you opened it. Reload the page before editing again.']);
+            }
+            $before = $this->editSnapshot($current);
+            $existing = $current->details->keyBy('id');
+            $retained = array_filter(array_column($data['items'], 'id'));
+            foreach ($existing as $line) {
+                if (!in_array($line->id, $retained) && ((int) $line->returned_qty > 0 || DB::table('order_return_records')->where('order_detail_id', $line->id)->exists())) {
+                    throw ValidationException::withMessages(['items' => 'A returned product cannot be removed from the order.']);
+                }
+            }
+            $products = Product::whereIn('id', array_unique(array_column($data['items'], 'product_id')))->orderBy('id')->lockForUpdate()->get()->keyBy('id');
+            $variations = ProductVariation::with(['variationAttributes.attribute', 'variationAttributes.attributeType'])
+                ->whereIn('id', array_filter(array_column($data['items'], 'product_variation_id')))->orderBy('id')->lockForUpdate()->get()->keyBy('id');
+            $subtotal = 0;
+            $quantity = 0;
+            $combinations = [];
+            foreach ($data['items'] as $index => $item) {
+                $line = !empty($item['id']) ? $existing->get((int) $item['id']) : null;
+                if (!empty($item['id']) && !$line) throw ValidationException::withMessages(["items.$index.id" => 'This item does not belong to this order.']);
+                $product = $products->get((int) $item['product_id']);
+                $variationId = !empty($item['product_variation_id']) ? (int) $item['product_variation_id'] : null;
+                $variation = $variationId ? $variations->get($variationId) : null;
+                $same = $line && (int) $line->product_id === (int) $item['product_id'] && (int) $line->product_variation_id === (int) $variationId;
+                if (!$product || (!$same && (!$product->status || ($product->is_variation && !$variation) || (!$product->is_variation && $variation)))) {
+                    throw ValidationException::withMessages(["items.$index.product_id" => 'Choose an active product and a valid variation.']);
+                }
+                if ($variationId && (!$variation || (int) $variation->product_id !== (int) $product->id || (!$same && !$variation->status))) {
+                    throw ValidationException::withMessages(["items.$index.product_variation_id" => 'This variation is unavailable or does not belong to this product.']);
+                }
+                $key = $product->id . ':' . ($variationId ?? 0);
+                if (isset($combinations[$key])) throw ValidationException::withMessages(['items' => 'The same product and variation appears twice. Combine its quantity into one row.']);
+                $combinations[$key] = true;
+                $qty = (int) $item['quantity'];
+                $sale = $this->cents($item['sale_price']);
+                if ($line && ((int) $line->returned_qty > 0 || DB::table('order_return_records')->where('order_detail_id', $line->id)->exists())
+                    && (!$same || $qty !== (int) $line->quantity || $sale !== $this->cents($line->sale_price))) {
+                    throw ValidationException::withMessages(['items' => 'A returned product’s identity, quantity and sale price must remain unchanged.']);
+                }
+                $purchase = $same ? $this->cents($line->purchase_price) : $this->cents($variation?->purchase_price ?? $product->purchase_price);
+                if ($purchase * $qty > 999999999999 || $sale * $qty > 999999999999) {
+                    throw ValidationException::withMessages(["items.$index.quantity" => 'The product line total exceeds the supported range.']);
+                }
+                $mrp = $same ? $line->mrp_price : ($variation?->mrp_price ?? $product->mrp_price);
+                $image = $same ? $line->image : asset($variation?->image ?: ($product->thumbnail_image ?: (($product->gallery_images ?? [])[0] ?? 'backend/assets/extra/preview-image.png')));
+                $values = [
+                    'product_id' => $product->id, 'product_variation_id' => $variationId,
+                    'product_name' => $same ? $line->product_name : $product->name,
+                    'variation_name' => $same ? $line->variation_name : $variation?->optionLabel($product->name),
+                    'sku' => $same ? $line->sku : ($variation?->sku ?? $product->sku), 'image' => $image,
+                    'attributes' => $same ? $line->attributes : $variation?->variationAttributes->map(fn ($pair) => ['type' => $pair->attributeType?->name, 'value' => $pair->attribute?->name])->all(),
+                    'quantity' => $qty, 'sale_price' => $sale / 100, 'unit_price' => $sale / 100,
+                    'purchase_price' => $purchase / 100, 'mrp_price' => $mrp,
+                    'total_cost' => ($purchase * $qty) / 100, 'total_amount' => ($sale * $qty) / 100,
+                    'line_total' => ($sale * $qty) / 100,
+                ];
+                if ($line) $line->update($values);
+                else $current->details()->create($values + ['returned_qty' => 0, 'exist_in_return' => false]);
+                $subtotal += $sale * $qty;
+                $quantity += $qty;
+            }
+            $current->details()->whereIn('id', $existing->keys()->diff($retained))->delete();
+            $shipping = $this->cents($data['shipping_cost']);
+            $extraShipping = $this->cents($current->extra_shipping_cost_amount);
+            $discount = $this->cents($data['extra_discount_amount']);
+            $totalDiscount = $discount + $this->cents($current->affiliate_discount) + $this->cents($current->coupon_discount_amount);
+            $grand = $subtotal + $shipping + $extraShipping + $this->cents($current->total_vat_amount) - $totalDiscount;
+            $paid = $this->cents($current->paid_amount);
+            if ($grand < 0 || $grand > 9999999999 || $subtotal > 9999999999 || $quantity > 99999999 || $shipping + $extraShipping > 9999999999 || $totalDiscount > 9999999999) {
+                throw ValidationException::withMessages(['items' => 'The order totals exceed the supported range, or discounts exceed the total.']);
+            }
+            if ($grand < $paid) throw ValidationException::withMessages(['items' => 'The new total cannot be less than the amount already paid. Record the payment adjustment first.']);
+            $statusId = (int) $data['status_id'];
+            $statusChanged = $statusId !== (int) $current->current_status;
+            if ($statusChanged) Status::whereKey($statusId)->where('status', true)->firstOrFail();
+            $shippingId = !empty($data['shipping_id']) ? (int) $data['shipping_id'] : null;
+            if ($shippingId && $shippingId !== (int) $current->shipping_charge_setting_id) {
+                $area = ShippingChargeSetting::whereKey($shippingId)->where('status', true)->firstOrFail();
+                $current->shipping_charge_setting_id = $area->id;
+                $current->delivery_area = $area->area_name;
+                $current->delivery_time = $area->delivery_time;
+            }
+            $current->fill([
+                'subtotal' => $subtotal / 100, 'total_quantity' => $quantity, 'shipping_cost' => $shipping / 100,
+                'total_shipping_cost' => ($shipping + $extraShipping) / 100, 'extra_discount_amount' => $discount / 100,
+                'total_discount_amount' => $totalDiscount / 100, 'grand_total' => $grand / 100,
+                'due_amount' => ($grand - $paid) / 100, 'current_status' => $statusId, 'notes' => $data['notes'] ?? null,
+            ]);
+            $current->saveOrFail();
+            $current->customerInfo()->updateOrCreate(['order_id' => $current->id], [
+                'customer_id' => $current->customer_id, 'name' => $data['name'], 'phone' => BangladeshPhone::normalize($data['phone']),
+                'email' => $data['email'] ?? null, 'address' => $data['address'], 'order_note' => $data['notes'] ?? null,
+            ]);
+            if ($statusChanged) $current->statusHistory()->create(['status_id' => $statusId]);
+            $pending = $current->payments()->where('payment_method', 'Cash')->where('payment_status', 'Pending')
+                ->whereNull('transaction_id')->whereNull('payment_tnx_no')->get();
+            if ($pending->count() === 1) $pending->first()->update(['amount' => ($grand - $paid) / 100]);
+            $current->unsetRelations();
+            $current->refresh();
+            DB::table('order_edit_logs')->insert([
+                'order_id' => $current->id, 'edited_by' => $userId,
+                'before' => json_encode($before, JSON_THROW_ON_ERROR), 'after' => json_encode($this->editSnapshot($current), JSON_THROW_ON_ERROR),
+                'created_at' => now(), 'updated_at' => now(),
+            ]);
+        }, 3);
+    }
+
+    private function cents($amount): int { return (int) round((float) ($amount ?? 0) * 100); }
 
     public function status(Order $order, int $statusId): void
     {

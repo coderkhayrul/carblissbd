@@ -2,7 +2,7 @@
 @section('admin-content')
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <div><h4 class="mb-1">{{ $order->order_no }}</h4><span class="text-muted">{{ $order->date?->format('d M Y') }} · {{ $order->order_source }}</span></div>
-        <a class="btn btn-label-secondary" href="{{ route('admin.orders.index') }}">Back to Orders</a>
+        <div class="d-flex gap-2"><a class="btn btn-primary" href="{{ route('admin.orders.edit', $order) }}">Edit Order</a><a class="btn btn-label-secondary" href="{{ route('admin.orders.index') }}">Back to Orders</a></div>
     </div>
     <div class="row g-4">
         <div class="col-12 col-lg-8">
@@ -49,4 +49,15 @@
         </div>
     </div>
     @include('admin.orders.action-history')
+    @if ($editLogs->isNotEmpty())
+        <div class="card mt-4"><h5 class="card-header">Order Edit History</h5>
+            <div class="table-responsive"><table class="table"><thead><tr><th>Date</th><th>Edited By</th><th>Previous Total</th><th>Updated Total</th></tr></thead><tbody>
+                @foreach ($editLogs as $log)
+                    @php($beforeEdit = json_decode($log->before, true))
+                    @php($afterEdit = json_decode($log->after, true))
+                    <tr><td>{{ \Illuminate\Support\Carbon::parse($log->created_at)->timezone('Asia/Dhaka')->format('d M Y h:i A') }}</td><td>{{ $log->editor ?? 'Deleted user' }}</td><td>&#2547;{{ number_format((float) ($beforeEdit['order']['grand_total'] ?? 0), 2) }}</td><td>&#2547;{{ number_format((float) ($afterEdit['order']['grand_total'] ?? 0), 2) }}</td></tr>
+                @endforeach
+            </tbody></table></div>
+        </div>
+    @endif
 @endsection

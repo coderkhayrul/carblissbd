@@ -18,7 +18,7 @@
     <div class="dropdown-menu order-action-menu" id="action-menu-{{ $order->id }}" hidden>
         <a class="dropdown-item" href="{{ route('admin.orders.show', $order) }}"><i class="bx bx-show me-2"
                 aria-hidden="true"></i>View</a>
-        <a class="dropdown-item" href="#"><i class="bx bx-edit me-2" aria-hidden="true"></i>Edit</a>
+        <a class="dropdown-item" href="{{ route('admin.orders.edit', $order) }}"><i class="bx bx-edit me-2" aria-hidden="true"></i>Edit</a>
         <a class="dropdown-item"
             href="{{ route('admin.orders.action', ['order' => $order, 'action' => 'status']) }}"><i
                 class="bx bx-check-circle me-2" aria-hidden="true"></i>Status</a>
