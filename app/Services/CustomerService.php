@@ -12,6 +12,22 @@ use Illuminate\Validation\ValidationException;
 
 class CustomerService
 {
+    public function profileSummary(Customer $customer): array
+    {
+        $orders = $customer->orders();
+        $totals = (clone $orders)->selectRaw('COUNT(*) as order_count, COALESCE(SUM(grand_total), 0) as order_total, COALESCE(SUM(paid_amount), 0) as paid_total, COALESCE(SUM(due_amount), 0) as due_total')->first();
+        $completed = (clone $orders)->whereHas('currentStatus', fn ($query) => $query->whereIn(DB::raw('LOWER(TRIM(name))'), ['delivered', 'completed', 'complete']));
+        return [
+            'total_orders' => (int) $totals->order_count,
+            'order_total' => (float) $totals->order_total,
+            'paid_total' => (float) $totals->paid_total,
+            'due_total' => (float) $totals->due_total,
+            'completed_orders' => (clone $completed)->count(),
+            'total_purchase' => (float) (clone $completed)->sum('grand_total'),
+            'pending_orders' => (clone $orders)->whereHas('currentStatus', fn ($query) => $query->whereRaw('LOWER(TRIM(name)) = ?', ['pending']))->count(),
+        ];
+    }
+
     public function updateAccount(User $user, array $data): void
     {
         DB::transaction(function () use ($user, $data) {

@@ -1,98 +1,31 @@
-<div class="col-xl-4 col-lg-5 order-1 order-md-0">
-    <!-- User Card -->
-    <div class="card mb-6">
-        <div class="card-body pt-12">
-            <div class="user-avatar-section">
-                <div class="d-flex align-items-center flex-column">
-                    <img class="img-fluid rounded mb-4" src="{{ asset('backend') }}/default/community.png" height="120"
-                        width="120" alt="User avatar" />
-                    <div class="user-info text-center">
-                        <h5>{{ $customer->name }}</h5>
-                        <span class="badge bg-label-secondary">Customer</span>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex justify-content-around flex-wrap my-6 gap-0 gap-md-3 gap-lg-4">
-                <div class="d-flex align-items-center me-5 gap-4">
-                    <div class="avatar">
-                        <div class="avatar-initial bg-label-primary rounded w-px-40 h-px-40">
-                            <i class="icon-base bx bx-wallet icon-lg"></i>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="mb-0">৳ 500</h5>
-                        <span>Total Purchase</span>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center gap-4">
-                    <div class="avatar">
-                        <div class="avatar-initial bg-label-primary rounded w-px-40 h-px-40">
-                            <i class="icon-base bx bx-cart check icon-lg"></i>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="mb-0">0</h5>
-                        <span>Order Complete</span>
-                    </div>
-                </div>
-            </div>
-            <h5 class="pb-4 border-bottom mb-4">Details</h5>
-            <div class="info-container">
-                <ul class="list-unstyled mb-6">
-                    <li class="mb-2">
-                        <span class="h6">Username:</span>
-                        <span>{{ $customer->username ?? 'N/A' }}</span>
-                    </li>
-                    <li class="mb-2">
-                        <span class="h6">Mobile:</span>
-                        <span>{{ $customer->mobile ?? 'N/A' }}</span>
-                    </li>
-                    <li class="mb-2">
-                        <span class="h6">Email:</span>
-                        <span>{{ $customer->email ?? 'N/A' }}</span>
-                    </li>
-                    <li class="mb-2">
-                        <span class="h6">Gender:</span>
-                        <span>{{ $customer->gender }}</span>
-                    </li>
-                    <li class="mb-2">
-                        <span class="h6">Date Of BirthDay:</span>
-                        <span>{{ $customer->date_of_birth ?? 'N/A' }}</span>
-                    </li>
-                    <li class="mb-2">
-                        <span class="h6">Status:</span>
-                        <span
-                            class="badge bg-label-{{ $customer->status ? 'success' : 'danger' }}">{{ $customer->status ? 'Active' : 'Inactive' }}</span>
-                    </li>
-                    <li class="mb-2">
-                        <span class="h6">Register Form:</span>
-                        <span>{{ $customer->register_from }}</span>
-                    </li>
-                    <li class="mb-2">
-                        <span class="h6">Address:</span>
-                        <span>{{ $customer->address }}</span>
-                    </li>
-                    <li class="mb-2">
-                        <span class="h6">Shipping Address:</span>
-                        <span>{{ $customer->shipping_address }}</span>
-                    </li>
-
-                </ul>
-                <div class="d-flex justify-content-center">
-                    {{-- <a href="javascript:;" class="btn btn-primary me-4" data-bs-target="#editUser"
-                        data-bs-toggle="modal">Edit</a> --}}
-                    <form action="{{ route('admin.customers.status.update', $customer) }}" method="POST">
-                        @csrf
-                        @method('PATCH')
-                        <input type="hidden" name="status" value="{{ $customer->status ? '0' : '1' }}">
-                        <button type="submit"
-                            class="btn btn-label-{{ $customer->status ? 'danger' : 'success' }} suspend">
-                            {{ $customer->status ? 'Suspend' : 'Activate' }}
-                        </button>
-                    </form>
-                </div>
-            </div>
+<div class="col-12 col-xl-4 col-lg-5 order-1 order-md-0">
+    <div class="card mb-4"><div class="card-body">
+        <div class="d-flex align-items-center flex-column text-center mb-4">
+            <img class="rounded mb-3" src="{{ asset($customer->image ?: 'backend/default/community.png') }}" width="120" height="120" style="object-fit:cover" alt="{{ $customer->name }}" onerror="this.onerror=null;this.src='{{ asset('backend/default/community.png') }}'">
+            <h5 class="text-break">{{ $customer->name }}</h5><span class="badge bg-label-secondary">Customer #{{ $customer->id }}</span>
         </div>
-    </div>
-    <!-- /User Card -->
+        <div class="row g-3 text-center mb-4">
+            <div class="col-12 col-sm-6"><strong class="d-block">&#2547;{{ number_format($summary['total_purchase'], 2) }}</strong><small>Completed Order Value</small></div>
+            <div class="col-12 col-sm-6"><strong class="d-block">{{ number_format($summary['completed_orders']) }}</strong><small>Completed Orders</small></div>
+        </div>
+        <h5 class="border-bottom pb-3">Customer Details</h5>
+        <dl class="row mb-4" style="overflow-wrap:anywhere">
+            <dt class="col-5">Mobile</dt><dd class="col-7">{{ $customer->mobile ?: 'N/A' }}</dd>
+            <dt class="col-5">Email</dt><dd class="col-7">{{ $customer->email ?: 'N/A' }}</dd>
+            <dt class="col-5">Gender</dt><dd class="col-7">{{ $customer->gender ?: 'N/A' }}</dd>
+            <dt class="col-5">Date of Birth</dt><dd class="col-7">{{ $customer->date_of_birth ?: 'N/A' }}</dd>
+            <dt class="col-5">Status</dt><dd class="col-7"><span class="badge bg-label-{{ $customer->status ? 'success' : 'danger' }}">{{ $customer->status ? 'Active' : 'Inactive' }}</span></dd>
+            <dt class="col-5">Verified</dt><dd class="col-7">{{ $customer->is_verified ? 'Yes' : 'No' }}</dd>
+            <dt class="col-5">Registered From</dt><dd class="col-7">{{ $customer->register_from ?: 'N/A' }}</dd>
+            <dt class="col-5">Joined</dt><dd class="col-7">{{ $customer->created_at?->timezone('Asia/Dhaka')->format('d M Y') ?? 'N/A' }}</dd>
+            <dt class="col-5">Address</dt><dd class="col-7" style="white-space:pre-line">{{ $customer->address ?: 'N/A' }}</dd>
+            <dt class="col-5">Shipping Address</dt><dd class="col-7" style="white-space:pre-line">{{ $customer->shipping_address ?: 'N/A' }}</dd>
+            <dt class="col-5">Country</dt><dd class="col-7">{{ $customer->country ?: 'N/A' }}</dd>
+        </dl>
+        <form action="{{ route('admin.customers.status.update', $customer) }}" method="POST">
+            @csrf @method('PATCH')
+            <input type="hidden" name="status" value="{{ $customer->status ? '0' : '1' }}">
+            <button type="submit" class="btn w-100 btn-label-{{ $customer->status ? 'danger' : 'success' }} suspend">{{ $customer->status ? 'Suspend' : 'Activate' }}</button>
+        </form>
+    </div></div>
 </div>

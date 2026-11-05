@@ -57,18 +57,19 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Customer $customer)
+    public function show(Customer $customer, CustomerService $customerService)
     {
-        $customer->with(['orders', 'user']);
-        // return $customer;
-        return view('admin.customers.show', compact('customer'));
+        $customer->load('user');
+        $summary = $customerService->profileSummary($customer);
+        $orders = $customer->orders()->with(['currentStatus', 'customerInfo'])->latest('id')->paginate(15);
+        return view('admin.customers.show', compact('customer', 'summary', 'orders'));
     }
 
-    public function editSecurity(Customer $customer)
+    public function editSecurity(Customer $customer, CustomerService $customerService)
     {
-        $customer->with(['orders', 'user']);
-        // return $customer;
-        return view('admin.customers.security', compact('customer'));
+        $customer->load('user');
+        $summary = $customerService->profileSummary($customer);
+        return view('admin.customers.security', compact('customer', 'summary'));
     }
 
     public function changePassword(Request $request, Customer $customer, CustomerService $customerService)

@@ -139,7 +139,7 @@
                                         </div>
                                     @endif
                                     <div class="d-flex flex-column">
-                                        <a href="#" class="text-heading text-truncate">
+                                        <a href="{{ route('admin.customers.show', $row) }}" class="text-heading text-truncate">
                                             <span class="fw-medium"> {{ $row->name }}</span>
                                         </a>
                                         <small>{{ $row->email ?? 'Not Available' }}</small>
@@ -171,7 +171,7 @@
                                         <a href="#sendSmsModal" class="dropdown-item send-sms" data-bs-toggle="modal"
                                             data-bs-target="#sendSmsModal" data-customer-name="{{ $row->name }}"
                                             data-customer-mobile="{{ $row->mobile }}">Send SMS</a>
-                                        <a href="javascript:;" class="dropdown-item ">Purchase History</a>
+                                        <a href="{{ route('admin.customers.show', $row) }}" class="dropdown-item">Purchase History</a>
 
                                     </div>
                                 </div>
