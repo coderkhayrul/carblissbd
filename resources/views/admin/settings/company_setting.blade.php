@@ -205,6 +205,16 @@
                         <!-- SEO CONFIGURATION -->
                         <hr class="my-6 mx-n6">
                         <h6>SEO CONFIGURATION</h6>
+                        <div class="card border mb-4"><div class="card-body">
+                            <h6>FRONTEND PAGE LOADER</h6>
+                            <input type="hidden" name="page_loader_enabled" value="0">
+                            <label class="form-check form-switch mb-3"><input class="form-check-input" type="checkbox" name="page_loader_enabled" value="1" @checked(old('page_loader_enabled', $companySetting->page_loader_enabled ?? true))><span class="form-check-label">Enable loader on all frontend pages</span></label>
+                            <label class="form-label" for="loader_image">Custom Loader GIF</label>
+                            @if ($companySetting->loader_image)<img class="d-block mb-3 rounded" src="{{ asset($companySetting->loader_image) }}" width="80" height="80" style="object-fit:contain" alt="Current page loader">@endif
+                            <input class="form-control" type="file" id="loader_image" name="loader_image" accept="image/gif">
+                            <p class="form-text">Animated GIF, maximum 2 MB. A small 64–128 px image under 200 KB is recommended for fast loading. Leaving this blank keeps the saved GIF. Without a GIF, the default spinner is used.</p>
+                            @if ($companySetting->loader_image)<label class="form-check"><input class="form-check-input" type="checkbox" name="remove_loader_image" value="1"><span class="form-check-label">Remove saved GIF and use the default spinner</span></label>@endif
+                        </div></div>
                         <div class="row g-4 mb-4">
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="og_image">Default Social Share Image</label>

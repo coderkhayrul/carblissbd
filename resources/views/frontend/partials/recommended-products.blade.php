@@ -9,6 +9,9 @@
             @include('frontend.partials.recommended-product-cards', ['products' => $recommendedProducts])
         </div>
         <div class="text-center mt-4">
+            @if ($footerCompany?->page_loader_enabled ?? true)
+                <div id="more-products-loader" role="status" aria-label="Loading more products" hidden>@include('frontend.partials.loader-icon')</div>
+            @endif
             <p id="more-products-status" class="small text-muted" role="status" aria-live="polite"></p>
             @if ($hasMoreProducts)
                 <button type="button" id="load-more-products" class="btn btn-outline-primary rounded-pill fw-bold px-4 py-2" data-url="{{ route('products.more') }}" data-cursor="{{ $recommendedProducts->last()->id }}" aria-controls="you-may-like-grid">View More Products</button>
@@ -22,18 +25,22 @@
             if (!button) return;
             const grid = document.getElementById('you-may-like-grid');
             const status = document.getElementById('more-products-status');
+            const loader = document.getElementById('more-products-loader');
             let loading = false;
             button.addEventListener('click', async () => {
                 if (loading) return;
                 loading = true;
+                if (loader) loader.hidden = false;
                 button.disabled = true;
                 button.textContent = 'Loading...';
                 grid.setAttribute('aria-busy', 'true');
                 status.textContent = '';
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 20000);
                 try {
                     const url = new URL(button.dataset.url, window.location.href);
                     url.searchParams.set('before', button.dataset.cursor);
-                    const response = await fetch(url, {headers: {'Accept': 'application/json'}});
+                    const response = await fetch(url, {headers: {'Accept': 'application/json'}, signal: controller.signal});
                     if (!response.ok) throw new Error('Unable to load products');
                     const data = await response.json();
                     grid.insertAdjacentHTML('beforeend', data.html);
@@ -46,6 +53,8 @@
                 } catch (error) {
                     status.textContent = 'Could not load products. Please try again.';
                 } finally {
+                    clearTimeout(timeout);
+                    if (loader) loader.hidden = true;
                     loading = false;
                     button.disabled = false;
                     button.textContent = 'View More Products';

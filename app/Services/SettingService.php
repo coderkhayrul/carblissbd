@@ -43,11 +43,22 @@ class SettingService
             'gtag' => $request['gtag'] ?? null,
             'analytics_enabled' => (bool) ($request['analytics_enabled'] ?? false),
             'search_indexing_enabled' => (bool) ($request['search_indexing_enabled'] ?? true),
+            'page_loader_enabled' => (bool) ($request['page_loader_enabled'] ?? true),
             'footer_description' => $request['footer_description'] ?? null,
             'bangla_footer_description' => $request['bangla_footer_description'] ?? null,
         ]);
 
         $companySetting->saveOrFail();
+        if (isset($request['loader_image'])) {
+            $loaderImage = saveImage($request['loader_image'], '/uploads/settings/');
+            $oldLoaderImage = $companySetting->loader_image;
+            $companySetting->update(['loader_image' => $loaderImage]);
+            if ($oldLoaderImage) deleteImage($oldLoaderImage);
+        } elseif (!empty($request['remove_loader_image'])) {
+            $oldLoaderImage = $companySetting->loader_image;
+            $companySetting->update(['loader_image' => null]);
+            if ($oldLoaderImage) deleteImage($oldLoaderImage);
+        }
         if (isset($request['og_image'])) {
             $image = saveImage($request['og_image'], '/uploads/settings/');
             $oldImage = $companySetting->og_image;

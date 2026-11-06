@@ -1,6 +1,7 @@
 @include('frontend.partials.header')
 
 <body>
+    @include('frontend.partials.page-loader')
     {{-- @include('frontend.partials.topbar') --}}
 
     <header class="site-header sticky-top bg-white shadow-sm z-index-highest">

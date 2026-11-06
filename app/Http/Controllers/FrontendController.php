@@ -38,7 +38,7 @@ class FrontendController extends Controller
 
         $newArrivals = Product::where('status', true)->where('publish', true)->where('is_new_arrival', true)
             ->with(['category', 'variations' => fn($query) => $query->where('status', true)->orderBy('sale_price')])
-            ->latest('id')->get();
+            ->latest('id')->limit(15)->get();
 
         $recommendedProducts = $this->recommendedProductsQuery()->without('brand')->limit(16)->get();
         $hasMoreProducts = $recommendedProducts->count() > 15;

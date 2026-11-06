@@ -24,5 +24,12 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}?v={{ filemtime(public_path('frontend/css/style.css')) }}" />
+    @if ($footerCompany?->page_loader_enabled ?? true)
+        <script>
+            document.documentElement.classList.add('store-page-loading');
+            window.storeLoaderSafety = setTimeout(function(){document.documentElement.classList.remove('store-page-loading');}, 10000);
+        </script>
+        <script src="{{ asset('frontend/js/page-loader.js') }}?v={{ filemtime(public_path('frontend/js/page-loader.js')) }}" defer></script>
+    @endif
 
 </head>

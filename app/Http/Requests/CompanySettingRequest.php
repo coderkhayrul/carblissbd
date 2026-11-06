@@ -42,6 +42,9 @@ class CompanySettingRequest extends FormRequest
             'gtag' => ['nullable', 'required_if:analytics_enabled,1', 'string', 'max:255', 'regex:/^G-[A-Z0-9]+$/'],
             'analytics_enabled' => ['required', 'boolean'],
             'search_indexing_enabled' => ['required', 'boolean'],
+            'page_loader_enabled' => ['required', 'boolean'],
+            'loader_image' => ['nullable', 'image', 'mimes:gif', 'max:2048'],
+            'remove_loader_image' => ['nullable', 'boolean'],
         ];
     }
 

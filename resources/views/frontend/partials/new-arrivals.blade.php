@@ -7,6 +7,7 @@
                     <i class="fa-solid fa-fire text-primary" aria-hidden="true"></i> New Arrivals
                 </h2>
                 <p class="text-muted small mb-0">Freshest stock, direct from global manufacturers</p>
+                <a class="small fw-bold" href="{{ route('new-arrivals') }}">View All New Arrivals</a>
             </div>
             <div class="d-flex gap-2 flex-shrink-0">
                 <button type="button" class="btn btn-outline-primary btn-sm rounded-circle prod-prev" aria-label="Previous products"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
