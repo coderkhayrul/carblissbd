@@ -23,6 +23,6 @@
     <!-- Custom Styles (Overriding Bootstrap defaults to match the brand) -->
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}" />
+    <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}?v={{ filemtime(public_path('frontend/css/style.css')) }}" />
 
 </head>

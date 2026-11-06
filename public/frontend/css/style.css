@@ -7,6 +7,61 @@
     --bs-body-bg: #F5F5F5;
 }
 
+/* Keep contact above the mobile navigation and below drawers/modals. */
+.whatsapp-contact {
+    position: fixed;
+    right: max(20px, env(safe-area-inset-right, 0px));
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    z-index: 1040;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #25d366;
+    color: #fff;
+    font-size: 34px;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .22);
+    transition: background-color .2s, transform .2s;
+    -webkit-tap-highlight-color: transparent;
+}
+.whatsapp-contact:hover, .whatsapp-contact:focus-visible {
+    color: #fff;
+    background: #128c46;
+    transform: translateY(-2px);
+}
+.whatsapp-contact:focus-visible { outline: 3px solid #111827; outline-offset: 4px; }
+.whatsapp-contact-label {
+    position: absolute;
+    right: calc(100% + 10px);
+    padding: 7px 10px;
+    border-radius: 6px;
+    background: #111827;
+    color: #fff;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+.whatsapp-contact:hover .whatsapp-contact-label,
+.whatsapp-contact:focus-visible .whatsapp-contact-label { opacity: 1; visibility: visible; }
+@media (max-width: 767.98px) {
+    .whatsapp-contact {
+        width: 52px;
+        height: 52px;
+        font-size: 30px;
+        right: max(14px, env(safe-area-inset-right, 0px));
+        bottom: calc(86px + env(safe-area-inset-bottom, 0px));
+    }
+    .whatsapp-contact-label { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .whatsapp-contact { transition: none; }
+}
+
 body {
     font-family: var(--bs-body-font-family);
     background-color: var(--bs-body-bg);

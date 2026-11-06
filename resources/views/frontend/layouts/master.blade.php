@@ -287,4 +287,5 @@
     </div>
 
     @include('frontend.partials.popup-ad')
+    @include('frontend.partials.whatsapp-contact')
     @include('frontend.partials.footer')
