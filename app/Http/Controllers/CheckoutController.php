@@ -14,6 +14,21 @@ use Illuminate\Validation\ValidationException;
 
 class CheckoutController extends Controller
 {
+    public function landingCheckout(Request $request, \App\Models\Product $product, CheckoutService $service)
+    {
+        abort_unless($product->status && $product->publish, 404);
+        $data = $request->validate([
+            'quantity' => ['required', 'integer', 'min:1', 'max:99'],
+            'variation_id' => [$product->is_variation ? 'required' : 'prohibited', 'nullable', 'integer', \Illuminate\Validation\Rule::exists('product_variations', 'id')->where('product_id', $product->id)->where('status', true)],
+        ]);
+        $request->merge(['items' => [['id' => $product->is_variation ? -(int) $data['variation_id'] : $product->id, 'qty' => $data['quantity']]], 'preserve_origin' => false]);
+        $response = $this->update($request, $service);
+        if ($response->getStatusCode() < 400) {
+            $request->session()->put('checkout.landing_product_id', $product->id);
+            $request->session()->put('checkout.token', (string) Str::uuid());
+        }
+        return $response;
+    }
     public function index(Request $request, CheckoutService $service)
     {
         if (!$request->session()->has('checkout.token')) {
@@ -79,6 +94,7 @@ class CheckoutController extends Controller
             $summary = $service->summary($data['items']);
         }
         $request->session()->put('checkout.items', array_map(fn ($item) => ['id' => $item['id'], 'qty' => $item['qty']], $summary['items']));
+        if (!$request->boolean('preserve_origin')) $request->session()->forget('checkout.landing_product_id');
         $request->session()->put('checkout.shipping_id', $summary['shipping']?->id);
         $request->session()->put('checkout_cart_display', $summary['items']);
         $request->session()->put('checkout.details', array_merge($request->session()->get('checkout.details', []),
@@ -113,6 +129,7 @@ class CheckoutController extends Controller
             return redirect()->route('checkout')->with('error', 'Your checkout has expired. Please submit the latest checkout form.');
         }
         try {
+            $data['landing_product_id'] = $request->session()->get('checkout.landing_product_id');
             $order = $service->place($data, $request->user());
         } catch (ValidationException $exception) {
             throw $exception;

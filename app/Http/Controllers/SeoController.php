@@ -11,7 +11,7 @@ class SeoController extends Controller
     private function query(string $type)
     {
         return match ($type) {
-            'products' => Product::where('status', true)->where('publish', true),
+            'products', 'landings' => Product::where('status', true)->where('publish', true),
             'categories' => Category::where('status', true),
             'brands' => Brand::where('status', true),
             'pages' => Page::where('status', true),
@@ -26,7 +26,7 @@ class SeoController extends Controller
     public function index()
     {
         $urls = [route('seo.sitemap.section', ['type' => 'static', 'page' => 1])];
-        foreach (['products', 'categories', 'brands', 'pages'] as $type) {
+        foreach (['products', 'landings', 'categories', 'brands', 'pages'] as $type) {
             $count = (int) ceil($this->query($type)->count() / self::SIZE);
             for ($page = 1; $page <= $count; $page++) $urls[] = route('seo.sitemap.section', compact('type', 'page'));
         }
@@ -48,6 +48,7 @@ class SeoController extends Controller
             foreach ($rows as $row) {
                 $url = match ($type) {
                     'products' => route('product.detail', ['product' => $row->slug]),
+                    'landings' => route('product.landing', $row->slug),
                     'categories' => route('category', ['category' => $row->slug]),
                     'brands' => route('brand', ['brand' => $row->slug]),
                     'pages' => route('pages.show', $row->id),

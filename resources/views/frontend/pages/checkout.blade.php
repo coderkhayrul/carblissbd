@@ -24,6 +24,7 @@
             <form action="{{ route('checkout.place-order') }}" method="POST" id="checkoutForm">
                 @csrf
                 <input type="hidden" name="checkout_token" value="{{ $checkoutToken }}">
+                <input type="hidden" name="preserve_origin" value="1">
                 <div class="row g-4 align-items-start">
                     <div class="col-12 col-lg-7">
                         <section class="bg-white rounded-4 border shadow-sm p-3 p-md-4 mb-4">

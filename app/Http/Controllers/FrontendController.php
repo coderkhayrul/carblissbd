@@ -11,6 +11,25 @@ use Illuminate\Http\Request;
 
 class FrontendController extends Controller
 {
+    public function productLanding(Product $product)
+    {
+        abort_unless($product->status && $product->publish, 404);
+        $product->load(['category', 'brand', 'variations' => fn ($query) => $query->where('status', true)->orderBy('sale_price'), 'variations.variationAttributes.attribute']);
+        $relatedProducts = $this->recommendedProductsQuery()->where('category_id', $product->category_id)->whereKeyNot($product->id)->limit(5)->get();
+        $videoId = null;
+        $parts = parse_url($product->landing_youtube_link ?: ($product->video_link ?? ''));
+        if (is_array($parts)) {
+            $host = strtolower($parts['host'] ?? '');
+            $path = trim($parts['path'] ?? '', '/');
+            if (in_array($host, ['youtu.be', 'www.youtu.be'], true)) $videoId = explode('/', $path)[0];
+            elseif (in_array($host, ['youtube.com', 'www.youtube.com', 'm.youtube.com', 'youtube-nocookie.com', 'www.youtube-nocookie.com'], true)) {
+                parse_str($parts['query'] ?? '', $query);
+                $videoId = $path === 'watch' ? ($query['v'] ?? null) : (preg_match('~^(?:embed|shorts|live)/([^/]+)~', $path, $match) ? $match[1] : null);
+            }
+        }
+        if (!is_string($videoId) || !preg_match('/^[A-Za-z0-9_-]{11}$/', $videoId)) $videoId = null;
+        return view('frontend.pages.product-landing', compact('product', 'relatedProducts', 'videoId'));
+    }
     public function cart(Request $request)
     {
         $shipping = $request->session()->get('checkout.shipping_id')

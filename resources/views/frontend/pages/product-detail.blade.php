@@ -31,6 +31,7 @@
             </ol>
         </nav>
         <section class="bg-white rounded-4 border border-light shadow-sm p-3 p-md-4 mb-4">
+            <a class="btn btn-sm btn-outline-primary mb-3" href="{{ route('product.landing', $product->slug) }}">প্রোডাক্ট সম্পর্কে বিস্তারিত জানুন</a>
             <div class="row g-4 g-lg-5">
                 <div class="col-12 col-lg-6">
                     <a id="detail-image-link" class="d-flex align-items-center justify-content-center bg-light rounded-4 p-3" href="{{ $initialImage }}" target="_blank" rel="noopener" aria-label="Open full product image">

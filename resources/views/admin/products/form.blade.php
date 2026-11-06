@@ -136,10 +136,11 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="panel-landing" role="tabpanel" aria-labelledby="tab-landing">
-                    <h5>Landing page content</h5><p class="text-muted">Optional promotional content. Text fields below allow up to 255 characters, matching the database.</p>
+                    <h5>Landing page content</h5><p class="text-muted">Use a clear title, one feature per line, a short introduction, detailed product information and a YouTube watch/share URL. Product gallery and variation images are reused automatically.</p>
+                    @if ($product->exists && $product->status && $product->publish)<a class="btn btn-sm btn-label-primary mb-3" target="_blank" rel="noopener" href="{{ route('product.landing', $product->slug) }}">Open Landing Page</a>@endif
                     <div class="row">
                         @foreach (['landing_page_title' => 'Landing Page Title', 'landing_page_feature' => 'Landing Page Feature', 'landing_short_description' => 'Landing Short Description', 'landing_long_description' => 'Landing Long Description'] as $field => $label)
-                            @include('admin.products.field', ['field' => $field, 'label' => $label, 'type' => 'textarea', 'max' => 255])
+                            @include('admin.products.field', ['field' => $field, 'label' => $label, 'type' => 'textarea', 'max' => ['landing_page_title' => 255, 'landing_page_feature' => 20000, 'landing_short_description' => 5000, 'landing_long_description' => 50000][$field]])
                         @endforeach
                         @include('admin.products.field', ['field' => 'landing_youtube_link', 'label' => 'Landing YouTube URL', 'type' => 'url', 'max' => 10000])
                     </div>

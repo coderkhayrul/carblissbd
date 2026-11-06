@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ request()->routeIs('product.landing') ? 'bn' : 'en' }}">
 
 <head>
     <meta charset="UTF-8">
@@ -24,6 +24,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}?v={{ filemtime(public_path('frontend/css/style.css')) }}" />
+    @if (request()->routeIs('product.landing'))<link rel="stylesheet" href="{{ asset('frontend/css/product-landing.css') }}">@endif
     @if ($footerCompany?->page_loader_enabled ?? true)
         <script>
             document.documentElement.classList.add('store-page-loading');

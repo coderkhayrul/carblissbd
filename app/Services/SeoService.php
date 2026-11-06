@@ -27,7 +27,8 @@ class SeoService
         $keywords = $company?->meta_keyword;
         $image = asset($company?->og_image ?: ($company?->logo ?: 'backend/assets/extra/preview-image.png'));
         $canonical = url()->current();
-        $product = $route === 'product.detail' ? ($data['product'] ?? null) : null;
+        $landing = $route === 'product.landing';
+        $product = in_array($route, ['product.detail', 'product.landing'], true) ? ($data['product'] ?? null) : null;
         $entity = match ($route) {
             'category' => $data['selectedCategory'] ?? null,
             'brand' => $data['selectedBrand'] ?? null,
@@ -48,7 +49,7 @@ class SeoService
             $label = ['category' => 'Categories', 'brand' => 'Brands', 'offers' => 'Offers', 'new-arrivals' => 'New Arrivals', 'products.search' => 'Product Search', 'cart' => 'Shopping Cart', 'checkout' => 'Checkout', 'profile' => 'My Account', 'order.success' => 'Order Received', 'login' => 'Login', 'register' => 'Register'][$route] ?? 'Account';
             $title = $label . ' | ' . $name;
         }
-        $public = in_array($route, ['home', 'product.detail', 'category', 'brand', 'pages.show', 'offers', 'new-arrivals'], true);
+        $public = in_array($route, ['home', 'product.detail', 'product.landing', 'category', 'brand', 'pages.show', 'offers', 'new-arrivals'], true);
         if ($public && in_array($route, ['category', 'brand', 'offers'], true) && (int) request('page', 1) > 1) {
             $canonical .= (str_contains($canonical, '?') ? '&' : '?') . 'page=' . (int) request('page');
             $title .= ' - Page ' . (int) request('page');
@@ -62,9 +63,9 @@ class SeoService
         }
         $price = null;
         if ($product) {
-            $canonical = route('product.detail', ['product' => $product->slug]);
-            $title = $product->meta_title ?: $product->name . ' | ' . $name;
-            $description = $this->text($product->meta_description ?: ($product->short_description ?: ($product->description ?: ($description ?: $product->name))));
+            $canonical = $landing ? route('product.landing', $product->slug) : route('product.detail', ['product' => $product->slug]);
+            $title = $landing ? (($product->landing_page_title ?: ($product->meta_title ?: $product->name)) . ' | ' . $name) : ($product->meta_title ?: $product->name . ' | ' . $name);
+            $description = $this->text(($landing ? $product->landing_short_description : null) ?: ($product->meta_description ?: ($product->short_description ?: ($product->description ?: ($description ?: $product->name)))));
             $keywords = $product->meta_keywords ?: $keywords;
             $images = collect([$product->thumbnail_image])->merge($product->gallery_images ?? [])->filter()->unique()->map(fn ($path) => asset($path))->values()->all();
             if (!$images && $product->is_variation) $images = $product->variations->pluck('image')->filter()->map(fn ($path) => asset($path))->values()->all();

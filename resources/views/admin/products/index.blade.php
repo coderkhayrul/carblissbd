@@ -36,6 +36,7 @@
                             <td>
                                 <div class="d-flex gap-2">
                                     <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-label-primary">Edit</a>
+                                    @if ($product->status && $product->publish)<a href="{{ route('product.landing', $product->slug) }}" target="_blank" rel="noopener" class="btn btn-sm btn-label-success">Landing Page</a>@endif
                                     <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="product-delete" data-name="{{ $product->name }}">
                                         @csrf
                                         @method('DELETE')

@@ -59,6 +59,7 @@ class AdminOrderService
                 'created_by' => $userId,
                 'order_no' => $invoice,
                 'order_source' => 'GSale',
+                'entry_channel' => 'Admin', 'landing_product_id' => null, 'landing_page_url' => null,
                 'date' => $data['date'],
                 'payment_type' => $data['payment_type'],
                 'shipping_method' => 'Regular Shipping',
@@ -367,6 +368,7 @@ class AdminOrderService
                 'is_courier_assigned' => false,
                 'cancel_reason' => null,
                 'draft_source' => 'Duplicate of ' . $original->order_no,
+                'entry_channel' => 'Admin', 'landing_product_id' => null, 'landing_page_url' => null,
             ]);
             $copy->saveOrFail();
             foreach ($original->details as $detail) {

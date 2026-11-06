@@ -180,6 +180,7 @@ class OrderController extends Controller
         $filters = $request->validate([
             'customer_id' => ['nullable', 'integer', 'exists:customers,id'],
             'order_source' => ['nullable', Rule::in(['Website', 'GSale', 'App'])],
+            'entry_channel' => ['nullable', Rule::in(['Checkout', 'Landing Page', 'Admin'])],
             'payment_type' => ['nullable', Rule::in(['COD', 'Online'])],
             'courier' => ['nullable', Rule::in(array_merge(AdminOrderService::COURIERS, ['unassigned']))],
             'status_id' => ['nullable', 'integer', 'exists:statuses,id'],
@@ -188,6 +189,7 @@ class OrderController extends Controller
             'order_no' => ['nullable', 'string', 'max:255'],
         ]);
         $query = Order::with(['customerInfo', 'customer', 'currentStatus', 'createdBy'])->latest('id');
+        if (!empty($filters['entry_channel'])) $query->where('entry_channel', $filters['entry_channel']);
         foreach (['customer_id' => 'customer_id', 'order_source' => 'order_source', 'payment_type' => 'payment_type', 'status_id' => 'current_status'] as $filter => $column) {
             if (isset($filters[$filter]) && $filters[$filter] !== '') $query->where($column, $filters[$filter]);
         }
@@ -215,7 +217,7 @@ class OrderController extends Controller
         return response()->streamDownload(function () use ($query) {
             $output = fopen('php://output', 'w');
             fwrite($output, "\xEF\xBB\xBF");
-            fputcsv($output, ['Invoice', 'Date', 'Customer', 'Phone', 'Source', 'Quantity', 'Paid', 'Due', 'Total', 'Payment Type', 'Status', 'Courier'], ',', '"', '');
+            fputcsv($output, ['Invoice', 'Date', 'Customer', 'Phone', 'Source', 'Quantity', 'Paid', 'Due', 'Total', 'Payment Type', 'Status', 'Courier', 'Entry Channel', 'Landing Page URL'], ',', '"', '');
             $safe = static function ($value) {
                 $value = (string) $value;
                 return preg_match('/^[\s]*[=+@-]/u', $value) ? "'" . $value : $value;
@@ -228,6 +230,7 @@ class OrderController extends Controller
                     $order->order_source, $order->total_quantity, $order->paid_amount, $order->due_amount,
                     $order->grand_total, $order->payment_type, $order->currentStatus?->name,
                     $order->is_courier_assigned ? trim($order->courier_name ?? '') : 'Not Assigned',
+                    $order->entry_channel, $order->landing_page_url,
                 ]), ',', '"', '');
             }
             fclose($output);

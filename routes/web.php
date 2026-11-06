@@ -6,7 +6,7 @@ use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Route;
 Route::get('/robots.txt', [\App\Http\Controllers\SeoController::class, 'robots'])->name('seo.robots');
 Route::get('/sitemap.xml', [\App\Http\Controllers\SeoController::class, 'index'])->name('seo.sitemap');
-Route::get('/sitemaps/{type}-{page}.xml', [\App\Http\Controllers\SeoController::class, 'section'])->whereIn('type', ['static', 'products', 'categories', 'brands', 'pages'])->whereNumber('page')->name('seo.sitemap.section');
+Route::get('/sitemaps/{type}-{page}.xml', [\App\Http\Controllers\SeoController::class, 'section'])->whereIn('type', ['static', 'products', 'landings', 'categories', 'brands', 'pages'])->whereNumber('page')->name('seo.sitemap.section');
 
 
 Route::middleware('guest')->group(function () {
@@ -27,6 +27,8 @@ Route::get('/search', [FrontendController::class, 'search'])->name('products.sea
 Route::get('/new-arrivals', [FrontendController::class, 'newArrivals'])->name('new-arrivals');
 Route::get('/offers', [FrontendController::class, 'offers'])->name('offers');
 Route::get('/product-detail', [FrontendController::class, 'productDetail'])->name('product.detail');
+Route::get('/landing/{product:slug}', [FrontendController::class, 'productLanding'])->name('product.landing');
+Route::post('/landing/{product:slug}/checkout', [CheckoutController::class, 'landingCheckout'])->middleware('throttle:30,1')->name('product.landing.checkout');
 Route::get('/cart', [FrontendController::class, 'cart'])->name('cart');
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout/cart', [CheckoutController::class, 'update'])->name('checkout.update');

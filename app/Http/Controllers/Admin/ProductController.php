@@ -65,6 +65,9 @@ class ProductController extends Controller
         foreach (['features', 'bangla_features', 'short_description', 'bangla_short_description', 'description', 'bangla_description'] as $field) {
             $rules[$field] = ['nullable', 'string', 'max:10000'];
         }
+        $rules['landing_page_feature'] = ['nullable', 'string', 'max:20000'];
+        $rules['landing_short_description'] = ['nullable', 'string', 'max:5000'];
+        $rules['landing_long_description'] = ['nullable', 'string', 'max:50000'];
         foreach (['purchase_price', 'sale_price', 'bangla_sale_price', 'mrp_price'] as $field) {
             $rules[$field] = ['required', 'numeric', 'decimal:0,2', 'min:0', 'max:99999999.99'];
         }

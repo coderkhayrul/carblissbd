@@ -52,7 +52,12 @@ class OrderService
                 $invoice = 'ORD-' . $year . '-' . str_pad((string) $next++, 6, '0', STR_PAD_LEFT);
             } while (Order::where('order_no', $invoice)->exists());
 
+            $landingProduct = !empty($data['landing_product_id']) && collect($summary['items'])->pluck('product_id')->unique()->all() === [(int) $data['landing_product_id']]
+                ? $products->get((int) $data['landing_product_id']) : null;
             $order = Order::create([
+                'entry_channel' => $landingProduct ? 'Landing Page' : 'Checkout',
+                'landing_product_id' => $landingProduct?->id,
+                'landing_page_url' => $landingProduct ? route('product.landing', $landingProduct->slug) : null,
                 'customer_id' => $customer->id, 'date' => now('Asia/Dhaka')->toDateString(),
                 'order_no' => $invoice, 'order_source' => 'Website', 'payment_type' => 'COD',
                 'shipping_method' => 'Regular Shipping', 'current_status' => $pending->id,
