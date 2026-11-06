@@ -13,6 +13,7 @@
                     <form class="card-body" action="{{ route('admin.company.settings.update') }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
+                        @if ($errors->any())<div class="alert alert-danger" role="alert"><ul class="mb-0">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
                         <div class="row g-6">
                             <div class="col-md-6">
                                 <label class="form-label" for="name">Company Name
@@ -204,6 +205,33 @@
                         <!-- SEO CONFIGURATION -->
                         <hr class="my-6 mx-n6">
                         <h6>SEO CONFIGURATION</h6>
+                        <div class="row g-4 mb-4">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="og_image">Default Social Share Image</label>
+                                @if ($companySetting->og_image)<img class="d-block img-fluid rounded mb-2" src="{{ asset($companySetting->og_image) }}" alt="Default social share image" style="max-height:140px;object-fit:contain">@endif
+                                <input class="form-control" type="file" id="og_image" name="og_image" accept="image/jpeg,image/png,image/webp">
+                                <p class="form-text">Recommended: 1200 x 630 JPG/PNG, maximum 4 MB. Product pages use their own product images.</p>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="google_site_verification">Google Search Console Verification Token</label>
+                                <input class="form-control" id="google_site_verification" name="google_site_verification" maxlength="255" value="{{ old('google_site_verification', $companySetting->google_site_verification) }}" placeholder="Content value from google-site-verification">
+                                <p class="form-text">Enter only the content token from the HTML verification tag, not the entire tag. Domain properties use DNS verification at your domain provider.</p>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="gtag">Google Analytics 4 Measurement ID</label>
+                                <input class="form-control" id="gtag" name="gtag" maxlength="255" value="{{ old('gtag', $companySetting->gtag) }}" placeholder="G-XXXXXXXXXX">
+                                <p class="form-text">Paste the Measurement ID only. Do not paste JavaScript or a Tag Manager container ID.</p>
+                                <input type="hidden" name="analytics_enabled" value="0">
+                                <label class="form-check form-switch"><input class="form-check-input" type="checkbox" name="analytics_enabled" value="1" @checked(old('analytics_enabled', $companySetting->analytics_enabled))><span class="form-check-label">Enable Google Analytics on public storefront pages</span></label>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <input type="hidden" name="search_indexing_enabled" value="0">
+                                <label class="form-check form-switch"><input class="form-check-input" type="checkbox" name="search_indexing_enabled" value="1" @checked(old('search_indexing_enabled', $companySetting->search_indexing_enabled ?? true))><span class="form-check-label">Allow Search Engine Indexing</span></label>
+                                <p class="form-text">Local/testing environments and .test domains always use noindex. On the live server set APP_ENV=production and APP_URL to the correct HTTPS domain.</p>
+                                <p class="mb-1"><a href="{{ route('seo.sitemap') }}" target="_blank" rel="noopener">XML Sitemap</a> &middot; <a href="{{ route('seo.robots') }}" target="_blank" rel="noopener">robots.txt</a></p>
+                                <p class="form-text">Submit /sitemap.xml in Search Console after verifying your live website.</p>
+                            </div>
+                        </div>
                         <div class="row g-6">
                             <div class="col-md-6">
                                 <label class="form-label" for="meta_title">Meta Title</label>

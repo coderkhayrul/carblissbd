@@ -24,7 +24,9 @@ class AppServiceProvider extends ServiceProvider
             $view->with('brandCompany', app('company.branding'));
         });
         \Illuminate\Support\Facades\View::composer('frontend.layouts.master', function ($view) {
-            $view->with(app(\App\Services\FrontendLayoutData::class)->get());
+            $layout = app(\App\Services\FrontendLayoutData::class)->get();
+            $view->with($layout);
+            $view->with('seo', app(\App\Services\SeoService::class)->build($view->getData(), $layout['footerCompany']));
         });
         \Illuminate\Support\Facades\View::composer('frontend.partials.popup-ad', function ($view) {
             $view->with('popupAd', app(\App\Services\FrontendLayoutData::class)->get()['popupAd']);

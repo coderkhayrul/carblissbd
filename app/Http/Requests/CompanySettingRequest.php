@@ -34,6 +34,14 @@ class CompanySettingRequest extends FormRequest
             'admin_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'admin_favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'auth_bg' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'meta_title' => ['nullable', 'string', 'max:255'],
+            'meta_keyword' => ['nullable', 'string', 'max:255'],
+            'meta_description' => ['nullable', 'string', 'max:5000'],
+            'og_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:4096'],
+            'google_site_verification' => ['nullable', 'string', 'max:255', 'regex:/^[A-Za-z0-9_\-]+$/'],
+            'gtag' => ['nullable', 'required_if:analytics_enabled,1', 'string', 'max:255', 'regex:/^G-[A-Z0-9]+$/'],
+            'analytics_enabled' => ['required', 'boolean'],
+            'search_indexing_enabled' => ['required', 'boolean'],
         ];
     }
 

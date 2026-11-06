@@ -39,11 +39,21 @@ class SettingService
             'meta_title' => $request['meta_title'] ?? null,
             'meta_keyword' => $request['meta_keyword'] ?? null,
             'meta_description' => $request['meta_description'] ?? null,
+            'google_site_verification' => $request['google_site_verification'] ?? null,
+            'gtag' => $request['gtag'] ?? null,
+            'analytics_enabled' => (bool) ($request['analytics_enabled'] ?? false),
+            'search_indexing_enabled' => (bool) ($request['search_indexing_enabled'] ?? true),
             'footer_description' => $request['footer_description'] ?? null,
             'bangla_footer_description' => $request['bangla_footer_description'] ?? null,
         ]);
 
         $companySetting->saveOrFail();
+        if (isset($request['og_image'])) {
+            $image = saveImage($request['og_image'], '/uploads/settings/');
+            $oldImage = $companySetting->og_image;
+            $companySetting->update(['og_image' => $image]);
+            if ($oldImage) deleteImage($oldImage);
+        }
 
         // Logo Update
         if (isset($request['logo'])) {

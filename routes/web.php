@@ -4,6 +4,9 @@ use App\Http\Controllers\Auth\CustomerAuthController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Route;
+Route::get('/robots.txt', [\App\Http\Controllers\SeoController::class, 'robots'])->name('seo.robots');
+Route::get('/sitemap.xml', [\App\Http\Controllers\SeoController::class, 'index'])->name('seo.sitemap');
+Route::get('/sitemaps/{type}-{page}.xml', [\App\Http\Controllers\SeoController::class, 'section'])->whereIn('type', ['static', 'products', 'categories', 'brands', 'pages'])->whereNumber('page')->name('seo.sitemap.section');
 
 
 Route::middleware('guest')->group(function () {

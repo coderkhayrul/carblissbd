@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <!-- Viewport tag for 100% responsiveness -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $footerCompany?->meta_title ?: ($footerCompany?->title ?: ($footerCompany?->name ?: 'CarBlissBD')) }}</title>
+    @include('frontend.partials.seo')
     <link rel="icon" href="{{ asset($footerCompany?->favicon ?: 'backend/assets/extra/favicon.png') }}">
 
     <!-- Bootstrap 5.3 CSS -->
