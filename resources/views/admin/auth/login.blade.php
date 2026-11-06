@@ -9,12 +9,12 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Admin Login | Carblissbd</title>
+    <title>Admin Login | {{ $brandCompany->name ?: 'Car Bliss BD' }}</title>
 
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('backend') }}/assets/extra/favicon.png" />
+    <link rel="icon" href="{{ asset($brandCompany->admin_favicon ?: ($brandCompany->favicon ?: 'backend/assets/extra/favicon.png')) }}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -52,17 +52,17 @@
         <a href="{{ route('admin.index') }}" class="app-brand auth-cover-brand gap-2">
             <span class="app-brand-logo demo">
                 <span class="text-primary">
-                    <img src="{{ asset('backend') }}/assets/extra/favicon.png" alt="">
+                    <img src="{{ asset($brandCompany->logo ?: 'backend/assets/extra/favicon.png') }}" alt="{{ $brandCompany->name ?: 'Company logo' }}" style="max-width:130px;max-height:45px;object-fit:contain">
                 </span>
             </span>
-            <span class="app-brand-text demo text-heading fw-bold">Car Bliss BD</span>
+            <span class="app-brand-text demo text-heading fw-bold">{{ $brandCompany->name ?: 'Car Bliss BD' }}</span>
         </a>
         <!-- /Logo -->
         <div class="authentication-inner row m-0">
             <!-- /Left Text -->
             <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center p-5">
                 <div class="w-100 d-flex justify-content-center">
-                    <img src="{{ asset('backend') }}/assets/extra/login-cover.png" class="img-fluid" alt="Login image"
+                    <img src="{{ asset($brandCompany->auth_bg ?: 'backend/assets/extra/login-cover.png') }}" class="img-fluid" alt="Login image" style="max-height:80vh;object-fit:contain"
                         width="700" />
                 </div>
             </div>

@@ -12,6 +12,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->scoped(\App\Services\FrontendLayoutData::class);
+        $this->app->scoped('company.branding', fn () => \App\Models\CompanySetting::orderBy('id')->first() ?? new \App\Models\CompanySetting);
     }
 
     /**
@@ -19,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \Illuminate\Support\Facades\View::composer(['admin.partials.header', 'admin.auth.login'], function ($view) {
+            $view->with('brandCompany', app('company.branding'));
+        });
         \Illuminate\Support\Facades\View::composer('frontend.layouts.master', function ($view) {
             $view->with(app(\App\Services\FrontendLayoutData::class)->get());
         });

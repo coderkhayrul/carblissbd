@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <!-- Viewport tag for 100% responsiveness -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CarBlissBD | Premier Car Accessories & Spare Parts Store</title>
+    <title>{{ $footerCompany?->meta_title ?: ($footerCompany?->title ?: ($footerCompany?->name ?: 'CarBlissBD')) }}</title>
+    <link rel="icon" href="{{ asset($footerCompany?->favicon ?: 'backend/assets/extra/favicon.png') }}">
 
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">

@@ -25,58 +25,56 @@ class SettingService
     */
     public function updateCompanySetting(CompanySetting $companySetting, array $request)
     {
-        $companySetting->update([
+        $companySetting->fill([
             'name' => $request['name'],
             'title' => $request['title'],
             'phone' => $request['phone'],
-            'hotline' => $request['hotline'],
+            'hotline' => $request['hotline'] ?? null,
             'email' => $request['email'],
-            'website' => $request['website'],
-            'bin' => $request['bin'],
-            'app_link' => $request['app_link'],
+            'website' => $request['website'] ?? null,
+            'bin' => $request['bin'] ?? null,
+            'app_link' => $request['app_link'] ?? null,
             'address' => $request['address'],
-            'bill_footer' => $request['bill_footer'],
-            'meta_title' => $request['meta_title'],
-            'meta_keyword' => $request['meta_keyword'],
-            'meta_description' => $request['meta_description'],
-            'footer_description' => $request['footer_description'],
-            'bangla_footer_description' => $request['bangla_footer_description'],
+            'bill_footer' => $request['bill_footer'] ?? null,
+            'meta_title' => $request['meta_title'] ?? null,
+            'meta_keyword' => $request['meta_keyword'] ?? null,
+            'meta_description' => $request['meta_description'] ?? null,
+            'footer_description' => $request['footer_description'] ?? null,
+            'bangla_footer_description' => $request['bangla_footer_description'] ?? null,
         ]);
+
+        $companySetting->saveOrFail();
 
         // Logo Update
         if (isset($request['logo'])) {
             $logo = saveImage($request['logo'], '/uploads/settings/');
-            if ($companySetting->logo) {
-                deleteImage($companySetting->logo);
-            }
+            $oldLogo = $companySetting->logo;
             $companySetting->update(['logo' => $logo]);
+            if ($oldLogo) deleteImage($oldLogo);
         }
 
         // Favicon Update
         if (isset($request['favicon'])) {
             $favicon = saveImage($request['favicon'], '/uploads/settings/');
-            if ($companySetting->favicon) {
-                deleteImage($companySetting->favicon);
-            }
+            $oldFavicon = $companySetting->favicon;
             $companySetting->update(['favicon' => $favicon]);
+            if ($oldFavicon) deleteImage($oldFavicon);
         }
 
         // Admin Favicon Update
         if (isset($request['admin_favicon'])) {
             $adminFavicon = saveImage($request['admin_favicon'], '/uploads/settings/');
-            if ($companySetting->admin_favicon) {
-                deleteImage($companySetting->admin_favicon);
-            }
+            $oldAdminFavicon = $companySetting->admin_favicon;
             $companySetting->update(['admin_favicon' => $adminFavicon]);
+            if ($oldAdminFavicon) deleteImage($oldAdminFavicon);
         }
 
         // Auth BG Update
         if (isset($request['auth_bg'])) {
             $authBg = saveImage($request['auth_bg'], '/uploads/settings/');
-            if ($companySetting->auth_bg) {
-                deleteImage($companySetting->auth_bg);
-            }
+            $oldAuthBg = $companySetting->auth_bg;
             $companySetting->update(['auth_bg' => $authBg]);
+            if ($oldAuthBg) deleteImage($oldAuthBg);
         }
     }
 

@@ -3,10 +3,14 @@
 
     <!-- Brand Logo -->
     <a href="{{ route('home') }}" class="site-header-logo text-decoration-none d-flex align-items-center flex-shrink-0">
+        @if ($footerCompany?->logo)
+            <img src="{{ asset($footerCompany->logo) }}" alt="{{ $footerCompany->name ?: 'Company logo' }}" style="width:clamp(100px,20vw,180px);max-height:56px;object-fit:contain" fetchpriority="high">
+        @else
         <span class="fs-4 fs-md-3 fw-bolder text-dark d-flex align-items-center">
             CAR<span class="text-primary d-flex align-items-center gap-1">BLISS<i
                     class="fa-solid fa-gauge-high"></i></span>BD
         </span>
+        @endif
     </a>
 
     <!-- Search Bar (Desktop) -->

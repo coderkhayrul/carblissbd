@@ -50,7 +50,7 @@ class AdminController extends Controller
     */
     public function companySettings()
     {
-        $companySetting = CompanySetting::first();
+        $companySetting = app('company.branding');
         return view('admin.settings.company_setting', compact('companySetting'));
     }
 
@@ -62,7 +62,7 @@ class AdminController extends Controller
     public function companySettingsUpdate(CompanySettingRequest $request)
     {
         try {
-            $companySetting = CompanySetting::first();
+            $companySetting = app('company.branding');
             $this->settingService->updateCompanySetting($companySetting, $request->all());
 
             return redirect()->back()->with('success', 'Company settings updated successfully.');
