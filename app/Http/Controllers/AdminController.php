@@ -137,8 +137,9 @@ class AdminController extends Controller
     */
     public function smsApiSettings()
     {
-        $smsApiSetting = SMSApiSetting::first();
-        return view('admin.settings.sms_api_setting', compact('smsApiSetting'));
+        $smsApiSetting = SMSApiSetting::orderBy('id')->first() ?? new SMSApiSetting;
+        $smsNotifications = \App\Models\OrderSmsNotification::with('order:id,order_no')->latest('id')->limit(20)->get();
+        return view('admin.settings.sms_api_setting', compact('smsApiSetting', 'smsNotifications'));
     }
 
 
@@ -149,13 +150,46 @@ class AdminController extends Controller
     */
     public function smsApiSettingsUpdate(Request $request)
     {
+        $smsApiSetting = SMSApiSetting::orderBy('id')->first() ?? new SMSApiSetting;
+        $jsonObject = function ($attribute, $value, $fail) {
+            $decoded = json_decode($value);
+            if (!is_object($decoded)) $fail('The ' . str_replace('_', ' ', $attribute) . ' must be a JSON object.');
+            if ($attribute === 'request_headers' && is_object($decoded)) {
+                foreach ($decoded as $header) {
+                    if (!is_string($header) || str_contains($header, "\r") || str_contains($header, "\n")) {
+                        $fail('Header values must be single-line strings.');
+                        break;
+                    }
+                }
+            }
+        };
+        $data = $request->validate([
+            'enabled' => ['required', 'boolean'],
+            'base_url' => ['nullable', 'required_if:enabled,1', 'url:http,https', 'max:255'],
+            'sender_id' => ['nullable', 'required_if:enabled,1', 'string', 'max:255'],
+            'api_key' => ['nullable', 'string', 'max:255'],
+            'api_secret' => ['nullable', 'string', 'max:255'],
+            'request_method' => ['required', 'in:GET,POST'],
+            'request_format' => ['required', 'in:form,json'],
+            'phone_format' => ['required', 'in:international,digits,local'],
+            'request_parameters' => ['nullable', 'json', 'max:10000', $jsonObject],
+            'request_headers' => ['nullable', 'json', 'max:10000', $jsonObject],
+            'success_path' => ['nullable', 'string', 'max:255'],
+            'success_value' => ['nullable', 'required_with:success_path', 'string', 'max:255'],
+            'message_template' => ['nullable', 'string', 'max:1000'],
+        ]);
+        foreach (['api_key', 'api_secret'] as $credential) {
+            if (empty($data[$credential])) unset($data[$credential]);
+        }
+        if ($request->boolean('enabled') && empty($data['api_key']) && !$smsApiSetting->api_key) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['api_key' => 'An API key is required to enable SMS.']);
+        }
         try {
-            $smsApiSetting = SMSApiSetting::first();
-            $this->settingService->smsApiSettingUpdate($smsApiSetting, $request->all());
+            $smsApiSetting->fill($data)->saveOrFail();
 
             return redirect()->back()->with('success', 'Sms Api settings updated successfully.');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred while updating: ' . $e->getMessage());
+        } catch (\Throwable) {
+            return redirect()->back()->with('error', 'Unable to save SMS settings. Please try again.');
         }
     }
 }

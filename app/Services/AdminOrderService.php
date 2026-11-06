@@ -92,6 +92,7 @@ class AdminOrderService
             ]);
             $order->update(['paid_amount' => $paid / 100, 'due_amount' => ($total - $paid) / 100]);
             $order->statusHistory()->create(['status_id' => $data['status_id'], 'cancel_reason' => $order->cancel_reason]);
+            app(OrderSmsService::class)->schedule($order);
             DB::table('next_invoice_nos')->where('id', $sequence->id)->update(['next_id' => $next, 'updated_at' => now()]);
             return $order;
         }, 3);
@@ -381,6 +382,7 @@ class AdminOrderService
             }
             $copy->payments()->create(['customer_id' => $copy->customer_id, 'payment_method' => 'Cash', 'payment_status' => 'Pending', 'amount' => $copy->grand_total]);
             $copy->statusHistory()->create(['status_id' => $pending->id]);
+            app(OrderSmsService::class)->schedule($copy);
             DB::table('next_invoice_nos')->where('id', $sequence->id)->update(['next_id' => $next, 'updated_at' => now()]);
             return $copy;
         }, 3);
