@@ -13,14 +13,15 @@ class EmailSettingSeeder extends Seeder
      */
     public function run(): void
     {
-        EmailSetting::create([
+        EmailSetting::firstOrCreate(['id' => 1], [
+            'enabled' => false,
             'sender_name' => 'Car Bliss BD',
             'sender_email' => 'carbliessbd@gmail.com',
             'mail_mailer' => 'smtp',
-            'mail_host' => 'sandbox.smtp.mailtrap.io',
-            'mail_port' => '2525',
-            'mail_username' => 'cf4d60d0af666d',
-            'mail_password' => '7cb09057e4fcb7',
+            'mail_host' => '',
+            'mail_port' => '587',
+            'mail_username' => '',
+            'mail_password' => '',
             'mail_encryption' => 'TLS',
         ]);
     }

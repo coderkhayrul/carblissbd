@@ -126,16 +126,19 @@ class SettingService
     public function emailSettingUpdate(EmailSetting $emailSetting,  array $request)
     {
 
-        $emailSetting->update([
-            'sender_name' => $request['sender_name'],
-            'sender_email' => $request['sender_email'],
+        $emailSetting->fill([
+            'enabled' => $request['enabled'],
+            'sender_name' => $request['sender_name'] ?? '',
+            'sender_email' => $request['sender_email'] ?? '',
             'mail_mailer' => $request['mail_mailer'],
-            'mail_host' => $request['mail_host'],
-            'mail_port' => $request['mail_port'],
-            'mail_username' => $request['mail_username'],
-            'mail_password' => $request['mail_password'],
+            'mail_host' => $request['mail_host'] ?? '',
+            'mail_port' => $request['mail_port'] ?? '',
+            'mail_username' => $request['mail_username'] ?? '',
             'mail_encryption' => $request['mail_encryption'],
         ]);
+        if (!empty($request['mail_password'])) $emailSetting->mail_password = \Illuminate\Support\Facades\Crypt::encryptString($request['mail_password']);
+        elseif (!$emailSetting->exists) $emailSetting->mail_password = '';
+        $emailSetting->saveOrFail();
     }
 
 

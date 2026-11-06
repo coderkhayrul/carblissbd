@@ -93,6 +93,7 @@ class OrderService
             ]);
             $order->statusHistory()->create(['status_id' => $pending->id]);
             app(OrderSmsService::class)->schedule($order);
+            app(OrderEmailService::class)->schedule($order);
             DB::table('next_invoice_nos')->where('id', $sequence->id)->update(['next_id' => $next, 'updated_at' => now()]);
             return $order;
         }, 3);

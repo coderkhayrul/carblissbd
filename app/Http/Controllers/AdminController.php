@@ -109,8 +109,10 @@ class AdminController extends Controller
     */
     public function emailSettings()
     {
-        $emailSetting = EmailSetting::first();
-        return view('admin.settings.email_setting', compact('emailSetting'));
+        $emailSetting = EmailSetting::orderBy('id')->first() ?? new EmailSetting;
+        $emailNotifications = \Illuminate\Support\Facades\DB::table('order_email_notifications')->join('orders', 'orders.id', '=', 'order_email_notifications.order_id')
+            ->select('order_email_notifications.*', 'orders.order_no')->latest('order_email_notifications.id')->limit(20)->get();
+        return view('admin.settings.email_setting', compact('emailSetting', 'emailNotifications'));
     }
 
     /*
@@ -120,13 +122,24 @@ class AdminController extends Controller
     */
     public function emailSettingsUpdate(Request $request)
     {
+        $request->merge(['enabled' => $request->boolean('enabled'), 'mail_encryption' => strtolower((string) $request->input('mail_encryption', 'tls'))]);
+        $emailSetting = EmailSetting::orderBy('id')->first() ?? new EmailSetting;
+        $required = $request->boolean('enabled') ? 'required' : 'nullable';
+        $data = $request->validate([
+            'enabled' => ['required', 'boolean'], 'sender_name' => [$required, 'string', 'max:255'],
+            'sender_email' => [$required, 'email', 'max:255'], 'mail_mailer' => ['required', \Illuminate\Validation\Rule::in(['smtp'])],
+            'mail_host' => [$required, 'string', 'max:255', 'regex:/^[a-zA-Z0-9.\-:]+$/'],
+            'mail_port' => [$required, 'integer', 'min:1', 'max:65535'],
+            'mail_username' => ['nullable', 'string', 'max:255'], 'mail_password' => ['nullable', 'string', 'max:2000'],
+            'mail_encryption' => ['required', \Illuminate\Validation\Rule::in(['tls', 'ssl', 'none'])],
+        ]);
         try {
-            $emailSetting = EmailSetting::first();
-            $this->settingService->emailSettingUpdate($emailSetting, $request->all());
+            $this->settingService->emailSettingUpdate($emailSetting, $data);
 
             return redirect()->back()->with('success', 'Email settings updated successfully.');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred while updating: ' . $e->getMessage());
+            report($e);
+            return redirect()->back()->with('error', 'Unable to save email settings. Please try again.');
         }
     }
 
