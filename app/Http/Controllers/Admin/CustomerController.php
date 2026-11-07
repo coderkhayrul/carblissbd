@@ -10,6 +10,19 @@ use Illuminate\Validation\Rules\Password;
 
 class CustomerController extends Controller
 {
+    public function sendSms(Request $request, Customer $customer, CustomerService $customerService)
+    {
+        $data = $request->validate(['message' => ['required', 'string', 'max:1000'], 'request_token' => ['required', 'uuid']]);
+        $sms = $customerService->sendSms($customer, $data, $request->user()->id);
+        return response()->json([
+            'status' => $sms->status,
+            'message' => match ($sms->status) {
+                'submitted' => 'SMS submitted to your gateway successfully. Final delivery depends on the provider.',
+                'processing' => 'This SMS is already being processed. Do not resend it.',
+                default => $sms->error ?: 'Unable to send SMS.',
+            },
+        ], $sms->status === 'failed' ? 502 : ($sms->status === 'processing' ? 202 : 200));
+    }
     public function updateStatus(Request $request, Customer $customer, CustomerService $customerService)
     {
         $validated = $request->validate([
@@ -62,7 +75,8 @@ class CustomerController extends Controller
         $customer->load('user');
         $summary = $customerService->profileSummary($customer);
         $orders = $customer->orders()->with(['currentStatus', 'customerInfo'])->latest('id')->paginate(15);
-        return view('admin.customers.show', compact('customer', 'summary', 'orders'));
+        $smsMessages = \Illuminate\Support\Facades\DB::table('customer_sms_messages')->where('customer_id', $customer->id)->latest('id')->limit(20)->get();
+        return view('admin.customers.show', compact('customer', 'summary', 'orders', 'smsMessages'));
     }
 
     public function editSecurity(Customer $customer, CustomerService $customerService)

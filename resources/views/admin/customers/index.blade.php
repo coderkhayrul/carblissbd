@@ -170,6 +170,7 @@
                                     <div class="dropdown-menu dropdown-menu-end m-0">
                                         <a href="#sendSmsModal" class="dropdown-item send-sms" data-bs-toggle="modal"
                                             data-bs-target="#sendSmsModal" data-customer-name="{{ $row->name }}"
+                                            data-send-url="{{ route('admin.customers.sms.send', $row) }}"
                                             data-customer-mobile="{{ $row->mobile }}">Send SMS</a>
                                         <a href="{{ route('admin.customers.show', $row) }}" class="dropdown-item">Purchase History</a>
 
@@ -186,11 +187,14 @@
         data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
             <div class="modal-content">
-                <form id="sendSmsForm" class="d-flex flex-column overflow-hidden">
+                <form id="sendSmsForm" method="POST" class="d-flex flex-column overflow-hidden">
+                    @csrf
+                    <input type="hidden" name="request_token" id="smsRequestToken">
                     <div class="modal-header">
                         <h5 class="modal-title" id="sendSmsModalLabel">Send SMS</h5>
                     </div>
                     <div class="modal-body">
+                        <p class="small text-muted">Uses your <a href="{{ route('admin.sms.api.settings') }}" target="_blank" rel="noopener">SMS API Setting</a>. Provider credentials and SMS sending must be enabled there.</p>
                         <div class="mb-4">
                             <label class="form-label" for="smsCustomerName">Customer</label>
                             <input type="text" class="form-control" id="smsCustomerName" readonly>
@@ -229,10 +233,20 @@
         const smsMessage = document.getElementById('smsMessage');
         const smsError = document.getElementById('smsError');
         const smsButton = document.getElementById('sendSmsButton');
+        let smsSending = false;
+        const smsCancel = smsForm.querySelector('[data-bs-dismiss="modal"]');
 
         smsModal.addEventListener('show.bs.modal', function(event) {
             const trigger = event.relatedTarget;
+            if (smsSending || !trigger) { event.preventDefault(); return; }
             smsForm.reset();
+            smsForm.action = trigger.dataset.sendUrl;
+            document.getElementById('smsRequestToken').value = window.crypto?.randomUUID?.() || 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, character => { const number = Math.floor(Math.random() * 16); return (character === 'x' ? number : (number & 3) | 8).toString(16); });
+            smsMessage.readOnly = false;
+            smsMessage.setCustomValidity('');
+            smsButton.textContent = 'Send SMS';
+            smsError.classList.remove('alert-success');
+            smsError.classList.add('alert-danger');
             smsError.classList.add('d-none');
             document.getElementById('smsCharacterCount').textContent = '0 / 1000 characters';
             document.getElementById('smsCustomerName').value = trigger.dataset.customerName || '';
@@ -254,15 +268,36 @@
                 ' / 1000 characters';
         });
 
-        smsForm.addEventListener('submit', function(event) {
+        smsModal.addEventListener('hide.bs.modal', event => { if (smsSending) event.preventDefault(); });
+        smsForm.addEventListener('submit', async function(event) {
             event.preventDefault();
+            if (smsSending || smsButton.disabled) return;
             if (!smsMessage.value.trim()) {
                 smsMessage.setCustomValidity('Please enter a message.');
                 smsMessage.reportValidity();
                 return;
             }
-            smsError.textContent = 'SMS sending is not configured yet. Please connect your SMS gateway.';
-            smsError.classList.remove('d-none');
+            smsSending = true; smsButton.disabled = true; smsCancel.disabled = true;
+            smsMessage.readOnly = true; smsButton.textContent = 'Sending...'; smsError.classList.add('d-none');
+            let allowCorrection = false;
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 30000);
+            try {
+                const response = await fetch(smsForm.action, {method: 'POST', headers: {Accept: 'application/json'}, body: new FormData(smsForm), signal: controller.signal});
+                const data = await response.json();
+                allowCorrection = response.status === 422 || response.status === 429 || response.status === 419;
+                smsError.textContent = data.errors ? Object.values(data.errors).flat().join(' ') : data.message || 'Unable to send SMS.';
+                const success = response.ok && data.status === 'submitted';
+                smsError.classList.toggle('alert-success', success); smsError.classList.toggle('alert-danger', !success);
+                smsButton.textContent = success ? 'SMS Submitted' : data.status === 'processing' ? 'Already Processing' : 'Send SMS';
+            } catch (_) {
+                smsError.textContent = 'Unable to confirm SMS submission. Check provider records before sending again; the SMS may already have been accepted.';
+                smsButton.textContent = 'Submission Unconfirmed';
+            } finally {
+                clearTimeout(timeout); smsSending = false; smsCancel.disabled = false;
+                smsButton.disabled = !allowCorrection; smsMessage.readOnly = !allowCorrection;
+                smsError.classList.remove('d-none');
+            }
         });
 
         // USERS TABLE

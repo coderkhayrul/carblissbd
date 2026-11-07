@@ -12,6 +12,42 @@ use Illuminate\Validation\ValidationException;
 
 class CustomerService
 {
+    public function sendSms(Customer $customer, array $data, int $userId): object
+    {
+        $settings = \App\Models\SMSApiSetting::orderBy('id')->first();
+        if (!$settings?->enabled || !$settings->base_url || !$settings->api_key || !$settings->sender_id) {
+            throw ValidationException::withMessages(['gateway' => 'SMS Gateway is disabled or incomplete. Open Settings > SMS API Setting, enter provider credentials and enable SMS.']);
+        }
+        $phone = BangladeshPhone::normalize($customer->mobile ?? '');
+        if (!BangladeshPhone::valid($phone)) throw ValidationException::withMessages(['phone' => 'This customer needs a valid Bangladesh mobile number before sending SMS.']);
+        $message = trim($data['message']);
+        if (!preg_match('/\S/u', $message)) throw ValidationException::withMessages(['message' => 'Write an SMS message.']);
+        $existing = DB::table('customer_sms_messages')->where('request_token', $data['request_token'])->first();
+        if ($existing) {
+            abort_unless((int) $existing->customer_id === $customer->id && (int) $existing->sent_by === $userId && $existing->message === $message, 409);
+            return $existing;
+        }
+        $inserted = DB::table('customer_sms_messages')->insertOrIgnore([
+            'customer_id' => $customer->id, 'sent_by' => $userId, 'request_token' => $data['request_token'],
+            'phone' => $phone, 'message' => $message, 'status' => 'processing', 'created_at' => now(), 'updated_at' => now(),
+        ]);
+        if (!$inserted) {
+            $existing = DB::table('customer_sms_messages')->where('request_token', $data['request_token'])->first();
+            abort_unless($existing && (int) $existing->customer_id === $customer->id && (int) $existing->sent_by === $userId && $existing->message === $message, 409);
+            return $existing;
+        }
+        try {
+            $result = app(SmsGatewayService::class)->send($settings, $phone, $message);
+            $update = ['status' => $result['accepted'] ? 'submitted' : 'failed', 'http_status' => $result['http_status'], 'submitted_at' => $result['accepted'] ? now() : null,
+                'error' => $result['accepted'] ? null : 'The provider rejected the SMS or its success response did not match. Check gateway settings.'];
+        } catch (\Throwable) {
+            // Do not expose gateway URLs, API keys or response bodies in logs or JSON.
+            $update = ['status' => 'failed', 'error' => 'The SMS request failed or timed out. Check provider records before sending again; it may have been accepted.'];
+        }
+        DB::table('customer_sms_messages')->where('request_token', $data['request_token'])->update($update + ['updated_at' => now()]);
+        return DB::table('customer_sms_messages')->where('request_token', $data['request_token'])->first();
+    }
+
     public function profileSummary(Customer $customer): array
     {
         $orders = $customer->orders();

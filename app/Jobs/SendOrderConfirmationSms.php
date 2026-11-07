@@ -6,7 +6,7 @@ use App\Models\{CompanySetting, OrderSmsNotification, SMSApiSetting};
 use App\Support\BangladeshPhone;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\{DB, Http};
+use Illuminate\Support\Facades\DB;
 
 class SendOrderConfirmationSms implements ShouldQueue
 {
@@ -51,28 +51,10 @@ class SendOrderConfirmationSms implements ShouldQueue
                 '{customer}' => $order->customerInfo?->name ?: 'Customer', '{hotline}' => $company?->hotline ?: '',
             ]);
             $notification->update(['phone' => $phone, 'message' => $message]);
-            $phone = match ($settings->phone_format) {
-                'local' => substr($phone, 3), 'digits' => ltrim($phone, '+'), default => $phone,
-            };
-            $values = ['{phone}' => $phone, '{message}' => $message, '{api_key}' => $settings->api_key,
-                '{api_secret}' => $settings->api_secret ?? '', '{sender_id}' => $settings->sender_id];
-            $parameters = $settings->request_parameters ? json_decode($settings->request_parameters, true, 512, JSON_THROW_ON_ERROR) : config('sms.parameters');
-            $headers = $settings->request_headers ? json_decode($settings->request_headers, true, 512, JSON_THROW_ON_ERROR) : [];
-            array_walk_recursive($parameters, function (&$value) use ($values) { if (is_string($value)) $value = strtr($value, $values); });
-            array_walk_recursive($headers, function (&$value) use ($values) { if (is_string($value)) $value = strtr($value, $values); });
-            $client = Http::connectTimeout(5)->timeout(15)->withoutRedirecting()->withHeaders($headers);
-            if ($settings->request_format === 'form') $client = $client->asForm();
-            $response = $settings->request_method === 'GET'
-                ? $client->get($settings->base_url, $parameters)
-                : $client->post($settings->base_url, $parameters);
-            $accepted = $response->successful();
-            if ($settings->success_path) {
-                $actual = data_get($response->json(), $settings->success_path);
-                $actual = is_bool($actual) ? ($actual ? 'true' : 'false') : $actual;
-                $accepted = $accepted && is_scalar($actual) && (string) $actual === (string) $settings->success_value;
-            }
+            $result = app(\App\Services\SmsGatewayService::class)->send($settings, $phone, $message);
+            $accepted = $result['accepted'];
             $notification->update([
-                'status' => $accepted ? 'submitted' : 'failed', 'http_status' => $response->status(),
+                'status' => $accepted ? 'submitted' : 'failed', 'http_status' => $result['http_status'],
                 'submitted_at' => $accepted ? now() : null,
                 'error' => $accepted ? null : 'Provider rejected the request or the configured success response did not match.',
             ]);

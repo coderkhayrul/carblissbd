@@ -318,11 +318,11 @@
                         <div data-i18n="Return Reasons">Return Reasons</div>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
+                {{-- <li class="menu-item {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.coupons.index') }}" class="menu-link">
                         <div data-i18n="Coupons">Coupons</div>
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </li>
         <!-- Settings -->
