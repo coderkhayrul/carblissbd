@@ -173,6 +173,7 @@
                                             data-send-url="{{ route('admin.customers.sms.send', $row) }}"
                                             data-customer-mobile="{{ $row->mobile }}">Send SMS</a>
                                         <a href="{{ route('admin.customers.show', $row) }}" class="dropdown-item">Purchase History</a>
+                                        <a href="#sendEmailModal" class="dropdown-item send-email" data-bs-toggle="modal" data-bs-target="#sendEmailModal" data-customer-name="{{ $row->name }}" data-customer-email="{{ $row->email }}" data-send-url="{{ route('admin.customers.email.send', $row) }}">Send Email</a>
 
                                     </div>
                                 </div>
@@ -224,6 +225,7 @@
             </div>
         </div>
     </div>
+    @include('admin.customers.email-modal')
 @endsection
 
 @push('backend_script')

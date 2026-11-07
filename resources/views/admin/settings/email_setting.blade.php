@@ -9,7 +9,7 @@
             <form action="{{ route('admin.email.settings.update') }}" method="POST">
                 @csrf
                 <input type="hidden" name="enabled" value="0">
-                <label class="form-check form-switch mb-4"><input class="form-check-input" type="checkbox" role="switch" name="enabled" value="1" @checked(old('enabled', $emailSetting->enabled))><span class="form-check-label">Enable Order Confirmation Emails</span></label>
+                <label class="form-check form-switch mb-4"><input class="form-check-input" type="checkbox" role="switch" name="enabled" value="1" @checked(old('enabled', $emailSetting->enabled))><span class="form-check-label">Enable Emails (Order Confirmations &amp; Customer Messages)</span></label>
                 <div class="row g-3">
                     <div class="col-12 col-sm-6"><label for="sender_name" class="form-label">Sender Name</label><input class="form-control" id="sender_name" name="sender_name" maxlength="255" value="{{ old('sender_name', $emailSetting->sender_name) }}"></div>
                     <div class="col-12 col-sm-6"><label for="sender_email" class="form-label">Sender Email</label><input class="form-control" type="email" id="sender_email" name="sender_email" maxlength="255" value="{{ old('sender_email', $emailSetting->sender_email) }}"><small class="form-text">Use an address verified by your email provider.</small></div>

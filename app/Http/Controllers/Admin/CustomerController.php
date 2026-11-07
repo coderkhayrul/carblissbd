@@ -10,6 +10,19 @@ use Illuminate\Validation\Rules\Password;
 
 class CustomerController extends Controller
 {
+    public function sendEmail(Request $request, Customer $customer, CustomerService $customerService)
+    {
+        $data = $request->validate([
+            'subject' => ['required', 'string', 'max:255', 'not_regex:/[\r\n]/'],
+            'message' => ['required', 'string', 'max:15000'], 'request_token' => ['required', 'uuid'],
+        ]);
+        $email = $customerService->sendEmail($customer, $data, $request->user()->id);
+        return response()->json(['status' => $email->status, 'message' => match ($email->status) {
+            'sent' => 'Email submitted successfully. Final inbox delivery depends on the recipient mail provider.',
+            'processing' => 'This email is already being processed. Do not resend it.',
+            default => $email->error ?: 'Unable to send email.',
+        }], $email->status === 'failed' ? 502 : ($email->status === 'processing' ? 202 : 200));
+    }
     public function sendSms(Request $request, Customer $customer, CustomerService $customerService)
     {
         $data = $request->validate(['message' => ['required', 'string', 'max:1000'], 'request_token' => ['required', 'uuid']]);
@@ -76,7 +89,8 @@ class CustomerController extends Controller
         $summary = $customerService->profileSummary($customer);
         $orders = $customer->orders()->with(['currentStatus', 'customerInfo'])->latest('id')->paginate(15);
         $smsMessages = \Illuminate\Support\Facades\DB::table('customer_sms_messages')->where('customer_id', $customer->id)->latest('id')->limit(20)->get();
-        return view('admin.customers.show', compact('customer', 'summary', 'orders', 'smsMessages'));
+        $emailMessages = \Illuminate\Support\Facades\DB::table('customer_email_messages')->where('customer_id', $customer->id)->latest('id')->limit(20)->get();
+        return view('admin.customers.show', compact('customer', 'summary', 'orders', 'smsMessages', 'emailMessages'));
     }
 
     public function editSecurity(Customer $customer, CustomerService $customerService)

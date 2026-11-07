@@ -1,7 +1,7 @@
 # Order confirmation email setup
 
 1. Open **Admin > Email Settings**. Enter your provider's verified sender address, SMTP host, port, username and password. Choose TLS/STARTTLS (usually port 587), SSL (usually 465), or None only if your provider requires it. SMTP providers using API keys as SMTP passwords are supported through these same fields.
-2. Enable **Order Confirmation Emails** and save. Passwords are encrypted with Laravel's APP_KEY; preserve that key. Blank password input keeps the saved password. Credentials never appear in the form or queued job payload.
+2. Enable **Emails (Order Confirmations & Customer Messages)** and save. Passwords are encrypted with Laravel's APP_KEY; preserve that key. Blank password input keeps the saved password. Credentials never appear in the form or queued job payload.
 3. Run a persistent worker under your process manager:
 
    ```sh

@@ -12,6 +12,45 @@ use Illuminate\Validation\ValidationException;
 
 class CustomerService
 {
+    public function sendEmail(Customer $customer, array $data, int $userId): object
+    {
+        $settings = \App\Models\EmailSetting::orderBy('id')->first();
+        if (!$settings?->enabled || !$settings->mail_host || !$settings->mail_port || !filter_var($settings->sender_email, FILTER_VALIDATE_EMAIL)) {
+            throw ValidationException::withMessages(['settings' => 'Email sending is disabled or incomplete. Configure and enable Settings > Email Settings first.']);
+        }
+        $recipient = trim($customer->email ?? '');
+        if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) throw ValidationException::withMessages(['recipient' => 'This customer needs a valid email address before you can send an email.']);
+        $subject = trim($data['subject']); $body = trim($data['message']);
+        if (!preg_match('/\S/u', $subject) || !preg_match('/\S/u', $body)) throw ValidationException::withMessages(['message' => 'Enter both an email subject and message.']);
+        $existing = DB::table('customer_email_messages')->where('request_token', $data['request_token'])->first();
+        if ($existing) {
+            abort_unless((int) $existing->customer_id === (int) $customer->id && (int) $existing->sent_by === $userId && $existing->subject === $subject && $existing->message === $body, 409);
+            return $existing;
+        }
+        $inserted = DB::table('customer_email_messages')->insertOrIgnore([
+            'customer_id' => $customer->id, 'sent_by' => $userId, 'request_token' => $data['request_token'],
+            'recipient' => $recipient, 'subject' => $subject, 'message' => $body, 'status' => 'processing', 'created_at' => now(), 'updated_at' => now(),
+        ]);
+        if (!$inserted) {
+            $existing = DB::table('customer_email_messages')->where('request_token', $data['request_token'])->first();
+            abort_unless($existing && (int) $existing->customer_id === (int) $customer->id && (int) $existing->sent_by === $userId && $existing->subject === $subject && $existing->message === $body, 409);
+            return $existing;
+        }
+        try {
+            $company = \App\Models\CompanySetting::orderBy('id')->first();
+            $customerName = $customer->name;
+            $delivery = app(SmtpMailerService::class)->build($settings)->send('emails.customer-message', compact('company', 'customerName', 'subject', 'body'), function ($mail) use ($settings, $recipient, $subject) {
+                $mail->from($settings->sender_email, $settings->sender_name)->to($recipient)->subject($subject);
+            });
+            if (!$delivery) throw new \RuntimeException('Email transport did not accept the message.');
+            $update = ['status' => 'sent', 'sent_at' => now(), 'error' => null];
+        } catch (\Throwable) {
+            $update = ['status' => 'failed', 'error' => 'Email delivery failed or timed out. Check Email Settings and provider records before sending again; the provider may already have accepted it.'];
+        }
+        DB::table('customer_email_messages')->where('request_token', $data['request_token'])->update($update + ['updated_at' => now()]);
+        return DB::table('customer_email_messages')->where('request_token', $data['request_token'])->first();
+    }
+
     public function sendSms(Customer $customer, array $data, int $userId): object
     {
         $settings = \App\Models\SMSApiSetting::orderBy('id')->first();

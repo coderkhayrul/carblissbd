@@ -36,6 +36,7 @@
                 <div class="card-footer"><p class="small text-muted">Showing {{ $orders->firstItem() ?? 0 }} - {{ $orders->lastItem() ?? 0 }} of {{ $orders->total() }} orders</p>{{ $orders->links('pagination::bootstrap-5') }}</div>
             </div>
             @include('admin.customers.sms-history')
+            @include('admin.customers.email-history')
         </div>
     </div>
 @endsection
