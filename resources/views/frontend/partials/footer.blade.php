@@ -28,8 +28,35 @@
             // },
         }) : null;
 
+        // Independent promotion carousel beside the main hero.
+        const promoElement = document.querySelector('.promo-ads-swiper');
+        const promoCount = promoElement?.querySelectorAll('.swiper-slide').length ?? 0;
+        if (promoElement && typeof Swiper !== 'undefined') {
+            new Swiper(promoElement, {
+                slidesPerView: 1,
+                spaceBetween: 12,
+                loop: promoCount > 1,
+                watchOverflow: true,
+                speed: 450,
+                grabCursor: promoCount > 1,
+                autoplay: promoCount > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? {
+                    delay: 3500,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
+                } : false,
+                keyboard: {enabled: true, onlyInViewport: true},
+                a11y: {enabled: true, containerMessage: 'Promotional offers'},
+            });
+        }
+
         // --- Initialize Swiper for the New Category Section ---
         var newCategorySwiper = new Swiper('.new-category-swiper', {
+            autoplay: {
+                delay: 3500,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+            },
+            rewind: true,
             slidesPerView: 2,
             spaceBetween: 8,
             watchOverflow: true,

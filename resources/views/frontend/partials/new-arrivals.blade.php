@@ -23,7 +23,7 @@
                     $mrp = (float) ($variation?->mrp_price ?? $product->mrp_price);
                     $productUrl = route('product.detail', ['product' => $product->slug]);
                 @endphp
-                <div class="swiper-slide">
+                <div class="swiper-slide">`
                     <article class="card border-light shadow-sm rounded-4 h-100 product-card">
                         <div class="position-absolute top-0 start-0 p-2 z-2">
                             <span class="badge bg-dark rounded-pill text-uppercase shadow-sm"

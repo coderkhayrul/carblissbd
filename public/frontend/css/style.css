@@ -1249,3 +1249,32 @@ body {
 .navbar-submenu-link > i { flex-shrink: 0; font-size: 10px; color: #94a3b8; }
 .navbar-category-submenu .navbar-submenu-view-all { color: #cf4217; font-weight: 700; background: #fff7f2; margin-bottom: 4px; }
 .navbar-category-submenu .navbar-submenu-link[aria-current=page] { background: #fff1eb; color: #cf4217; font-weight: 700; }
+
+/* Main hero and independent rotating promotion rail. */
+.home-hero-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 16px; align-items: stretch; }
+.home-hero-main, .home-hero-promos { min-width: 0; min-height: 0; margin: 0; padding: 0; align-self: stretch; }
+.home-hero-promos { display: flex; align-items: stretch; }
+.home-hero-promos > .promo-ads-swiper { flex: 1 1 auto; min-width: 0; }
+.home-hero-grid .hero-slider-container { width: 100%; margin: 0; }
+.promo-ads-swiper { width: 100%; height: 300px; background: #172331; }
+.promo-sidebar-slide { position: relative; height: 100%; overflow: hidden; background: #172331; }
+.promo-sidebar-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.promo-sidebar-shade { position: absolute; inset: 0; background: linear-gradient(180deg,transparent 25%,rgba(0,0,0,.75)); pointer-events: none; }
+.promo-sidebar-content { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 22px 18px; color: #fff; overflow-wrap: anywhere; }
+.promo-sidebar-content h2, .promo-sidebar-content p { color: #fff; }
+@media (min-width: 768px) {
+    .home-hero-grid { --home-hero-height: 460px; grid-template-rows: var(--home-hero-height); }
+    .home-hero-grid.has-promo-sidebar { grid-template-columns: minmax(0,1fr) clamp(220px,20vw,280px); }
+    .home-hero-grid.has-promo-sidebar > .home-hero-main { grid-area: 1 / 1; }
+    .home-hero-grid.has-promo-sidebar > .home-hero-promos { grid-area: 1 / 2; }
+    .home-hero-grid > .home-hero-main, .home-hero-grid > .home-hero-promos { height: var(--home-hero-height); }
+    .home-hero-grid .hero-slider-container, .home-hero-grid .promo-ads-swiper { display: block; width: 100%; height: 100%; margin: 0; }
+}
+@media (min-width: 1200px) {
+    .home-hero-grid { --home-hero-height: 480px; }
+}
+@media (max-width: 767.98px) {
+    .home-hero-grid { gap: 12px; }
+    .promo-ads-swiper { height: 280px; }
+    .promo-sidebar-content { padding: 20px 22px; }
+}
