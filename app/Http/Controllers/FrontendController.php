@@ -147,7 +147,8 @@ class FrontendController extends Controller
         }
 
         $products = $this->recommendedProductsQuery()->whereIn('category_id', $categoryIds)
-            ->paginate(24)->withQueryString();
+            ->paginate(30)->withQueryString();
+        if ($request->expectsJson()) return $this->catalogBatch($products);
 
         return view('frontend.pages.category', compact('categories', 'selectedCategory', 'products'));
     }
@@ -165,9 +166,19 @@ class FrontendController extends Controller
         } else {
             $query->whereIn('brand_id', $brands->pluck('id'));
         }
-        $products = $query->paginate(24)->withQueryString();
+        $products = $query->paginate(30)->withQueryString();
+        if ($request->expectsJson()) return $this->catalogBatch($products);
 
         return view('frontend.pages.brand', compact('brands', 'selectedBrand', 'products'));
+    }
+
+    private function catalogBatch($products)
+    {
+        return response()->json([
+            'html' => view('frontend.partials.recommended-product-cards', ['products' => $products])->render(),
+            'next_url' => $products->nextPageUrl(), 'has_more' => $products->hasMorePages(),
+            'last' => $products->lastItem(), 'total' => $products->total(),
+        ]);
     }
 
     public function offers()

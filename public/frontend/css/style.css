@@ -1297,3 +1297,6 @@ body {
 @media(min-width:992px) { .catalog-product-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:32px 20px; } }
 @media(min-width:1200px) { .catalog-product-grid { grid-template-columns:repeat(6,minmax(0,1fr)); } }
 @media(max-width:575.98px) { .catalog-introduction h1 { font-size:16px; } .catalog-introduction p { font-size:12px; } .catalog-introduction,.catalog-products-panel { padding:16px 12px; } .catalog-product-prices > span { font-size:15px; } }
+
+.catalog-listing [hidden] { display: none !important; }
+#catalog-load-button[aria-disabled=true] { pointer-events: none; opacity: .65; }

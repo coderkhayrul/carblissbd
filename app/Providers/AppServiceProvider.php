@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\View::composer('frontend.partials.popup-ad', function ($view) {
             $view->with('popupAd', app(\App\Services\FrontendLayoutData::class)->get()['popupAd']);
         });
-        \Illuminate\Support\Facades\View::composer('frontend.partials.recommended-products', function ($view) {
+        \Illuminate\Support\Facades\View::composer(['frontend.partials.recommended-products', 'frontend.partials.catalog-listing'], function ($view) {
             $view->with('footerCompany', app(\App\Services\FrontendLayoutData::class)->get()['footerCompany']);
         });
     }
