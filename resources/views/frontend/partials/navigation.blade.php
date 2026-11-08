@@ -1,5 +1,5 @@
 <!-- Top Main Bar -->
-<div class="site-header-main container-lg py-3 d-flex align-items-center justify-content-between gap-3">
+<div class="site-header-main container-lg d-flex align-items-center justify-content-between gap-3">
 
     <!-- Brand Logo -->
     <a href="{{ route('home') }}" class="site-header-logo text-decoration-none d-flex align-items-center flex-shrink-0">
@@ -14,7 +14,7 @@
     </a>
 
     <!-- Search Bar (Desktop) -->
-    <div class="d-none d-md-block flex-grow-1" style="max-width: 650px; min-width: 0;">
+    <div class="header-desktop-search d-none d-md-block flex-grow-1">
         @include('frontend.partials.product-search', ['searchId' => 'main-search'])
     </div>
     <!-- Header Action Utilities -->
@@ -30,32 +30,23 @@
             </div>
         </button>
 
-        <!-- Search Action Button (Replacing Wishlist) -->
-        <button onclick="document.getElementById('main-search').focus();"
-            class="d-none d-md-flex btn btn-link p-0 text-dark hover-text-primary transition-all text-decoration-none">
-            <div class="bg-orange-50 rounded-circle d-flex align-items-center justify-content-center transition-all"
-                style="width: 40px; height: 40px;">
-                <i class="fa-solid fa-magnifying-glass fs-5"></i>
-            </div>
-        </button>
-
         <!-- User Profile -->
         <a href="{{ Auth::check() ? (Auth::user()->role === 'admin' ? route('admin.dashboard') : route('profile')) : route('login') }}"
-            class="text-decoration-none text-dark hover-text-primary d-flex align-items-center gap-2 transition-all">
+            class="header-profile text-decoration-none text-dark hover-text-primary d-flex align-items-center gap-2 transition-all" aria-label="My account">
             <div class="bg-orange-50 rounded-circle d-flex align-items-center justify-content-center transition-all"
                 style="width: 40px; height: 40px;">
                 <i class="fa-regular fa-user fs-5"></i>
             </div>
             <div class="d-none d-lg-block text-start lh-1">
-                <span class="text-muted d-block mb-1"
+                <span class="header-account-name d-block mb-1"
                     style="font-size: 0.7rem;">{{ Auth::check() ? Auth::user()->name : 'Sign In' }}</span>
                 <span class="fw-bold d-block" style="font-size: 0.85rem;">My Account</span>
             </div>
         </a>
 
         <!-- Cart Button -->
-        <button onclick="toggleCartDrawer()"
-            class="btn btn-link p-0 text-dark hover-text-primary transition-all text-decoration-none position-relative">
+        <button type="button" onclick="toggleCartDrawer()" aria-label="Open shopping cart"
+            class="header-cart btn btn-link p-0 text-dark hover-text-primary transition-all text-decoration-none position-relative">
             <div class="bg-orange-50 rounded-circle d-flex align-items-center justify-content-center transition-all"
                 style="width: 40px; height: 40px;">
                 <i class="fa-solid fa-cart-shopping fs-5"></i>
@@ -68,6 +59,6 @@
 </div>
 
 <!-- Mobile Search Container -->
-<div id="mobile-search-container" class="d-none d-md-none px-3 pb-3 pt-2 bg-white w-100 border-top border-light">
+<div id="mobile-search-container" class="d-none d-md-none px-3 pb-3 pt-2 w-100 border-top border-light">
     @include('frontend.partials.product-search', ['searchId' => 'mobile-product-search'])
 </div>

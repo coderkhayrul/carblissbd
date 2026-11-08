@@ -1,14 +1,14 @@
 @include('frontend.partials.header')
 
-<body>
+<body class="storefront">
     @include('frontend.partials.page-loader')
     {{-- @include('frontend.partials.topbar') --}}
 
-    <header class="site-header sticky-top bg-white shadow-sm z-index-highest">
+    <header class="site-header sticky-top shadow-sm z-index-highest">
         @include('frontend.partials.navigation')
 
-        @include('frontend.partials.navbar')
     </header>
+    @include('frontend.partials.navbar')
 
     @yield('front-content')
 

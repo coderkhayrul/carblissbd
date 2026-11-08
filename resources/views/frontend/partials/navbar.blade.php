@@ -1,35 +1,35 @@
-    <nav class="category-navbar bg-white border-top border-bottom border-light w-100 shadow-sm"
+    <nav class="category-navbar border-top border-bottom border-light w-100 shadow-sm"
         aria-label="Product categories">
-        <div class="container-md px-3">
+        <div class="container-lg px-3">
             <div class="category-navbar-items d-flex align-items-center gap-2 overflow-x-auto no-scrollbar py-2">
+                <button type="button" onclick="toggleCategoryModal()" class="header-all-categories btn text-nowrap fw-bold d-flex align-items-center gap-3 flex-shrink-0"><i class="fa-solid fa-bars" aria-hidden="true"></i>All Categories<i class="fa-solid fa-chevron-down small" aria-hidden="true"></i></button>
                 <a href="{{ route('brand') }}"
                     class="btn bg-light text-dark fw-bold border border-secondary border-opacity-10 rounded-pill px-3 py-1 text-nowrap d-flex align-items-center gap-2 hover-bg-primary transition-all flex-shrink-0"
                     style="font-size: .75rem;">
-                    <i class="fa-solid fa-tags text-muted" aria-hidden="true"></i> Brand
+                    Brand
                 </a>
                 <a href="{{ route('offers') }}"
                     class="btn {{ request()->routeIs('offers') ? 'btn-primary active' : 'bg-light text-dark border-secondary border-opacity-10 hover-bg-primary' }} fw-bold border rounded-pill px-3 py-1 text-nowrap d-flex align-items-center gap-2 transition-all flex-shrink-0"
                     style="font-size: .75rem;" @if (request()->routeIs('offers')) aria-current="page" @endif>
-                    <i class="fa-solid fa-percent {{ request()->routeIs('offers') ? 'text-white' : 'text-muted' }}" aria-hidden="true"></i> Offer
+                    Offer
                 </a>
-                @foreach ($menuCategories->whereNull('parent_id')->take(5) as $menuCategory)
+                @foreach ($menuCategories->whereNull('parent_id') as $menuCategory)
                     <div class="navbar-category-item d-flex align-items-center flex-shrink-0">
+                    @if ($menuCategory->children->isNotEmpty())
+                        <button type="button" class="navbar-category-trigger navbar-submenu-toggle btn text-dark fw-bold text-nowrap" aria-expanded="false" aria-controls="navbar-submenu-{{ $menuCategory->id }}" @if (request('category') === $menuCategory->slug || $menuCategory->children->contains('slug', request('category'))) aria-current="page" @endif>{{ $menuCategory->name }}</button>
+                        <div id="navbar-submenu-{{ $menuCategory->id }}" class="navbar-category-submenu" aria-label="{{ $menuCategory->name }} subcategories" hidden>
+                            <div class="navbar-submenu-heading">{{ $menuCategory->name }}</div>
+                            <a href="{{ route('category', ['category' => $menuCategory->slug]) }}" class="navbar-submenu-link navbar-submenu-view-all"><span>View All {{ $menuCategory->name }}</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                            @foreach ($menuCategory->children as $child)
+                                <a href="{{ route('category', ['category' => $child->slug]) }}" class="navbar-submenu-link" @if (request('category') === $child->slug) aria-current="page" @endif><span>{{ $child->name }}</span><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></a>
+                            @endforeach
+                        </div>
+                    @else
                     <a href="{{ route('category', ['category' => $menuCategory->slug]) }}"
                         class="btn bg-light text-dark fw-bold border border-secondary border-opacity-10 rounded-pill px-3 py-1 text-nowrap d-flex align-items-center gap-2 hover-bg-primary transition-all flex-shrink-0"
                         style="font-size: .75rem;" @if (request('category') === $menuCategory->slug) aria-current="page" @endif>
-                        <i class="{{ $menuCategory->icon ?: 'fa-solid fa-layer-group' }} text-muted"
-                            aria-hidden="true"></i>
                         {{ $menuCategory->name }}
                     </a>
-                    @if ($menuCategory->children->isNotEmpty())
-                        <button type="button" class="navbar-submenu-toggle" aria-expanded="false" aria-controls="navbar-submenu-{{ $menuCategory->id }}" aria-label="Subcategories of {{ $menuCategory->name }}">
-                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-                        </button>
-                        <div id="navbar-submenu-{{ $menuCategory->id }}" class="navbar-category-submenu" hidden>
-                            @foreach ($menuCategory->children as $child)
-                                <a href="{{ route('category', ['category' => $child->slug]) }}" class="navbar-submenu-link">{{ $child->name }}</a>
-                            @endforeach
-                        </div>
                     @endif
                     </div>
                 @endforeach
@@ -70,7 +70,7 @@
                 item.addEventListener('pointerleave', () => { if (hover.matches) leave(); });
                 panel.addEventListener('pointerenter', () => clearTimeout(timer));
                 panel.addEventListener('pointerleave', () => { if (hover.matches) leave(); });
-                button.addEventListener('click', () => { if (active?.panel === panel) close(); else open(); });
+                button.addEventListener('click', () => { if (hover.matches) open(); else if (active?.panel === panel) close(); else open(); });
                 button.addEventListener('keydown', event => {
                     if (event.key === 'ArrowDown') { event.preventDefault(); open(); panel.querySelector('a')?.focus(); }
                 });
