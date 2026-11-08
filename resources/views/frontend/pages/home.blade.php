@@ -62,7 +62,7 @@
                     </div>
                 @endif
                 @if ($promoAds->isNotEmpty())
-                    <aside class="home-hero-promos" aria-label="Promotional offers">@include('frontend.partials.promotion')</aside>
+                <aside class="home-hero-promos d-none d-md-flex" aria-label="Promotional offers">@include('frontend.partials.promotion')</aside>
                 @endif
             </div>
         </section>

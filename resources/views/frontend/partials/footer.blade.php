@@ -117,17 +117,23 @@
         // --- Initialize Swiper for New Arrivals Section ---
         const arrivalsElement = document.querySelector('#new-arrivals .new-arrivals-swiper');
         var newArrivalsSwiper = arrivalsElement ? new Swiper(arrivalsElement, {
-            threshold: 8,
+            simulateTouch: true,
+            threshold: 10,
             touchAngle: 35,
-            touchStartPreventDefault: false,
+            touchStartPreventDefault: true,
+            preventClicks: true,
+            preventClicksPropagation: true,
+            speed: 400,
             slidesPerView: 2,
             spaceBetween: 12,
             watchOverflow: true,
             grabCursor: true,
-            navigation: {
-                nextEl: '#new-arrivals .prod-next',
-                prevEl: '#new-arrivals .prod-prev',
+            scrollbar: {
+                el: arrivalsElement.querySelector('.new-arrivals-scrollbar'),
+                draggable: true,
             },
+            keyboard: {enabled: true, onlyInViewport: true},
+            a11y: {enabled: true, containerMessage: 'New arrival products'},
             breakpoints: {
                 576: {
                     slidesPerView: 3,
@@ -147,6 +153,7 @@
                 }
             }
         }) : null;
+        arrivalsElement?.addEventListener('dragstart', event => event.preventDefault());
 
         // Init logic on load
         window.onload = function() {

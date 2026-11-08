@@ -147,7 +147,7 @@ class FrontendController extends Controller
         }
 
         $products = $this->recommendedProductsQuery()->whereIn('category_id', $categoryIds)
-            ->paginate(20)->withQueryString();
+            ->paginate(24)->withQueryString();
 
         return view('frontend.pages.category', compact('categories', 'selectedCategory', 'products'));
     }
@@ -165,7 +165,7 @@ class FrontendController extends Controller
         } else {
             $query->whereIn('brand_id', $brands->pluck('id'));
         }
-        $products = $query->paginate(20)->withQueryString();
+        $products = $query->paginate(24)->withQueryString();
 
         return view('frontend.pages.brand', compact('brands', 'selectedBrand', 'products'));
     }
