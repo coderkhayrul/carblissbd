@@ -39,8 +39,8 @@
         }
 
         /* .sale-list-table tbody tr:nth-child(odd) td {
-                        background-color: #f8f9fb;
-                    } */
+                                background-color: #f8f9fb;
+                            } */
 
         .sale-list-table .invoice-cell,
         .sale-list-table .customer-cell,
@@ -193,13 +193,13 @@
                             <option value="{{ $channel }}" @selected(request('entry_channel') === $channel)>{{ $channel }}</option>
                         @endforeach
                     </select>
-                    <label class="form-label" for="filter-payment">Payment Type</label>
+                    {{-- <label class="form-label" for="filter-payment">Payment Type</label>
                     <select class="form-select" id="filter-payment" name="payment_type">
                         <option value="">All Payment Types</option>
                         @foreach (['COD', 'Online'] as $payment)
                             <option value="{{ $payment }}" @selected(request('payment_type') === $payment)>{{ $payment }}</option>
                         @endforeach
-                    </select>
+                    </select> --}}
                 </div>
                 <div class="col-6 col-md-6 col-xl-2">
                     <label class="form-label" for="filter-courier">Courier</label>
