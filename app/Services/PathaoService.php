@@ -135,6 +135,7 @@ class PathaoService
 
     public function book(Order $order, array $data): void
     {
+        if (!$order->fresh()->canAssignCourier('Pathao')) $this->fail('A courier is already assigned or a booking is pending. Another courier cannot be assigned.');
         $lock = Cache::lock('courier-booking-order-' . $order->id, 90);
         if (!$lock->get()) $this->fail('Another booking request is running.');
         try {
@@ -147,7 +148,7 @@ class PathaoService
             [$shipment, $payload] = DB::transaction(function () use ($order, $data, $settings) {
                 $current = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
                 if ($current->pathaoShipment()->exists() || $current->steadfastShipment()->exists()) $this->fail('This order already has a booking or an unresolved courier request.');
-                if ($current->is_courier_assigned && trim($current->courier_name ?? '') !== 'Pathao') $this->fail('This order is assigned to another courier.');
+                if (!$current->canAssignCourier('Pathao')) $this->fail('This order is already assigned to a courier. Its courier cannot be changed.');
                 $current->load(['customerInfo', 'currentStatus', 'details']);
                 if (in_array(strtolower(trim($current->currentStatus?->name ?? '')), ['cancelled', 'canceled', 'cancel', 'returned', 'delivered', 'completed'], true)) $this->fail('A completed, cancelled or returned order cannot be booked.');
                 $info = $current->customerInfo;

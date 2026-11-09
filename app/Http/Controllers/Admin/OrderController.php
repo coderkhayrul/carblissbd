@@ -306,6 +306,7 @@ class OrderController extends Controller
     public function assignCourier(Request $request, Order $order, AdminOrderService $service)
     {
         $data = $request->validate(['courier' => ['required', Rule::in(AdminOrderService::COURIERS)]]);
+        if (!$order->canAssignCourier($data['courier'])) throw ValidationException::withMessages(['courier' => 'A courier is already assigned or a booking is pending. Its courier cannot be changed.']);
         if ($data['courier'] === 'Pathao') return redirect()->route('admin.pathao.booking', $order);
         try {
             $service->courier($order, $data['courier']);
@@ -315,6 +316,6 @@ class OrderController extends Controller
             report($exception);
             return back()->with('error', 'Unable to assign this courier. Please try again.');
         }
-        return back()->with('success', $data['courier'] === 'Steadfast' ? 'Order booked with Steadfast successfully.' : $data['courier'] . ' assigned locally. No courier API booking was sent.');
+        return back()->with('success', 'Order booked with Steadfast successfully.');
     }
 }

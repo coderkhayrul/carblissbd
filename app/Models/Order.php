@@ -17,6 +17,13 @@ class Order extends Model
     public function customerInfo() { return $this->hasOne(OrderCustomerInfo::class); }
     public function steadfastShipment() { return $this->hasOne(SteadfastShipment::class); }
     public function pathaoShipment() { return $this->hasOne(PathaoShipment::class); }
+
+    public function canAssignCourier(string $courier): bool
+    {
+        // Reservations also lock the courier before an external booking has been confirmed.
+        if ($this->pathaoShipment || $this->steadfastShipment) return false;
+        return !$this->is_courier_assigned || trim($this->courier_name ?? '') === $courier;
+    }
     public function payments() { return $this->hasMany(OrderCustomerPayment::class); }
     public function statusHistory() { return $this->hasMany(OrderStatus::class); }
     public function currentStatus() { return $this->belongsTo(Status::class, 'current_status'); }

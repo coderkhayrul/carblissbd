@@ -205,7 +205,7 @@
                     <label class="form-label" for="filter-courier">Courier</label>
                     <select class="form-select" id="filter-courier" name="courier">
                         <option value="">All Courier</option>
-                        @foreach (['unassigned' => 'Not Assigned', 'Pathao' => 'Pathao', 'Steadfast' => 'Steadfast', 'eCourier' => 'eCourier', 'Paperfly' => 'Paperfly', 'RedX' => 'RedX'] as $value => $label)
+                        @foreach (['unassigned' => 'Not Assigned', 'Pathao' => 'Pathao', 'Steadfast' => 'Steadfast'] as $value => $label)
                             <option value="{{ $value }}" @selected(request('courier') === $value)>{{ $label }}</option>
                         @endforeach
                     </select>

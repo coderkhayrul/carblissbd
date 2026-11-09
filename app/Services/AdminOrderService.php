@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 
 class AdminOrderService
 {
-    public const COURIERS = ['Pathao', 'Steadfast', 'eCourier', 'Paperfly', 'RedX'];
+    public const COURIERS = ['Pathao', 'Steadfast'];
     public const COPIES = [
         'customer' => 'Customer Copy',
         'accounts' => 'Accounts Copy',
@@ -270,20 +270,9 @@ class AdminOrderService
 
     public function courier(Order $order, string $courier): void
     {
+        if (!in_array($courier, self::COURIERS, true)) throw ValidationException::withMessages(['courier' => 'Only Pathao and Steadfast are supported.']);
         if ($courier === 'Pathao') throw ValidationException::withMessages(['courier' => 'Use the Pathao booking form to select the pickup store and parcel details.']);
-        if ($courier === 'Steadfast') {
-            app(SteadfastService::class)->book($order);
-            return;
-        }
-        DB::transaction(function () use ($order, $courier) {
-            $current = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
-            if ($current->steadfastShipment()->exists()) throw ValidationException::withMessages(['courier' => 'This order has a Steadfast booking or an unresolved booking request. Its courier cannot be replaced.']);
-            if ($current->pathaoShipment()->exists()) throw ValidationException::withMessages(['courier' => 'This order has a Pathao booking or an unresolved request. Its courier cannot be replaced.']);
-            $current->courier_name = $courier;
-            $current->is_courier_assigned = true;
-            $current->courier_status = 'Assigned';
-            $current->saveOrFail();
-        });
+        app(SteadfastService::class)->book($order);
     }
 
     public function complaint(Order $order, array $data, int $userId): void

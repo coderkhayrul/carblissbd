@@ -49,7 +49,9 @@
             <a class="dropdown-item" href="{{ route('admin.orders.show', $order) }}">Steadfast Details / Cancel Order</a>
         @endif
         @foreach (\App\Services\AdminOrderService::COURIERS as $courier)
-            @if ($courier === 'Pathao')
+            @if (!$order->canAssignCourier($courier))
+                <button class="dropdown-item disabled" type="button" disabled aria-disabled="true" title="A courier is already assigned or booking is pending"><i class="bx bxs-truck me-2" aria-hidden="true"></i>Assign {{ $courier }}</button>
+            @elseif ($courier === 'Pathao')
                 <a class="dropdown-item" href="{{ route('admin.pathao.booking', $order) }}"><i class="bx bxs-truck me-2" aria-hidden="true"></i>Assign Pathao</a>
             @else
             <form method="POST" action="{{ route('admin.orders.courier.assign', $order) }}" class="order-courier-form"

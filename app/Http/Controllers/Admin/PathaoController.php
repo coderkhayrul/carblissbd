@@ -106,6 +106,7 @@ class PathaoController extends Controller
 
     public function booking(Order $order)
     {
+        if (!$order->canAssignCourier('Pathao')) return redirect()->route('admin.orders.show', $order)->with('error', 'A courier is already assigned or a booking is pending. Use the existing courier details.');
         $settings = PathaoSetting::configuration();
         $order->load(['customerInfo', 'pathaoShipment']);
         return view('admin.orders.pathao-booking', compact('order', 'settings'));

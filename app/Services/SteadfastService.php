@@ -65,6 +65,7 @@ class SteadfastService
 
     public function book(Order $order): void
     {
+        if (!$order->fresh()->canAssignCourier('Steadfast')) $this->fail('A courier is already assigned or a booking is pending. Another courier cannot be assigned.');
         $lock = Cache::lock('steadfast-order-' . $order->id, 90);
         if (!$lock->get()) $this->fail('Another courier request is running. Please wait.');
         try {
@@ -78,7 +79,7 @@ class SteadfastService
                 }
                 $current->load(['customerInfo', 'currentStatus']);
                 if (in_array(strtolower(trim($current->currentStatus?->name ?? '')), ['cancelled', 'canceled', 'cancel', 'returned', 'delivered', 'completed'])) $this->fail('A cancelled, returned or completed order cannot be booked.');
-                if ($current->is_courier_assigned && trim($current->courier_name ?? '') !== 'Steadfast') $this->fail('This order is already assigned to another courier.');
+                if (!$current->canAssignCourier('Steadfast')) $this->fail('This order is already assigned to a courier. Its courier cannot be changed.');
                 $info = $current->customerInfo;
                 $phone = preg_replace('/\D/', '', $info?->phone ?? '');
                 if (str_starts_with($phone, '880')) $phone = substr($phone, 2);
