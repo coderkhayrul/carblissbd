@@ -81,7 +81,7 @@ class OrderController extends Controller
             report($exception);
             return back()->withInput()->with('error', 'Unable to create the order. No order or payment was saved.');
         }
-        return redirect()->route('admin.orders.show', $order)->with('success', 'New sale created successfully. Invoice: ' . $order->order_no);
+        return redirect()->route('admin.orders.show', $order)->with('success', 'New sale created successfully. Invoice: ' . $order->order_no)->with('new_order_sound', $order->id);
     }
 
     private function productCatalog($products): array
@@ -287,7 +287,7 @@ class OrderController extends Controller
         try {
             if ($action === 'duplicate') {
                 $copy = $service->duplicate($order, $data['request_token']);
-                return redirect()->route('admin.orders.show', $copy)->with('success', 'Order duplicated with a new invoice number.');
+                return redirect()->route('admin.orders.show', $copy)->with('success', 'Order duplicated with a new invoice number.')->with('new_order_sound', $copy->id);
             }
             match ($action) {
                 'status' => $service->status($order, (int) $data['status_id'], $data['cancel_reason'] ?? null),

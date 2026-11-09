@@ -59,6 +59,7 @@
 <script src="{{ asset('backend') }}/assets/js/main.js"></script>
 
 <script src="{{ asset('backend') }}/js/custom.js"></script>
+<script src="{{ asset('backend/assets/js/order-notifications.js') }}?v={{ filemtime(public_path('backend/assets/js/order-notifications.js')) }}" defer></script>
 
 @stack('backend_script')
 </body>

@@ -41,6 +41,9 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('order-notifications', [\App\Http\Controllers\Admin\OrderNotificationController::class, 'index'])->middleware('throttle:300,1')->name('order-notifications.index');
+    Route::post('order-notifications/read-all', [\App\Http\Controllers\Admin\OrderNotificationController::class, 'readAll'])->name('order-notifications.read-all');
+    Route::post('order-notifications/{notification}/read', [\App\Http\Controllers\Admin\OrderNotificationController::class, 'read'])->whereNumber('notification')->name('order-notifications.read');
     Route::get('configuration/courier/pathao', [\App\Http\Controllers\Admin\PathaoController::class, 'settings'])->name('pathao.settings');
     Route::post('configuration/courier/pathao', [\App\Http\Controllers\Admin\PathaoController::class, 'save'])->name('pathao.save');
     Route::post('configuration/courier/pathao/connect', [\App\Http\Controllers\Admin\PathaoController::class, 'connect'])->middleware('throttle:5,1')->name('pathao.connect');

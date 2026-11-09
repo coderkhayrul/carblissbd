@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -12,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->scoped(\App\Services\FrontendLayoutData::class);
-        $this->app->scoped('company.branding', fn () => \App\Models\CompanySetting::orderBy('id')->first() ?? new \App\Models\CompanySetting);
+        $this->app->scoped('company.branding', fn() => \App\Models\CompanySetting::orderBy('id')->first() ?? new \App\Models\CompanySetting);
     }
 
     /**
@@ -20,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \Illuminate\Support\Facades\View::composer('admin.partials.order-notifications', function ($view) {
+            $view->with('orderNoticeFeed', app(\App\Services\AdminOrderNotificationService::class)->feed((int) Auth::id()));
+        });
         \Illuminate\Support\Facades\View::composer(['admin.partials.header', 'admin.auth.login'], function ($view) {
             $view->with('brandCompany', app('company.branding'));
         });

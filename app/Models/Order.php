@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    protected static function booted(): void
+    {
+        static::created(function (self $order) {
+            // Same transaction as the order: failed checkouts roll this notification back too.
+            \Illuminate\Support\Facades\DB::table('admin_order_notifications')->insertOrIgnore(['order_id' => $order->id, 'created_at' => now()]);
+        });
+    }
+
     protected $guarded = [];
     protected $casts = ['date' => 'date', 'grand_total' => 'decimal:2', 'subtotal' => 'decimal:2', 'shipping_cost' => 'decimal:2'];
     public function customer()
