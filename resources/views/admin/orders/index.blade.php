@@ -66,6 +66,8 @@
 
         .sale-list-table .amount-cell {
             min-width: 200px;
+            font-size: 1rem;
+            line-height: 1.6;
             font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
         }
 
