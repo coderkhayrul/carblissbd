@@ -41,6 +41,12 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('configuration/courier/steadfast', [\App\Http\Controllers\Admin\SteadfastController::class, 'settings'])->name('steadfast.settings');
+    Route::post('configuration/courier/steadfast', [\App\Http\Controllers\Admin\SteadfastController::class, 'save'])->name('steadfast.save');
+    Route::post('configuration/courier/steadfast/connection', [\App\Http\Controllers\Admin\SteadfastController::class, 'connection'])->middleware('throttle:5,1')->name('steadfast.connection');
+    Route::post('orders/{order}/steadfast/sync', [\App\Http\Controllers\Admin\SteadfastController::class, 'sync'])->middleware('throttle:20,1')->name('steadfast.sync');
+    Route::post('orders/{order}/steadfast/cancel', [\App\Http\Controllers\Admin\SteadfastController::class, 'cancel'])->name('steadfast.cancel');
+    Route::post('orders/{order}/steadfast/release', [\App\Http\Controllers\Admin\SteadfastController::class, 'release'])->middleware('throttle:5,1')->name('steadfast.release');
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 

@@ -295,7 +295,7 @@
         </li>
         <!-- Configuration -->
         <li
-            class="menu-item {{ request()->routeIs('admin.shipping-charge-settings.*', 'admin.statuses.*', 'admin.return-reasons.*', 'admin.coupons.*') ? 'open active' : '' }}">
+            class="menu-item {{ request()->routeIs('admin.shipping-charge-settings.*', 'admin.statuses.*', 'admin.return-reasons.*', 'admin.coupons.*', 'admin.steadfast.*') ? 'open active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-cube"></i>
                 <div data-i18n="Configuration">Configuration</div>
@@ -305,6 +305,11 @@
                     <a href="{{ route('admin.shipping-charge-settings.index') }}" class="menu-link">
                         <div data-i18n="Shipping Charge">Shipping Charge</div>
                     </a>
+                </li>
+
+                <li class="menu-item {{ request()->routeIs('admin.steadfast.*') ? 'open active' : '' }}">
+                    <a href="javascript:void(0);" class="menu-link menu-toggle"><div>Courier Configuration</div></a>
+                    <ul class="menu-sub"><li class="menu-item {{ request()->routeIs('admin.steadfast.*') ? 'active' : '' }}"><a href="{{ route('admin.steadfast.settings') }}" class="menu-link"><div>Steadfast</div></a></li></ul>
                 </li>
 
                 <li class="menu-item {{ request()->routeIs('admin.statuses.*') ? 'active' : '' }}">

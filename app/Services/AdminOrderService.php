@@ -104,6 +104,7 @@ class AdminOrderService
     {
         DB::transaction(function () use ($order, $data, $userId, $logEdit) {
             $current = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
+            if ($current->steadfastShipment()->exists()) throw ValidationException::withMessages(['order' => 'This order has a Steadfast booking or an unresolved booking request. Products, recipient and COD cannot be edited here. Use the Steadfast panel for parcel changes; use the order Status action to change local status.']);
             $current->load(['details', 'customerInfo', 'payments']);
             if (!hash_equals($this->editVersion($current), $data['edit_version'])) {
                 throw ValidationException::withMessages(['order' => 'This order changed after you opened it. Reload the page before editing again.']);
@@ -268,8 +269,13 @@ class AdminOrderService
 
     public function courier(Order $order, string $courier): void
     {
+        if ($courier === 'Steadfast') {
+            app(SteadfastService::class)->book($order);
+            return;
+        }
         DB::transaction(function () use ($order, $courier) {
             $current = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
+            if ($current->steadfastShipment()->exists()) throw ValidationException::withMessages(['courier' => 'This order has a Steadfast booking or an unresolved booking request. Its courier cannot be replaced.']);
             $current->courier_name = $courier;
             $current->is_courier_assigned = true;
             $current->courier_status = 'Assigned';

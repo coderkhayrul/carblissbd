@@ -188,7 +188,7 @@ class OrderController extends Controller
             'date_to' => array_merge(['nullable', 'date_format:Y-m-d'], $request->filled('date_from') ? ['after_or_equal:date_from'] : []),
             'order_no' => ['nullable', 'string', 'max:255'],
         ]);
-        $query = Order::with(['customerInfo', 'customer', 'currentStatus', 'createdBy'])->latest('id');
+        $query = Order::with(['customerInfo', 'customer', 'currentStatus', 'createdBy', 'steadfastShipment'])->latest('id');
         if (!empty($filters['entry_channel'])) $query->where('entry_channel', $filters['entry_channel']);
         foreach (['customer_id' => 'customer_id', 'order_source' => 'order_source', 'payment_type' => 'payment_type', 'status_id' => 'current_status'] as $filter => $column) {
             if (isset($filters[$filter]) && $filters[$filter] !== '') $query->where($column, $filters[$filter]);
@@ -308,10 +308,12 @@ class OrderController extends Controller
         $data = $request->validate(['courier' => ['required', Rule::in(AdminOrderService::COURIERS)]]);
         try {
             $service->courier($order, $data['courier']);
+        } catch (ValidationException $exception) {
+            throw $exception;
         } catch (\Throwable $exception) {
             report($exception);
             return back()->with('error', 'Unable to assign this courier. Please try again.');
         }
-        return back()->with('success', $data['courier'] . ' assigned locally. No courier API booking was sent.');
+        return back()->with('success', $data['courier'] === 'Steadfast' ? 'Order booked with Steadfast successfully.' : $data['courier'] . ' assigned locally. No courier API booking was sent.');
     }
 }

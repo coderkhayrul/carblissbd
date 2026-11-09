@@ -39,8 +39,8 @@
         }
 
         /* .sale-list-table tbody tr:nth-child(odd) td {
-                background-color: #f8f9fb;
-            } */
+                        background-color: #f8f9fb;
+                    } */
 
         .sale-list-table .invoice-cell,
         .sale-list-table .customer-cell,
@@ -115,17 +115,43 @@
                 font-size: 1.1rem;
             }
         }
-    .order-action-menu[hidden] { display: none !important; } .order-action-menu { min-width: 220px; max-width: calc(100vw - 16px); max-height: 360px; overflow-y: auto; z-index: 2100; } .order-action-menu .dropdown-item { font-size: .82rem; padding: .6rem .9rem; } .order-action-buttons { flex-shrink: 0; } .sale-courier { min-width: 320px; }
-</style>
+
+        .order-action-menu[hidden] {
+            display: none !important;
+        }
+
+        .order-action-menu {
+            min-width: 220px;
+            max-width: calc(100vw - 16px);
+            max-height: 360px;
+            overflow-y: auto;
+            z-index: 2100;
+        }
+
+        .order-action-menu .dropdown-item {
+            font-size: .82rem;
+            padding: .6rem .9rem;
+        }
+
+        .order-action-buttons {
+            flex-shrink: 0;
+        }
+
+        .sale-courier {
+            min-width: 320px;
+        }
+    </style>
 @endpush
 @section('admin-content')
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <h4 class="sale-list-heading mb-0"><i class="bx bx-list-ul me-1" aria-hidden="true"></i>Sale / Order List</h4>
-        <div class="d-flex gap-2 flex-wrap"><a class="btn btn-sm btn-primary" href="{{ route('admin.orders.create') }}"><i class="bx bx-plus me-1" aria-hidden="true"></i>New Sale</a>
-        <a class="btn btn-sm btn-primary"
-            href="{{ route('admin.orders.export', request()->only(['customer_id', 'order_source', 'entry_channel', 'payment_type', 'courier', 'status_id', 'date_from', 'date_to', 'order_no'])) }}">
-            <i class="bx bx-download me-1" aria-hidden="true"></i>Excel CSV
-        </a></div>
+        <div class="d-flex gap-2 flex-wrap"><a class="btn btn-sm btn-primary" href="{{ route('admin.orders.create') }}"><i
+                    class="bx bx-plus me-1" aria-hidden="true"></i>New Sale</a>
+            <a class="btn btn-sm btn-primary"
+                href="{{ route('admin.orders.export', request()->only(['customer_id', 'order_source', 'entry_channel', 'payment_type', 'courier', 'status_id', 'date_from', 'date_to', 'order_no'])) }}">
+                <i class="bx bx-download me-1" aria-hidden="true"></i>Excel CSV
+            </a>
+        </div>
     </div>
     @if ($errors->any())
         <div class="alert alert-danger" role="alert">
@@ -161,7 +187,12 @@
                 </div>
                 <div class="col-6 col-md-3 col-xl-2">
                     <label class="form-label" for="filter-entry">Order Entry</label>
-                    <select class="form-select mb-2" id="filter-entry" name="entry_channel"><option value="">All Entry Channels</option>@foreach (['Checkout', 'Landing Page', 'Admin'] as $channel)<option value="{{ $channel }}" @selected(request('entry_channel') === $channel)>{{ $channel }}</option>@endforeach</select>
+                    <select class="form-select mb-2" id="filter-entry" name="entry_channel">
+                        <option value="">All Entry Channels</option>
+                        @foreach (['Checkout', 'Landing Page', 'Admin'] as $channel)
+                            <option value="{{ $channel }}" @selected(request('entry_channel') === $channel)>{{ $channel }}</option>
+                        @endforeach
+                    </select>
                     <label class="form-label" for="filter-payment">Payment Type</label>
                     <select class="form-select" id="filter-payment" name="payment_type">
                         <option value="">All Payment Types</option>
@@ -242,7 +273,9 @@
                                 <a class="d-block fw-bold text-body mb-2"
                                     href="{{ route('admin.orders.show', $order) }}">{{ $order->order_no }}</a>
                                 <span class="badge sale-source">{{ $order->order_source }}</span>
-                                @if ($order->entry_channel === 'Landing Page')<span class="badge bg-label-success mt-1">Landing Page</span>@endif
+                                @if ($order->entry_channel === 'Landing Page')
+                                    <span class="badge bg-label-success mt-1">Landing Page</span>
+                                @endif
                             </td>
                             <td class="customer-cell">
                                 <a class="fw-bold text-body d-block mb-1"
@@ -276,13 +309,24 @@
                             <td class="sale-courier">
                                 <div class="d-flex justify-content-between align-items-center gap-3">
                                     <div>
-                                        <span class="badge {{ $order->is_courier_assigned ? 'bg-label-primary' : 'bg-warning text-white' }}">{{ $order->is_courier_assigned ? trim($order->courier_name ?? 'Assigned') : 'Not Assigned' }}</span>
-                                        @if ($order->courier_status)<div class="small text-muted mt-1">{{ $order->courier_status }}</div>@endif
+                                        <span
+                                            class="badge {{ $order->is_courier_assigned ? 'bg-label-primary' : 'bg-warning text-white' }}">{{ $order->is_courier_assigned ? trim($order->courier_name ?? 'Assigned') : 'Not Assigned' }}</span>
+                                        @if ($order->courier_status)
+                                            <div class="small text-muted mt-1">{{ $order->courier_status }}</div>
+                                        @endif
                                     </div>
                                     <div class="border-start border-end px-3 text-center small">
                                         <strong class="text-muted">{{ $order->order_source }}</strong>
-                                        @if ($order->createdBy)<div class="small text-muted" style="max-width:120px;white-space:normal;overflow-wrap:anywhere">{{ $order->createdBy->name }}</div>@endif
-                                        @if ($order->draft_source)<div class="small text-muted" style="max-width:120px;white-space:normal;overflow-wrap:anywhere">{{ $order->draft_source }}</div>@endif
+                                        @if ($order->createdBy)
+                                            <div class="small text-muted"
+                                                style="max-width:120px;white-space:normal;overflow-wrap:anywhere">
+                                                {{ $order->createdBy->name }}</div>
+                                        @endif
+                                        @if ($order->draft_source)
+                                            <div class="small text-muted"
+                                                style="max-width:120px;white-space:normal;overflow-wrap:anywhere">
+                                                {{ $order->draft_source }}</div>
+                                        @endif
                                     </div>
                                     @include('admin.orders.actions-menu')
                                 </div>

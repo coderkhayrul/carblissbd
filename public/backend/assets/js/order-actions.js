@@ -49,7 +49,7 @@
     document.addEventListener('submit', event => {
         const form = event.target.closest('.order-courier-form');
         if (!form) return;
-        if (!window.confirm('Assign ' + form.dataset.courier + ' to this order? This saves the assignment in the backend only.')) {
+        if (!window.confirm(form.dataset.courier === 'Steadfast' ? 'Book this order with Steadfast? Recipient details and the outstanding COD amount will be sent to Steadfast.' : 'Assign ' + form.dataset.courier + ' to this order? This saves the assignment in the backend only.')) {
             event.preventDefault();
             return;
         }

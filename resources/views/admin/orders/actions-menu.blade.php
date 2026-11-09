@@ -40,6 +40,10 @@
             aria-hidden="true"></i><span class="visually-hidden">Assign courier for
             {{ $order->order_no }}</span></button>
     <div class="dropdown-menu order-action-menu" id="courier-menu-{{ $order->id }}" hidden>
+        @if ($order->steadfastShipment)
+            <form method="POST" action="{{ route('admin.steadfast.sync', $order) }}">@csrf<button class="dropdown-item" type="submit">Sync Steadfast Status</button></form>
+            <a class="dropdown-item" href="{{ route('admin.orders.show', $order) }}">Steadfast Details / Cancel Order</a>
+        @endif
         @foreach (\App\Services\AdminOrderService::COURIERS as $courier)
             <form method="POST" action="{{ route('admin.orders.courier.assign', $order) }}" class="order-courier-form"
                 data-courier="{{ $courier }}">

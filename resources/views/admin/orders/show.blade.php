@@ -37,6 +37,7 @@
             </div>
         </div>
         <div class="col-12 col-lg-4">
+            @include('admin.orders.steadfast')
             @if ($order->cancel_reason)
                 <div class="card mb-4 border border-danger"><h5 class="card-header text-danger">Cancellation Reason</h5><div class="card-body" style="white-space:pre-line;overflow-wrap:anywhere">{{ $order->cancel_reason }}</div></div>
             @endif
