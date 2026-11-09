@@ -4,6 +4,15 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 
+Schedule::call(function () {
+    if (!\App\Models\PathaoSetting::find(1)?->webhook_enabled) return;
+    \App\Models\PathaoWebhook::whereNull('processed_at')->where(function ($query) {
+        $query->whereNull('retry_at')->orWhere('retry_at', '<=', now());
+    })->orderBy('id')->limit(30)->pluck('id')->each(function ($id) {
+        app(\App\Services\PathaoWebhookService::class)->process($id);
+    });
+})->name('recover-pathao-webhooks')->everyMinute()->withoutOverlapping(30);
+
 // Durable inbox fallback if the webhook queue worker / dispatch was temporarily unavailable.
 Schedule::call(function () {
     if (!\App\Models\SteadfastSetting::find(1)?->enabled) return;

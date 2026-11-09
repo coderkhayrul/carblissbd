@@ -72,6 +72,7 @@ class SteadfastService
             $this->ready($settings);
             $shipment = DB::transaction(function () use ($order) {
                 $current = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
+                if ($current->pathaoShipment()->exists()) $this->fail('This order already has a Pathao booking or an unresolved request.');
                 if ($existing = SteadfastShipment::where('order_id', $current->id)->first()) {
                     $this->fail($existing->booking_state === 'booked' ? 'This invoice is already booked. Use Sync Status.' : 'An earlier booking needs verification. Use Sync Status or check this invoice in Steadfast; another booking has been blocked to prevent duplicates.');
                 }

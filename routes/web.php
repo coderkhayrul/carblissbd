@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\CustomerAuthController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Route;
+Route::post('/webhooks/pathao', \App\Http\Controllers\PathaoWebhookController::class)->middleware('throttle:1000,1')->name('pathao.webhook');
 Route::post('/webhooks/steadfast', \App\Http\Controllers\SteadfastWebhookController::class)->middleware('throttle:1000,1')->name('steadfast.webhook');
 Route::get('/robots.txt', [\App\Http\Controllers\SeoController::class, 'robots'])->name('seo.robots');
 Route::get('/sitemap.xml', [\App\Http\Controllers\SeoController::class, 'index'])->name('seo.sitemap');

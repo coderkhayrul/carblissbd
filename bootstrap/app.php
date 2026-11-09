@@ -20,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->validateCsrfTokens(except: ['webhooks/steadfast']);
+        $middleware->validateCsrfTokens(except: ['webhooks/steadfast', 'webhooks/pathao']);
         $middleware->alias([
             'is_admin' => \App\Http\Middleware\IsAdminMiddleware::class,
         ]);
@@ -45,7 +45,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->dontFlash(['mail_password', 'steadfast_api_key', 'steadfast_secret_key', 'steadfast_webhook_token']);
+        $exceptions->dontFlash(['mail_password', 'steadfast_api_key', 'steadfast_secret_key', 'steadfast_webhook_token', 'pathao_client_id', 'pathao_client_secret', 'pathao_username', 'pathao_password', 'pathao_webhook_secret']);
         $exceptions->shouldRenderJsonWhen(
             fn(Request $request) => $request->is('api/*'),
         );

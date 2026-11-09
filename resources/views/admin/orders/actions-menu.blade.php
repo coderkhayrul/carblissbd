@@ -40,11 +40,18 @@
             aria-hidden="true"></i><span class="visually-hidden">Assign courier for
             {{ $order->order_no }}</span></button>
     <div class="dropdown-menu order-action-menu" id="courier-menu-{{ $order->id }}" hidden>
+        @if ($order->pathaoShipment)
+            <form method="POST" action="{{ route('admin.pathao.sync', $order) }}">@csrf<button class="dropdown-item" type="submit">Sync Pathao Status</button></form>
+            <a class="dropdown-item" href="{{ route('admin.orders.show', $order) }}">Pathao Booking Details</a>
+        @endif
         @if ($order->steadfastShipment)
             <form method="POST" action="{{ route('admin.steadfast.sync', $order) }}">@csrf<button class="dropdown-item" type="submit">Sync Steadfast Status</button></form>
             <a class="dropdown-item" href="{{ route('admin.orders.show', $order) }}">Steadfast Details / Cancel Order</a>
         @endif
         @foreach (\App\Services\AdminOrderService::COURIERS as $courier)
+            @if ($courier === 'Pathao')
+                <a class="dropdown-item" href="{{ route('admin.pathao.booking', $order) }}"><i class="bx bxs-truck me-2" aria-hidden="true"></i>Assign Pathao</a>
+            @else
             <form method="POST" action="{{ route('admin.orders.courier.assign', $order) }}" class="order-courier-form"
                 data-courier="{{ $courier }}">
                 @csrf @method('PATCH')
@@ -52,6 +59,7 @@
                 <button class="dropdown-item" type="submit"><i class="bx bxs-truck me-2" aria-hidden="true"></i>Assign
                     {{ $courier }}</button>
             </form>
+            @endif
         @endforeach
     </div>
 </div>

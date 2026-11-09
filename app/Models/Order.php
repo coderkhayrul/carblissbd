@@ -16,6 +16,7 @@ class Order extends Model
     public function details() { return $this->hasMany(OrderDetail::class); }
     public function customerInfo() { return $this->hasOne(OrderCustomerInfo::class); }
     public function steadfastShipment() { return $this->hasOne(SteadfastShipment::class); }
+    public function pathaoShipment() { return $this->hasOne(PathaoShipment::class); }
     public function payments() { return $this->hasMany(OrderCustomerPayment::class); }
     public function statusHistory() { return $this->hasMany(OrderStatus::class); }
     public function currentStatus() { return $this->belongsTo(Status::class, 'current_status'); }

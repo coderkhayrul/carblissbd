@@ -41,6 +41,17 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('configuration/courier/pathao', [\App\Http\Controllers\Admin\PathaoController::class, 'settings'])->name('pathao.settings');
+    Route::post('configuration/courier/pathao', [\App\Http\Controllers\Admin\PathaoController::class, 'save'])->name('pathao.save');
+    Route::post('configuration/courier/pathao/connect', [\App\Http\Controllers\Admin\PathaoController::class, 'connect'])->middleware('throttle:5,1')->name('pathao.connect');
+    Route::get('configuration/courier/pathao/locations/{type}', [\App\Http\Controllers\Admin\PathaoController::class, 'locations'])->middleware('throttle:60,1')->name('pathao.locations');
+    Route::post('configuration/courier/pathao/stores', [\App\Http\Controllers\Admin\PathaoController::class, 'createStore'])->middleware('throttle:5,1')->name('pathao.stores.create');
+    Route::get('orders/{order}/pathao', [\App\Http\Controllers\Admin\PathaoController::class, 'booking'])->name('pathao.booking');
+    Route::post('orders/{order}/pathao', [\App\Http\Controllers\Admin\PathaoController::class, 'book'])->middleware('throttle:10,1')->name('pathao.book');
+    Route::post('orders/{order}/pathao/price', [\App\Http\Controllers\Admin\PathaoController::class, 'price'])->middleware('throttle:20,1')->name('pathao.price');
+    Route::post('orders/{order}/pathao/sync', [\App\Http\Controllers\Admin\PathaoController::class, 'sync'])->middleware('throttle:20,1')->name('pathao.sync');
+    Route::post('orders/{order}/pathao/recover', [\App\Http\Controllers\Admin\PathaoController::class, 'recover'])->middleware('throttle:5,1')->name('pathao.recover');
+    Route::post('orders/{order}/pathao/release', [\App\Http\Controllers\Admin\PathaoController::class, 'release'])->middleware('throttle:5,1')->name('pathao.release');
     Route::get('configuration/courier/steadfast', [\App\Http\Controllers\Admin\SteadfastController::class, 'settings'])->name('steadfast.settings');
     Route::post('configuration/courier/steadfast', [\App\Http\Controllers\Admin\SteadfastController::class, 'save'])->name('steadfast.save');
     Route::post('configuration/courier/steadfast/connection', [\App\Http\Controllers\Admin\SteadfastController::class, 'connection'])->middleware('throttle:5,1')->name('steadfast.connection');

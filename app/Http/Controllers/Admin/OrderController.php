@@ -188,7 +188,7 @@ class OrderController extends Controller
             'date_to' => array_merge(['nullable', 'date_format:Y-m-d'], $request->filled('date_from') ? ['after_or_equal:date_from'] : []),
             'order_no' => ['nullable', 'string', 'max:255'],
         ]);
-        $query = Order::with(['customerInfo', 'customer', 'currentStatus', 'createdBy', 'steadfastShipment'])->latest('id');
+        $query = Order::with(['customerInfo', 'customer', 'currentStatus', 'createdBy', 'steadfastShipment', 'pathaoShipment'])->latest('id');
         if (!empty($filters['entry_channel'])) $query->where('entry_channel', $filters['entry_channel']);
         foreach (['customer_id' => 'customer_id', 'order_source' => 'order_source', 'payment_type' => 'payment_type', 'status_id' => 'current_status'] as $filter => $column) {
             if (isset($filters[$filter]) && $filters[$filter] !== '') $query->where($column, $filters[$filter]);
@@ -306,6 +306,7 @@ class OrderController extends Controller
     public function assignCourier(Request $request, Order $order, AdminOrderService $service)
     {
         $data = $request->validate(['courier' => ['required', Rule::in(AdminOrderService::COURIERS)]]);
+        if ($data['courier'] === 'Pathao') return redirect()->route('admin.pathao.booking', $order);
         try {
             $service->courier($order, $data['courier']);
         } catch (ValidationException $exception) {
