@@ -6,6 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+    protected static function booted(): void
+    {
+        $clearLayout = fn () => \Illuminate\Support\Facades\Cache::store(config('cache.frontend_store', 'file'))->forget('frontend.layout.v1');
+        static::saved($clearLayout);
+        static::deleted($clearLayout);
+    }
+
+    public function scopeSerialOrder(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
+    {
+        return $query->orderBy('menu_serial')->orderBy('id');
+    }
+
     protected $fillable = [
         'parent_id', 'name', 'slug', 'image', 'icon', 'banner_image', 'description',
         'is_highlight', 'show_on_menu', 'show_on_side_menu', 'is_tab', 'menu_serial',

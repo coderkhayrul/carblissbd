@@ -50,6 +50,12 @@ class CategoryService
         $category->saveOrFail();
     }
 
+    public function updateSerial(Category $category, int $serial): void
+    {
+        $category->menu_serial = $serial;
+        $category->saveOrFail();
+    }
+
     public function delete(Category $category): void
     {
         DB::transaction(function () use ($category) {

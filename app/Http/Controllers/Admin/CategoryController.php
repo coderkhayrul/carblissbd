@@ -13,7 +13,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('parent')->orderBy('menu_serial')->orderBy('id')->get();
+        $categories = Category::with('parent')->serialOrder()->get();
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -99,6 +99,13 @@ class CategoryController extends Controller
             return back()->with('error', 'Unable to update the category status.');
         }
         return back()->with('success', 'Category status updated successfully.');
+    }
+
+    public function updateSerial(Request $request, Category $category, CategoryService $service)
+    {
+        $data = $request->validate(['menu_serial' => ['required', 'integer', 'min:0', 'max:2147483647']]);
+        $service->updateSerial($category, (int) $data['menu_serial']);
+        return back()->with('success', 'Category serial updated. Desktop and mobile category lists now use the new order.');
     }
 
     public function destroy(Category $category, CategoryService $service)

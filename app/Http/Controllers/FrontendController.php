@@ -53,7 +53,7 @@ class FrontendController extends Controller
             ->orderBy('serial')->orderBy('id')->get();
         $promoAds = PromoAds::where('status', true)->orderBy('orderBy')->orderBy('id')->get();
         $popularCategories = Category::where('status', true)->where('is_top_ten', true)
-            ->orderBy('menu_serial')->orderBy('id')->get();
+            ->serialOrder()->get();
 
         $newArrivals = Product::where('status', true)->where('publish', true)->where('is_new_arrival', true)
             ->with(['category', 'variations' => fn($query) => $query->where('status', true)->orderBy('sale_price')])
@@ -128,7 +128,7 @@ class FrontendController extends Controller
     public function category(Request $request)
     {
         $data = $request->validate(['category' => ['nullable', 'string', 'max:255']]);
-        $categories = Category::where('status', true)->orderBy('menu_serial')->orderBy('name')->get();
+        $categories = Category::where('status', true)->serialOrder()->get();
         $selectedCategory = !empty($data['category'])
             ? $categories->firstWhere('slug', $data['category'])
             : null;

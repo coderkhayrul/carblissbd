@@ -67,6 +67,7 @@
                         <div class="mb-4">
                             <label class="form-label" for="menu_serial">Serial</label>
                             <input type="number" class="form-control" id="menu_serial" name="menu_serial" required min="0" max="2147483647" value="{{ old('menu_serial', $category->menu_serial ?? 0) }}">
+                            <small class="text-muted">Smaller numbers appear first on desktop and mobile category lists, menus and Shop By Category. Subcategories follow their own serial order.</small>
                         </div>
                         <div class="mb-4">
                             <label class="form-label" for="tab_serial">Tab Serial</label>

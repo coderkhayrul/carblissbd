@@ -5,6 +5,8 @@
             <h5 class="mb-0">Category List</h5>
             <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">Add Category</a>
         </div>
+        <p class="px-4 mb-3 small text-muted">Set the serial below and click Save. Smaller numbers appear first on desktop and mobile. Categories with the same serial keep their creation order.</p>
+        @if ($errors->any())<div class="alert alert-danger mx-4"><ul class="mb-0">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
         <div class="table-responsive">
             <table class="data-table table table-bordered align-middle text-nowrap">
                 <thead><tr><th>SL</th><th>Category</th><th>Parent</th><th>Slug</th><th>Serial</th><th>Status</th><th>Actions</th></tr></thead>
@@ -20,7 +22,13 @@
                             </td>
                             <td>{{ $category->parent?->name ?? 'Main Category' }}</td>
                             <td>{{ $category->slug }}</td>
-                            <td>{{ $category->menu_serial }}</td>
+                            <td data-order="{{ $category->menu_serial }}" data-search="{{ $category->menu_serial }}">
+                                <form action="{{ route('admin.categories.serial.update', $category) }}" method="POST" class="d-flex gap-2 align-items-center">
+                                    @csrf @method('PATCH')
+                                    <input type="number" class="form-control form-control-sm" name="menu_serial" required min="0" max="2147483647" value="{{ $category->menu_serial }}" style="width:90px" aria-label="Serial for {{ $category->name }}">
+                                    <button class="btn btn-sm btn-label-primary" type="submit">Save</button>
+                                </form>
+                            </td>
                             <td>
                                 <form action="{{ route('admin.categories.status.update', $category) }}" method="POST" class="category-status-form">
                                     @csrf

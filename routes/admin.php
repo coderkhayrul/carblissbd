@@ -103,6 +103,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::patch('brands/{brand}/status', [BrandController::class, 'updateStatus'])->name('brands.status.update');
     Route::resource('brands', BrandController::class)->except('show');
     Route::patch('categories/{category}/status', [CategoryController::class, 'updateStatus'])->name('categories.status.update');
+    Route::patch('categories/{category}/serial', [CategoryController::class, 'updateSerial'])->name('categories.serial.update');
     Route::resource('categories', CategoryController::class)->except('show');
     Route::patch('attribute-types/{attributeType}/status', [AttributeTypeController::class, 'updateStatus'])->name('attribute-types.status.update');
     Route::resource('attribute-types', AttributeTypeController::class)

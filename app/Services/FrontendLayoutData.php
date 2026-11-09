@@ -32,8 +32,8 @@ class FrontendLayoutData
                     'company' => CompanySetting::orderBy('id')->first()?->toArray(),
                     'categories' => Category::where('status', true)->where('show_on_menu', true)
                         ->with(['children' => fn($query) => $query->where('status', true)->where('show_on_menu', true)
-                            ->orderBy('menu_serial')->orderBy('id')])
-                        ->orderBy('menu_serial')->orderBy('id')->get()->toArray(),
+                            ->serialOrder()])
+                        ->serialOrder()->get()->toArray(),
                     'popup' => PopupAds::orderBy('id')->first()?->toArray(),
                 ];
             }
