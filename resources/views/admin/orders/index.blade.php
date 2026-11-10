@@ -243,12 +243,26 @@
             </div>
         </div>
     </form>
+    <form id="order-bulk-print-form" method="POST" action="{{ route('admin.orders.print-invoices') }}" target="_blank" class="card mb-3">
+        @csrf
+        <div class="card-body d-flex flex-wrap align-items-end gap-3">
+            <div><label class="form-label" for="order-print-mode">Invoice Format</label><select class="form-select form-select-sm" id="order-print-mode" name="mode"><option value="mini">Mini Invoice / A4 Labels</option><option value="full">Full Invoice / A4</option></select></div>
+            <div><label class="form-label" for="order-print-columns">Mini Invoices per Row</label><select class="form-select form-select-sm" id="order-print-columns" name="columns"><option value="3">3 per row (smaller)</option><option value="2">2 per row (larger)</option></select></div>
+            <div><label class="form-label" for="order-print-copy">Full Invoice Copy</label><select class="form-select form-select-sm" id="order-print-copy" name="copy">@foreach (\App\Services\AdminOrderService::COPIES as $key => $label)<option value="{{ $key }}" @selected($key === 'customer')>{{ $label }}</option>@endforeach</select></div>
+            <button class="btn btn-primary btn-sm" id="order-print-selected" type="submit" disabled><i class="bx bx-printer me-1" aria-hidden="true"></i>Print Selected</button>
+            <button class="btn btn-label-secondary btn-sm" id="order-print-clear" type="button">Clear Selection</button>
+            <span class="small text-muted" id="order-print-selection-count" role="status">0 orders selected</span>
+        </div>
+        <div id="order-print-selected-inputs"></div>
+        <p class="small text-muted px-3 pb-2 mb-0">Select orders using the checkboxes. The header checkbox selects the current table page. Selections remain while changing table pages. Maximum 200 orders per print batch.</p>
+    </form>
     <div class="card sale-list-card">
         <div class="px-3 pt-3 small text-muted">{{ number_format($orders->count()) }} orders match your filters</div>
         <div class="table-responsive">
             <table class="data-table sale-list-table table table-bordered mb-0">
                 <thead>
                     <tr>
+                        <th><input type="checkbox" class="form-check-input order-print-all" aria-label="Select orders on this page"></th>
                         <th>SL</th>
                         <th>Order &amp; Invoice</th>
                         <th>Customer</th>
@@ -266,6 +280,7 @@
                             $paymentLabel = $due <= 0 ? 'Paid' : ($paid > 0 ? 'Partially Paid' : 'Pending');
                         @endphp
                         <tr>
+                            <td class="text-center"><input type="checkbox" class="form-check-input order-print-checkbox" value="{{ $order->id }}" aria-label="Select invoice {{ $order->order_no }}"></td>
                             <td class="text-center">{{ $loop->iteration }}</td>
                             <td class="invoice-cell">
                                 <span
@@ -350,12 +365,12 @@
         dateFrom.addEventListener('change', () => {
             dateTo.min = dateFrom.value;
         });
-        new DataTable('.data-table', {
+        const orderListTable = new DataTable('.data-table', {
             scrollX: true,
             pageLength: 50,
             order: [],
             columnDefs: [{
-                targets: [5, 6],
+                targets: [0, 6, 7],
                 orderable: false
             }],
             language: {
@@ -379,6 +394,8 @@
                 bottomEnd: 'paging'
             }
         });
+        window.orderInvoicePrintTable = orderListTable;
     </script>
     <script src="{{ asset('backend/assets/js/order-actions.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/order-invoice-print.js') }}" defer></script>
 @endpush

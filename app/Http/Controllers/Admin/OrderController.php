@@ -254,7 +254,30 @@ class OrderController extends Controller
         abort_unless(array_key_exists($copy, AdminOrderService::COPIES), 404);
         $order->load(['customerInfo', 'customer', 'details', 'currentStatus']);
         $copyLabel = AdminOrderService::COPIES[$copy];
-        return response()->view('admin.orders.invoice', compact('order', 'copy', 'copyLabel'))->header('Cache-Control', 'no-store, private');
+        $company = app('company.branding');
+        return response()->view('admin.orders.invoice', compact('order', 'copy', 'copyLabel', 'company'))->header('Cache-Control', 'no-store, private');
+    }
+
+    public function miniInvoice(Order $order)
+    {
+        $order->load(['customerInfo', 'customer', 'details', 'pathaoShipment', 'steadfastShipment']);
+        return response()->view('admin.orders.print-invoices', ['orders' => collect([$order]), 'mode' => 'mini', 'columns' => 3, 'copy' => 'customer', 'copyLabel' => 'Customer Copy', 'company' => app('company.branding')])->header('Cache-Control', 'no-store, private');
+    }
+
+    public function printInvoices(Request $request)
+    {
+        $data = $request->validate([
+            'order_ids' => ['required', 'array', 'min:1', 'max:200'],
+            'order_ids.*' => ['required', 'integer', 'distinct', 'exists:orders,id'],
+            'mode' => ['required', Rule::in(['mini', 'full'])],
+            'columns' => ['required', 'integer', Rule::in([2, 3])],
+            'copy' => ['required', Rule::in(array_keys(AdminOrderService::COPIES))],
+        ]);
+        $positions = array_flip(array_map('intval', $data['order_ids']));
+        $orders = Order::whereIn('id', $data['order_ids'])->with(['customerInfo', 'customer', 'details', 'currentStatus', 'pathaoShipment', 'steadfastShipment'])
+            ->get()->sortBy(fn ($order) => $positions[$order->id])->values();
+        $copy = $data['copy'];
+        return response()->view('admin.orders.print-invoices', ['orders' => $orders, 'mode' => $data['mode'], 'columns' => (int) $data['columns'], 'copy' => $copy, 'copyLabel' => AdminOrderService::COPIES[$copy], 'company' => app('company.branding')])->header('Cache-Control', 'no-store, private');
     }
 
     public function action(Order $order, string $action)

@@ -126,6 +126,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::patch('products/{product}/status', [ProductController::class, 'updateStatus'])->name('products.status.update');
     Route::resource('products', ProductController::class)->except('show');
     Route::get('orders/export', [OrderController::class, 'export'])->name('orders.export');
+    Route::post('orders/print-invoices', [OrderController::class, 'printInvoices'])->name('orders.print-invoices');
+    Route::get('orders/{order}/mini-invoice', [OrderController::class, 'miniInvoice'])->name('orders.mini-invoice');
     Route::get('orders/products/search', [OrderController::class, 'searchProducts'])->name('orders.products.search');
     Route::get('orders/customers/search', [OrderController::class, 'searchCustomers'])->name('orders.customers.search');
     Route::post('orders/customers', [OrderController::class, 'createCustomer'])->name('orders.customers.store');

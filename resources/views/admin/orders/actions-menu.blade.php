@@ -5,6 +5,7 @@
             aria-hidden="true"></i><span class="visually-hidden">Invoice copies for
             {{ $order->order_no }}</span></button>
     <div class="dropdown-menu order-action-menu" id="invoice-menu-{{ $order->id }}" hidden>
+        <a class="dropdown-item" href="{{ route('admin.orders.mini-invoice', $order) }}" target="_blank" rel="noopener"><i class="bx bx-printer me-2" aria-hidden="true"></i>Mini Invoice (A4)</a>
         @foreach (\App\Services\AdminOrderService::COPIES as $copy => $label)
             <a class="dropdown-item" href="{{ route('admin.orders.invoice', ['order' => $order, 'copy' => $copy]) }}"
                 target="_blank" rel="noopener"><i class="bx bx-printer me-2"
