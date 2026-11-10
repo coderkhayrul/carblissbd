@@ -17,6 +17,7 @@
         aria-expanded="false" aria-haspopup="true" title="Order actions"><i class="bx bx-dots-horizontal-rounded fs-5"
             aria-hidden="true"></i><span class="visually-hidden">Actions for {{ $order->order_no }}</span></button>
     <div class="dropdown-menu order-action-menu" id="action-menu-{{ $order->id }}" hidden>
+        <a class="dropdown-item" href="{{ route('admin.orders.due-collection',$order) }}"><i class="bx bx-money me-2" aria-hidden="true"></i>Due Collection / Receipts</a>
         <a class="dropdown-item" href="{{ route('admin.orders.show', $order) }}"><i class="bx bx-show me-2"
                 aria-hidden="true"></i>View</a>
         <a class="dropdown-item" href="{{ route('admin.orders.edit', $order) }}"><i class="bx bx-edit me-2" aria-hidden="true"></i>Edit</a>

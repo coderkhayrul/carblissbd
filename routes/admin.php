@@ -41,6 +41,9 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('orders/{order}/due-collection', [\App\Http\Controllers\Admin\OrderDueCollectionController::class,'create'])->name('orders.due-collection');
+    Route::post('orders/{order}/due-collection', [\App\Http\Controllers\Admin\OrderDueCollectionController::class,'store'])->middleware('throttle:15,1')->name('orders.due-collection.store');
+    Route::get('orders/{order}/payments/{payment}/receipt', [\App\Http\Controllers\Admin\OrderDueCollectionController::class,'receipt'])->name('orders.collection-receipt');
     Route::get('reports/customers', [\App\Http\Controllers\Admin\CustomerReportController::class, 'index'])->name('reports.customers');
     Route::get('reports/customers/export', [\App\Http\Controllers\Admin\CustomerReportController::class, 'export'])->name('reports.customers.export');
     Route::get('reports/products', [\App\Http\Controllers\Admin\ProductReportController::class, 'index'])->name('reports.products');

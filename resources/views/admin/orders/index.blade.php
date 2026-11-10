@@ -320,6 +320,7 @@
                                 <span class="badge bg-info mb-2">{{ $order->payment_type }}</span><br>
                                 <span
                                     class="badge {{ $due <= 0 ? 'bg-label-success' : 'bg-label-secondary' }}">{{ $paymentLabel }}</span>
+                                @if ($due > 0 && in_array(strtolower(trim($order->currentStatus?->name ?? '')), ['delivered','completed','complete'], true))<br><a class="btn btn-sm btn-label-success mt-2" href="{{ route('admin.orders.due-collection',$order) }}">Collect Due</a>@endif
                             </td>
                             <td class="sale-courier">
                                 <div class="d-flex justify-content-between align-items-center gap-3">

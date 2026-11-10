@@ -30,9 +30,9 @@
                 </div>
             </div>
             <div class="card mb-4">
-                <h5 class="card-header" id="order-payments">Payment Records</h5>
+                <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2" id="order-payments"><h5 class="mb-0">Payment Records</h5><a class="btn btn-sm btn-success" href="{{ route('admin.orders.due-collection',$order) }}">Due Collection / Receipts</a></div>
                 <div class="table-responsive"><table class="table"><thead><tr><th>Method</th><th>Status</th><th>Amount</th><th>Transaction</th></tr></thead><tbody>
-                    @foreach ($order->payments as $payment)<tr><td>{{ $payment->payment_method }}</td><td>{{ $payment->payment_status }}</td><td>&#2547;{{ number_format((float) $payment->amount, 2) }}</td><td>{{ $payment->transaction_id ?? '—' }}</td></tr>@endforeach
+                    @foreach ($order->payments as $payment)<tr><td>{{ $payment->payment_method }}</td><td>{{ $payment->superseded_at ? 'Superseded pending balance' : $payment->payment_status }}</td><td>&#2547;{{ number_format((float) $payment->amount, 2) }}</td><td>{{ $payment->transaction_id ?: '—' }}@if ($payment->record_type==='due_collection')<br><a href="{{ route('admin.orders.collection-receipt',['order'=>$order,'payment'=>$payment]) }}" target="_blank" rel="noopener">Print Receipt</a>@endif</td></tr>@endforeach
                 </tbody></table></div>
             </div>
         </div>
