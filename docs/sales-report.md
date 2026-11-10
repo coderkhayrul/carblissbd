@@ -1,0 +1,13 @@
+# Sales Report
+
+Admin Reports > Sales Report opens the current month's orders, using the business order `date` (Asia/Dhaka), not payment date or courier settlement date. Filter by date range/all time, customer (including inactive historical customers), invoice, source, entry channel, current status, creating admin, payment type and courier. Daily/monthly grouping and pagination are supported.
+
+Sales Orders and all monetary sales KPIs exclude orders currently Cancelled/Canceled/Cancel or Returned/Return. Pending/processing/shipped orders remain booked sales. Unknown or deleted statuses remain included so their orders do not silently disappear. Completed sales use current Delivered/Completed/Complete statuses. This is an operational booked-sales report, not a financial revenue recognition or cash-flow statement.
+
+The report shows gross product value (stored subtotal), discounts, VAT, shipping, stored grand totals, recorded paid/due balances, average eligible order value, customer count, cancelled/returned counts and recorded return value. Period/source counts include every matching order; their sales amounts follow the eligibility rule. Detail rows retain original values and explicitly label Included/Excluded.
+
+Return value is the sum of recorded order_return_records.amount, grouped once per order to prevent fan-out. It is matched to original order date. Courier return statuses alone have no product return ledger value. Partial returns do not automatically update stored order totals in this application, so they are disclosed separately rather than subtracting them twice or inventing refund/discount/shipping allocations. Order paid balances are not necessarily customer cash received within the selected dates. Refund accounting and recognized profit are outside this report.
+
+The trend shows the latest 30 populated daily/monthly periods; the period summary lists the complete matched range. Summary queries cover all matching orders independently of the 25/50/100-row detail page. Export All Results streams the full filtered details as UTF-8 CSV with spreadsheet formula-injection protection. Print This Page / PDF prints the summary and current detail page, explicitly labelled with page number; use CSV for all detail rows. No misleading all-results claim is made for paginated print.
+
+All routes require admin authorization and return private/no-store data. Queries use bindings for filter inputs. No new database columns, demo data or external integrations are required. No tests, browser checks or exports were executed during implementation, per the user's instructions.

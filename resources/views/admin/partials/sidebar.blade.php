@@ -69,25 +69,25 @@
             </a>
         </li>
         <!-- Reports -->
-        <li class="menu-item">
+        <li class="menu-item {{ request()->routeIs('admin.reports.sales*', 'admin.reports.products*', 'admin.reports.customers*') ? 'open active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-list-ul"></i>
                 <div data-i18n="Reports">Reports</div>
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
-                        <div data-i18n="Sell Report">Sell Report</div>
+                <li class="menu-item {{ request()->routeIs('admin.reports.sales*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.reports.sales') }}" class="menu-link">
+                        <div data-i18n="Sales Report">Sales Report</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.reports.products*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.reports.products') }}" class="menu-link">
                         <div data-i18n="Product Report">Product Report</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('admin.reports.customers*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.reports.customers') }}" class="menu-link">
                         <div data-i18n="Customer Report">Customer Report</div>
                     </a>
                 </li>

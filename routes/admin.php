@@ -41,6 +41,13 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('reports/customers', [\App\Http\Controllers\Admin\CustomerReportController::class, 'index'])->name('reports.customers');
+    Route::get('reports/customers/export', [\App\Http\Controllers\Admin\CustomerReportController::class, 'export'])->name('reports.customers.export');
+    Route::get('reports/products', [\App\Http\Controllers\Admin\ProductReportController::class, 'index'])->name('reports.products');
+    Route::get('reports/products/export', [\App\Http\Controllers\Admin\ProductReportController::class, 'export'])->name('reports.products.export');
+    Route::get('reports/sales', [\App\Http\Controllers\Admin\SalesReportController::class, 'index'])->name('reports.sales');
+    Route::get('reports/sales/customers', [\App\Http\Controllers\Admin\SalesReportController::class, 'customers'])->middleware('throttle:60,1')->name('reports.sales.customers');
+    Route::get('reports/sales/export', [\App\Http\Controllers\Admin\SalesReportController::class, 'export'])->name('reports.sales.export');
     Route::get('order-notifications', [\App\Http\Controllers\Admin\OrderNotificationController::class, 'index'])->middleware('throttle:300,1')->name('order-notifications.index');
     Route::post('order-notifications/read-all', [\App\Http\Controllers\Admin\OrderNotificationController::class, 'readAll'])->name('order-notifications.read-all');
     Route::post('order-notifications/{notification}/read', [\App\Http\Controllers\Admin\OrderNotificationController::class, 'read'])->whereNumber('notification')->name('order-notifications.read');
