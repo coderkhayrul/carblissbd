@@ -16,28 +16,28 @@ class UserSeeder extends Seeder
     {
         // অ্যাডমিন ইউজার তৈরি
         User::create([
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
-            'mobile' => '01835061968',
-            'password' => Hash::make('password'),
+            'name' => 'Alrafi Fahim',
+            'email' => 'carblissbd@gmail.com',
+            'mobile' => '01999906676',
+            'password' => Hash::make('Fahim2500'),
             'role' => 'admin',
         ]);
 
-        User::create([
-            'name' => 'Manager',
-            'email' => 'manager@gmail.com',
-            'mobile' => '01735061968',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-        ]);
+        // User::create([
+        //     'name' => 'Manager',
+        //     'email' => 'manager@gmail.com',
+        //     'mobile' => '01735061968',
+        //     'password' => Hash::make('password'),
+        //     'role' => 'admin',
+        // ]);
 
-        User::create([
-            'name' => 'Sales',
-            'email' => 'sales@gmail.com',
-            'mobile' => '01335061968',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-        ]);
+        // User::create([
+        //     'name' => 'Sales',
+        //     'email' => 'sales@gmail.com',
+        //     'mobile' => '01335061968',
+        //     'password' => Hash::make('password'),
+        //     'role' => 'admin',
+        // ]);
 
         // সাধারণ কাস্টমার ইউজার তৈরি
         User::create([
@@ -47,19 +47,20 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'customer',
         ]);
-        User::create([
-            'name' => 'Asik Bhuyain',
-            'email' => 'asik@gmail.com',
-            'mobile' => '01703132067',
-            'password' => Hash::make('password'),
-            'role' => 'customer',
-        ]);
-        User::create([
-            'name' => 'ONTO',
-            'email' => 'onto@gmail.com',
-            'mobile' => '01803132067',
-            'password' => Hash::make('password'),
-            'role' => 'customer',
-        ]);
+
+        // User::create([
+        //     'name' => 'Asik Bhuyain',
+        //     'email' => 'asik@gmail.com',
+        //     'mobile' => '01703132067',
+        //     'password' => Hash::make('password'),
+        //     'role' => 'customer',
+        // ]);
+        // User::create([
+        //     'name' => 'ONTO',
+        //     'email' => 'onto@gmail.com',
+        //     'mobile' => '01803132067',
+        //     'password' => Hash::make('password'),
+        //     'role' => 'customer',
+        // ]);
     }
 }
