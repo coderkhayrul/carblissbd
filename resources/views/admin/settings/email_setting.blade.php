@@ -5,7 +5,7 @@
     <div class="col-12 col-lg-9">
         <div class="card mb-4"><h5 class="card-header">Email Settings</h5><div class="card-body">
             @if ($errors->any())<div class="alert alert-danger" role="alert"><ul class="mb-0">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
-            <p>Order confirmation emails use these SMTP settings for both website checkout and admin sales. An email is sent only when the order recipient has an email address.</p>
+            <p>These SMTP settings send customer confirmations and new-order notifications to your Sender Email. Customer confirmations require a customer email address; admin notifications do not.</p>
             <form action="{{ route('admin.email.settings.update') }}" method="POST">
                 @csrf
                 <input type="hidden" name="enabled" value="0">
@@ -23,6 +23,24 @@
                 <button type="submit" class="btn btn-primary mt-4">Save Email Settings</button>
             </form>
         </div></div>
+        <div class="card mb-4"><h5 class="card-header">Send Test Email</h5><div class="card-body">
+            @if (session('email_test_success'))<div class="alert alert-success text-break" role="status">{{ session('email_test_success') }}</div>@endif
+            @if (session('email_test_error'))<div class="alert alert-danger text-break" role="alert">{{ session('email_test_error') }}</div>@endif
+            <p>Save Email Settings first. This sends immediately using the saved configuration without waiting for the queue. You can test while automatic emails are disabled.</p>
+            <form action="{{ route('admin.email.settings.test') }}" method="POST" id="smtp-test-form">
+                @csrf
+                <div class="row g-3 align-items-end"><div class="col-12 col-md-8"><label for="test_recipient" class="form-label">Test Recipient Email</label><input type="email" class="form-control" id="test_recipient" name="test_recipient" required maxlength="255" value="{{ old('test_recipient', $emailSetting->sender_email) }}"></div>
+                <div class="col-12 col-md-4"><button type="submit" class="btn btn-primary w-100" id="smtp-test-button">Send Test Email</button></div></div>
+            </form>
+            <p class="small text-muted mt-3 mb-0">If the test succeeds but order emails do not arrive, check that Enable Emails is on and the database queue worker is running. Existing failed emails need to be retried after correcting the configuration.</p>
+        </div></div>
+        <script>
+            document.getElementById('smtp-test-form').addEventListener('submit', function () {
+                const button = document.getElementById('smtp-test-button');
+                button.disabled = true;
+                button.textContent = 'Sending…';
+            });
+        </script>
         <div class="card mb-4"><h5 class="card-header">Delivery Setup</h5><div class="card-body">
             <p>After configuring your provider, enable emails above and run a persistent database queue worker on the server:</p>
             <pre class="bg-light p-3 rounded text-wrap">php artisan queue:work database --queue=default --tries=3 --timeout=60</pre>

@@ -83,6 +83,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
     Route::get('/settings/email-setting', [AdminController::class, 'emailSettings'])->name('email.settings');
     Route::post('/settings/email-setting', [AdminController::class, 'emailSettingsUpdate'])->name('email.settings.update');
+    Route::post('/settings/email-setting/test', [AdminController::class, 'emailSettingsTest'])->middleware('throttle:3,1')->name('email.settings.test');
 
     Route::get('/settings/sms-api-setting', [AdminController::class, 'smsApiSettings'])->name('sms.api.settings');
     Route::post('/settings/sms-api-setting', [AdminController::class, 'smsApiSettingsUpdate'])->name('sms.api.settings.update');

@@ -143,6 +143,27 @@ class AdminController extends Controller
         }
     }
 
+    public function emailSettingsTest(Request $request)
+    {
+        $data = $request->validate(['test_recipient' => ['required', 'email', 'max:255']]);
+        $settings = EmailSetting::orderBy('id')->first();
+        if (!$settings || !filter_var($settings->sender_email, FILTER_VALIDATE_EMAIL) || !$settings->mail_host || !$settings->mail_port) {
+            return back()->with('email_test_error', 'Save a valid Sender Email, SMTP Host and Port before sending a test email.');
+        }
+        try {
+            app(\App\Services\SmtpMailerService::class)->build($settings)->send('emails.smtp-test', [
+                'senderName' => $settings->sender_name ?: config('app.name'),
+                'sentAt' => now()->timezone('Asia/Dhaka')->format('d M Y, h:i A'),
+            ], function ($message) use ($settings, $data) {
+                $message->from($settings->sender_email, $settings->sender_name)->to($data['test_recipient'])
+                    ->subject('SMTP Configuration Test - ' . ($settings->sender_name ?: config('app.name')));
+            });
+            return back()->with('email_test_success', 'SMTP server accepted the test email for ' . $data['test_recipient'] . '. Check Inbox and Spam. This confirms SMTP sending; final inbox delivery depends on your provider.');
+        } catch (\Throwable $exception) {
+            return back()->with('email_test_error', app(\App\Services\SmtpMailerService::class)->failureMessage($exception));
+        }
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SMS API SETTINGS FUNCTION

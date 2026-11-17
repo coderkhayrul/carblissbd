@@ -40,9 +40,9 @@ class SendAdminOrderEmail implements ShouldQueue
                     'recipient' => $recipient, 'status' => 'sent', 'sent_at' => now(), 'last_error' => null, 'updated_at' => now(),
                 ]);
             });
-        } catch (\Throwable) {
+        } catch (\Throwable $exception) {
             DB::table('admin_order_email_notifications')->where('id', $this->notificationId)->whereNull('sent_at')->update([
-                'last_error' => 'Delivery failed. Check Email Settings and SMTP provider availability.', 'updated_at' => now(),
+                'last_error' => app(SmtpMailerService::class)->failureMessage($exception), 'updated_at' => now(),
             ]);
             throw new \RuntimeException('Admin order email delivery failed. Check Email Settings.');
         }
@@ -51,7 +51,7 @@ class SendAdminOrderEmail implements ShouldQueue
     public function failed(?\Throwable $exception): void
     {
         DB::table('admin_order_email_notifications')->where('id', $this->notificationId)->whereNull('sent_at')->update([
-            'status' => 'failed', 'last_error' => 'Delivery failed after automatic retries. Check Email Settings.', 'updated_at' => now(),
+            'status' => 'failed', 'updated_at' => now(),
         ]);
     }
 }

@@ -36,14 +36,14 @@ class SendOrderConfirmationEmail implements ShouldQueue
                 });
                 DB::table('order_email_notifications')->where('id', $notification->id)->update(['status' => 'sent', 'sent_at' => now(), 'last_error' => null, 'updated_at' => now()]);
             });
-        } catch (\Throwable) {
-            DB::table('order_email_notifications')->where('id', $this->notificationId)->whereNull('sent_at')->update(['last_error' => 'Delivery failed. Check SMTP credentials, encryption and provider availability.', 'updated_at' => now()]);
+        } catch (\Throwable $exception) {
+            DB::table('order_email_notifications')->where('id', $this->notificationId)->whereNull('sent_at')->update(['last_error' => app(\App\Services\SmtpMailerService::class)->failureMessage($exception), 'updated_at' => now()]);
             throw new \RuntimeException('Order email delivery failed. Check Email Settings and SMTP provider availability.');
         }
     }
 
     public function failed(?\Throwable $exception): void
     {
-        DB::table('order_email_notifications')->where('id', $this->notificationId)->whereNull('sent_at')->update(['status' => 'failed', 'last_error' => 'Delivery failed after automatic retries. Check Email Settings.', 'updated_at' => now()]);
+        DB::table('order_email_notifications')->where('id', $this->notificationId)->whereNull('sent_at')->update(['status' => 'failed', 'updated_at' => now()]);
     }
 }
