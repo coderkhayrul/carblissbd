@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             PaymentSettingSeeder::class,
             ShippingChargeSettingSeeder::class,
             SocialLinkSeeder::class,
-            // CustomerSeeder::class,
+            CustomerSeeder::class,
             // BrandSeeder::class,
             // CategorySeeder::class,
             // CategoryHierarchySeeder::class,

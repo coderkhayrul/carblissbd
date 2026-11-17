@@ -14,7 +14,8 @@ class CustomerController extends Controller
     {
         $data = $request->validate([
             'subject' => ['required', 'string', 'max:255', 'not_regex:/[\r\n]/'],
-            'message' => ['required', 'string', 'max:15000'], 'request_token' => ['required', 'uuid'],
+            'message' => ['required', 'string', 'max:15000'],
+            'request_token' => ['required', 'uuid'],
         ]);
         $email = $customerService->sendEmail($customer, $data, $request->user()->id);
         return response()->json(['status' => $email->status, 'message' => match ($email->status) {
