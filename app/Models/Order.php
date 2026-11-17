@@ -11,6 +11,17 @@ class Order extends Model
         static::created(function (self $order) {
             // Same transaction as the order: failed checkouts roll this notification back too.
             \Illuminate\Support\Facades\DB::table('admin_order_notifications')->insertOrIgnore(['order_id' => $order->id, 'created_at' => now()]);
+            $notificationId = \Illuminate\Support\Facades\DB::table('admin_order_email_notifications')->insertGetId([
+                'order_id' => $order->id, 'status' => 'pending', 'created_at' => now(), 'updated_at' => now(),
+            ]);
+            \Illuminate\Support\Facades\DB::afterCommit(function () use ($notificationId, $order) {
+                try {
+                    \App\Jobs\SendAdminOrderEmail::dispatch($notificationId)->onConnection('database')->delay(now()->addSeconds(10));
+                } catch (\Throwable) {
+                    // The scheduler recovers this durable record if queue insertion fails.
+                    \Illuminate\Support\Facades\Log::warning('Admin order email could not be queued.', ['order_id' => $order->id]);
+                }
+            });
         });
     }
 
