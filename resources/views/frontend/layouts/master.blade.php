@@ -191,7 +191,11 @@
     <div id="category-drawer" class="bottom-drawer d-flex flex-column shadow-lg">
         <div class="p-3 border-bottom border-light d-flex justify-content-between align-items-center bg-white"
             style="border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem;">
-            <h3 id="cat-modal-title" class="h6 fw-bolder text-dark mb-0 flex-grow-1 text-center">All Categories</h3>
+            <button type="button" id="cat-back-btn" aria-label="Back to parent categories"
+                class="btn btn-light rounded-circle p-0 d-none flex-shrink-0" style="width:30px;height:30px;">
+                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            </button>
+            <h3 id="cat-modal-title" class="h6 fw-bolder text-dark mb-0 flex-grow-1 text-center" aria-live="polite">All Categories</h3>
             <button onclick="toggleCategoryModal()"
                 class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px;">
@@ -200,6 +204,7 @@
         </div>
         <div
             class="flex-grow-1 overflow-auto bg-light pb-5 position-relative border-top border-secondary border-opacity-10 category-drawer-content">
+            <a id="cat-view-all" class="btn btn-outline-primary d-none m-3 mb-0" href="#">View all products</a>
             <div id="main-cat-grid" class="p-3 row row-cols-3 row-cols-lg-5 g-2 m-0"></div>
         </div>
     </div>

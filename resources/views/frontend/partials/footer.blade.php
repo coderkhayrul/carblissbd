@@ -357,7 +357,7 @@
 
         // --- Mobile Category Modal Logic ---
         @php
-            $mobileMenuData = $menuCategories->filter(fn ($category) => !$category->parent_id)->map(fn ($category) => [
+            $mobileMenuData = $menuCategories->map(fn ($category) => [
                 'id' => $category->id,
                 'parent_id' => $category->parent_id,
                 'name' => $category->name,
@@ -367,23 +367,45 @@
         @endphp
         const categoriesDataList = {{ Illuminate\Support\Js::from($mobileMenuData) }};
 
-        function renderMainCategories() {
+        function renderMainCategories(parentId = null) {
             const grid = document.getElementById('main-cat-grid');
             if (!grid) return;
+            const parent = categoriesDataList.find(item => String(item.id) === String(parentId));
+            const items = categoriesDataList.filter(item => parent ? String(item.parent_id) === String(parent.id) : !item.parent_id);
+            document.getElementById('cat-modal-title').textContent = parent ? parent.name : 'All Categories';
+            const back = document.getElementById('cat-back-btn');
+            back.classList.toggle('d-none', !parent);
+            back.onclick = () => renderMainCategories(parent?.parent_id || null);
+            const viewAll = document.getElementById('cat-view-all');
+            viewAll.classList.toggle('d-none', !parent);
+            if (parent) {
+                viewAll.href = parent.url;
+                viewAll.textContent = 'View all ' + parent.name;
+            }
             grid.replaceChildren();
-            if (!categoriesDataList.length) {
+            if (!items.length) {
                 const empty = document.createElement('p');
                 empty.className = 'text-muted small w-100 text-center py-4';
                 empty.textContent = 'No categories available.';
                 grid.appendChild(empty);
                 return;
             }
-            categoriesDataList.forEach(data => {
+            items.forEach(data => {
                 const column = document.createElement('div');
                 column.className = 'col';
-                const card = document.createElement('a');
+                const hasChildren = categoriesDataList.some(item => String(item.parent_id) === String(data.id));
+                const card = document.createElement(hasChildren ? 'button' : 'a');
                 card.className = 'mobile-category-card d-flex flex-column align-items-center bg-white p-3 rounded-4 shadow-sm border border-light text-decoration-none hover-text-primary h-100 w-100';
-                card.href = data.url;
+                if (hasChildren) {
+                    card.type = 'button';
+                    card.setAttribute('aria-label', 'Show subcategories of ' + data.name);
+                    card.addEventListener('click', () => {
+                        renderMainCategories(data.id);
+                        document.getElementById('cat-back-btn').focus();
+                    });
+                } else {
+                    card.href = data.url;
+                }
                 const frame = document.createElement('div');
                 frame.className = 'rounded-circle overflow-hidden mb-2 border border-2 border-primary flex-shrink-0';
                 frame.style.cssText = 'width:60px;height:60px;';
