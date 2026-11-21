@@ -57,7 +57,7 @@
                 pauseOnMouseEnter: true,
             },
             rewind: true,
-            slidesPerView: 2,
+            slidesPerView: 3,
             spaceBetween: 8,
             watchOverflow: true,
             grabCursor: true,
@@ -67,15 +67,15 @@
             },
             breakpoints: {
                 576: {
-                    slidesPerView: 4,
+                    slidesPerView: 5,
                     spaceBetween: 10,
                 },
                 768: {
-                    slidesPerView: 6,
+                    slidesPerView: 7,
                     spaceBetween: 10,
                 },
                 992: {
-                    slidesPerView: 8,
+                    slidesPerView: 10,
                     spaceBetween: 10,
                 }
             }

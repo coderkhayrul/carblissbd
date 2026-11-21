@@ -13,7 +13,7 @@
                             <div class="swiper-slide h-auto">
                                 <a href="{{ route('category', ['category' => $category->slug]) }}"
                                     class="text-decoration-none d-flex flex-column bg-white rounded-3 category-card overflow-hidden h-100">
-                                    <div class="w-100 rounded-circle overflow-hidden bg-white flex-shrink-0"
+                                    <div class="w-100 rounded-3 border border-light overflow-hidden bg-white flex-shrink-0"
                                         style="aspect-ratio: 1 / 1;">
                                         <img src="{{ asset($category->image ?: 'backend/assets/extra/preview-image.png') }}"
                                             alt="{{ $category->name }}" loading="lazy"
