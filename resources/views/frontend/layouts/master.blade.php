@@ -113,7 +113,7 @@
             <i class="fa-solid fa-border-all fs-5 mb-1"></i>
             <span class="fw-bold" style="font-size: 0.65rem;">Category</span>
         </button>
-        <a href="#offers"
+        <a href="{{ route('offers') }}"
             class="text-decoration-none text-muted hover-text-primary d-flex flex-column align-items-center text-center transition-all"
             style="width: 20%;">
             <i class="fa-solid fa-tags fs-5 mb-1"></i>

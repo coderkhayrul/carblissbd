@@ -407,13 +407,13 @@
                     card.href = data.url;
                 }
                 const frame = document.createElement('div');
-                frame.className = 'rounded-circle overflow-hidden mb-2 border border-2 border-primary flex-shrink-0';
-                frame.style.cssText = 'width:60px;height:60px;';
+                frame.className = 'rounded-2 overflow-hidden mb-2 border border-light bg-white flex-shrink-0';
+                frame.style.cssText = 'width:100%;aspect-ratio:1 / 1;';
                 const image = document.createElement('img');
                 image.src = data.img;
                 image.alt = data.name;
                 image.loading = 'lazy';
-                image.className = 'w-100 h-100 object-fit-contain';
+                image.className = 'd-block w-100 h-100 object-fit-contain';
                 frame.appendChild(image);
                 const name = document.createElement('span');
                 name.className = 'fw-bold text-center text-dark';

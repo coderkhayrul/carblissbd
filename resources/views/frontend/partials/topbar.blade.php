@@ -9,7 +9,7 @@
     <div class="d-flex align-items-center gap-3">
         <span class="text-primary fw-bold d-none d-sm-inline animate-pulse-custom">⚡ Super Delivery
             Nationwide!</span>
-        <a href="#offers" class="text-white text-decoration-none hover-text-primary transition-all">Offers</a>
+        <a href="{{ route('offers') }}" class="text-white text-decoration-none hover-text-primary transition-all">Offers</a>
         <span class="text-secondary">|</span>
         <a href="#track" class="text-white text-decoration-none hover-text-primary transition-all">Track Order</a>
     </div>
