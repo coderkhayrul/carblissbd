@@ -10,7 +10,7 @@
             @elseif ($products->isEmpty())
                 <p>No products found. Try a different name, brand or SKU.</p>
             @else
-                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-2 g-md-4">
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2 g-md-4">
                     @include('frontend.partials.recommended-product-cards', ['products' => $products])
                 </div>
                 <nav class="d-flex justify-content-between align-items-center gap-3 mt-4" aria-label="Search results pages">

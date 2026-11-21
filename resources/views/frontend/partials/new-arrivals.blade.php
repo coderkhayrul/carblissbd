@@ -15,7 +15,7 @@
             @endif
         </div>
         <div class="{{ $showAllArrivals ? 'arrival-all-products' : 'swiper new-arrivals-swiper' }}">
-            <div class="{{ $showAllArrivals ? 'row row-cols-2 row-cols-sm-3 row-cols-lg-5 g-3' : 'swiper-wrapper' }}">
+            <div class="{{ $showAllArrivals ? 'row row-cols-2 row-cols-sm-3 row-cols-lg-6 g-3' : 'swiper-wrapper' }}">
             @foreach ($newArrivals as $product)
                 @php
                     $variation = $product->is_variation ? $product->variations->first() : null;

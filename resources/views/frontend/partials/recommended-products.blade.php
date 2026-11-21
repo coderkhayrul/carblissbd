@@ -5,7 +5,7 @@
             <h2 class="h4 fw-bolder text-dark text-uppercase d-flex align-items-center gap-2 mb-1"><i class="fa-solid fa-thumbs-up text-primary" aria-hidden="true"></i> You May Like</h2>
             <p class="text-muted small mb-0">Explore more products for your car</p>
         </div>
-        <div id="you-may-like-grid" class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-2 g-md-4" aria-busy="false">
+        <div id="you-may-like-grid" class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2 g-md-4" aria-busy="false">
             @include('frontend.partials.recommended-product-cards', ['products' => $recommendedProducts])
         </div>
         <div class="text-center mt-4">

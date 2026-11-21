@@ -12,7 +12,7 @@
     <section class="catalog-products-panel" aria-labelledby="catalog-products-title">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4"><h2 id="catalog-products-title" class="mb-0">{{ $catalogName }}</h2><span class="catalog-result-count">@if ($products->total()){{ $products->firstItem() }}–{{ $products->lastItem() }} of {{ $products->total() }} products @else 0 products @endif</span></div>
         @if ($products->isNotEmpty())
-            <div id="catalog-products-grid" class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-2 g-md-4" aria-busy="false">
+            <div id="catalog-products-grid" class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2 g-md-4" aria-busy="false">
                 @include('frontend.partials.recommended-product-cards', ['products' => $products])
             </div>
             @if ($products->hasMorePages())

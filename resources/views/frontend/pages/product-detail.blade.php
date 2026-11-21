@@ -228,7 +228,7 @@
         @if ($relatedProducts->isNotEmpty())
             <section class="bg-white rounded-4 border border-light shadow-sm p-3 p-md-4">
                 <h2 class="h4 fw-bold mb-4">You May Also Like</h2>
-                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-2 g-md-4">@include('frontend.partials.recommended-product-cards', ['products' => $relatedProducts])</div>
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2 g-md-4">@include('frontend.partials.recommended-product-cards', ['products' => $relatedProducts])</div>
             </section>
         @endif
     </main>

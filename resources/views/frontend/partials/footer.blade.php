@@ -145,11 +145,11 @@
                     spaceBetween: 16,
                 },
                 992: {
-                    slidesPerView: 5,
+                    slidesPerView: 6,
                     spaceBetween: 16,
                 },
                 1200: {
-                    slidesPerView: 5,
+                    slidesPerView: 6,
                     spaceBetween: 16,
                 }
             }
