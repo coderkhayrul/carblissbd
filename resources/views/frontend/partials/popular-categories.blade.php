@@ -12,15 +12,15 @@
                         @foreach ($popularCategories as $category)
                             <div class="swiper-slide h-auto">
                                 <a href="{{ route('category', ['category' => $category->slug]) }}"
-                                    class="text-decoration-none d-flex flex-column bg-white rounded-3 border category-card overflow-hidden h-100">
-                                    <div class="p-2 d-flex align-items-center justify-content-center bg-white"
-                                        style="height: 100px;">
+                                    class="text-decoration-none d-flex flex-column bg-white rounded-3 category-card overflow-hidden h-100">
+                                    <div class="w-100 rounded-circle overflow-hidden bg-white flex-shrink-0"
+                                        style="aspect-ratio: 1 / 1;">
                                         <img src="{{ asset($category->image ?: 'backend/assets/extra/preview-image.png') }}"
                                             alt="{{ $category->name }}" loading="lazy"
-                                            class="w-100 h-100 object-fit-contain category-img-zoom">
+                                            width="350" height="350"
+                                            class="d-block w-100 h-100 object-fit-cover category-img-zoom">
                                     </div>
-                                    <div class="border-top p-2 bg-white mt-auto"
-                                        style="border-color: rgba(241,90,41,.1) !important;">
+                                    <div class="p-2 bg-white mt-auto">
                                         <span class="fw-bolder text-dark text-center d-block"
                                             style="font-size: .7rem; overflow-wrap: anywhere;">{{ $category->name }}</span>
                                     </div>
