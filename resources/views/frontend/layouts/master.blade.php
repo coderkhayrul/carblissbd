@@ -191,11 +191,6 @@
     <div id="category-drawer" class="bottom-drawer d-flex flex-column shadow-lg">
         <div class="p-3 border-bottom border-light d-flex justify-content-between align-items-center bg-white"
             style="border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem;">
-            <button id="cat-back-btn" onclick="showMainCategories()"
-                class="btn btn-link text-secondary p-0 d-none align-items-center justify-content-center text-decoration-none"
-                style="width: 30px; height: 30px;">
-                <i class="fa-solid fa-arrow-left"></i>
-            </button>
             <h3 id="cat-modal-title" class="h6 fw-bolder text-dark mb-0 flex-grow-1 text-center">All Categories</h3>
             <button onclick="toggleCategoryModal()"
                 class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center"
@@ -206,9 +201,6 @@
         <div
             class="flex-grow-1 overflow-auto bg-light pb-5 position-relative border-top border-secondary border-opacity-10 category-drawer-content">
             <div id="main-cat-grid" class="p-3 row row-cols-3 row-cols-lg-5 g-2 m-0"></div>
-            <div id="sub-cat-list" class="d-none p-3 pb-5 bg-white">
-                <ul id="sub-cat-items" class="list-unstyled d-flex flex-column gap-2 m-0"></ul>
-            </div>
         </div>
     </div>
 

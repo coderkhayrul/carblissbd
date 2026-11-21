@@ -357,7 +357,7 @@
 
         // --- Mobile Category Modal Logic ---
         @php
-            $mobileMenuData = $menuCategories->map(fn ($category) => [
+            $mobileMenuData = $menuCategories->filter(fn ($category) => !$category->parent_id)->map(fn ($category) => [
                 'id' => $category->id,
                 'parent_id' => $category->parent_id,
                 'name' => $category->name,
@@ -381,15 +381,9 @@
             categoriesDataList.forEach(data => {
                 const column = document.createElement('div');
                 column.className = 'col';
-                const hasChildren = categoriesDataList.some(item => item.parent_id === data.id);
-                const card = document.createElement(hasChildren ? 'button' : 'a');
+                const card = document.createElement('a');
                 card.className = 'mobile-category-card d-flex flex-column align-items-center bg-white p-3 rounded-4 shadow-sm border border-light text-decoration-none hover-text-primary h-100 w-100';
-                if (hasChildren) {
-                    card.type = 'button';
-                    card.addEventListener('click', () => openSubCategory(data.id));
-                } else {
-                    card.href = data.url;
-                }
+                card.href = data.url;
                 const frame = document.createElement('div');
                 frame.className = 'rounded-circle overflow-hidden mb-2 border border-2 border-primary flex-shrink-0';
                 frame.style.cssText = 'width:60px;height:60px;';
@@ -416,52 +410,10 @@
             } else {
                 closeAllDrawers();
                 renderMainCategories();
-                showMainCategories();
                 overlay.classList.remove('d-none');
                 setTimeout(() => drawer.classList.add('show'), 10);
                 document.body.style.overflow = 'hidden';
             }
-        }
-
-        function openSubCategory(key) {
-            const data = categoriesDataList.find(item => item.id === key);
-            if (!data) return;
-            document.getElementById('cat-modal-title').textContent = data.name;
-            const backBtn = document.getElementById('cat-back-btn');
-            backBtn.classList.remove('d-none');
-            backBtn.classList.add('d-flex');
-            const subItems = document.getElementById('sub-cat-items');
-            subItems.replaceChildren();
-            const items = [{name: 'View all ' + data.name, url: data.url},
-                ...categoriesDataList.filter(item => item.parent_id === data.id)];
-            items.forEach(item => {
-                const row = document.createElement('li');
-                const link = document.createElement('a');
-                link.href = item.url;
-                link.className = 'd-flex justify-content-between align-items-center gap-2 p-3 bg-light rounded-3 fw-bold text-dark text-decoration-none hover-text-primary border';
-                const label = document.createElement('span');
-                label.textContent = item.name;
-                label.style.overflowWrap = 'anywhere';
-                const icon = document.createElement('i');
-                icon.className = 'fa-solid fa-chevron-right small flex-shrink-0';
-                icon.setAttribute('aria-hidden', 'true');
-                link.append(label, icon);
-                row.appendChild(link);
-                subItems.appendChild(row);
-            });
-            document.getElementById('main-cat-grid').classList.add('d-none');
-            document.getElementById('sub-cat-list').classList.remove('d-none');
-            document.getElementById('sub-cat-list').classList.add('d-block');
-        }
-        function showMainCategories() {
-            document.getElementById('cat-modal-title').innerText = "All Categories";
-            const backBtn = document.getElementById('cat-back-btn');
-            backBtn.classList.add('d-none');
-            backBtn.classList.remove('d-flex');
-
-            document.getElementById('sub-cat-list').classList.add('d-none');
-            document.getElementById('sub-cat-list').classList.remove('d-block');
-            document.getElementById('main-cat-grid').classList.remove('d-none');
         }
 
         function handleDemoLogin(e) {
