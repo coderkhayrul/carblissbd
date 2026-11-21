@@ -152,6 +152,10 @@ class CallQueuedHandler
                     $lockReleased = true;
                 }
 
+                if (! empty($command->debounceOwner ?? '')) {
+                    (new DebounceLock($this->container->make(Cache::class)))->releaseMaxWait($command);
+                }
+
                 return $this->dispatcher->dispatchNow(
                     $command, $this->resolveHandler($job, $command)
                 );
@@ -436,7 +440,7 @@ class CallQueuedHandler
      *
      * @param  string  $uuid
      * @param  mixed  $command
-     * @param  \Throwable  $e
+     * @param  \Throwable|null  $e
      * @return void
      */
     protected function ensureFailedBatchJobIsRecorded(string $uuid, $command, $e)
@@ -455,7 +459,7 @@ class CallQueuedHandler
      *
      * @param  string  $uuid
      * @param  mixed  $command
-     * @param  \Throwable  $e
+     * @param  \Throwable|null  $e
      * @return void
      */
     protected function ensureChainCatchCallbacksAreInvoked(string $uuid, $command, $e)
