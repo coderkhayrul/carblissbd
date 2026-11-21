@@ -89,7 +89,8 @@
             spaceBetween: 15,
             grabCursor: true,
             watchOverflow: true,
-            loop: brandCount > 6,
+            loop: false,
+            rewind: true,
             autoplay: brandCount > 1 ? {
                 delay: 2500, // Auto slides every 2.5 seconds
                 disableOnInteraction: false,
@@ -104,11 +105,11 @@
                     spaceBetween: 15,
                 },
                 768: {
-                    slidesPerView: 3,
+                    slidesPerView: 5,
                     spaceBetween: 20,
                 },
                 992: {
-                    slidesPerView: 6, // 6 items on large screens
+                    slidesPerView: 8,
                     spaceBetween: 20,
                 }
             }

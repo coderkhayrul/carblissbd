@@ -12,9 +12,9 @@
                 <div class="swiper-wrapper">
                     @foreach ($topBrands as $brand)
                         <div class="swiper-slide h-auto">
-                            <a href="{{ route('brand', ['brand' => $brand->slug]) }}" class="d-block text-decoration-none bg-light p-3 rounded-4 text-center border border-light h-100" title="{{ $brand->title ?: $brand->name }}">
-                                <div class="d-flex align-items-center justify-content-center" style="height: 80px; overflow: hidden;">
-                                    <img src="{{ asset($brand->logo ?: 'backend/assets/extra/preview-image.png') }}" alt="{{ $brand->name }} logo" loading="lazy" class="w-100 h-100 object-fit-contain">
+                            <a href="{{ route('brand', ['brand' => $brand->slug]) }}" class="d-block text-decoration-none text-center h-100" title="{{ $brand->title ?: $brand->name }}">
+                                <div class="w-100 rounded-circle overflow-hidden border border-light bg-white" style="aspect-ratio: 1 / 1;">
+                                    <img src="{{ asset($brand->logo ?: 'backend/assets/extra/preview-image.png') }}" alt="{{ $brand->name }} logo" loading="lazy" class="d-block w-100 h-100 object-fit-cover">
                                 </div>
                                 <span class="small fw-semibold text-dark d-block mt-2">{{ $brand->name }}</span>
                             </a>
