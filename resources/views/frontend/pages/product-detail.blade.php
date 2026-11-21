@@ -60,10 +60,10 @@
             <div class="row g-4 g-lg-5">
                 <div class="col-12 col-lg-6">
                     <a id="detail-image-link"
-                        class="d-flex align-items-center justify-content-center bg-light rounded-4 p-3"
+                        class="d-flex align-items-center justify-content-center bg-light rounded-4 overflow-hidden"
                         href="{{ $initialImage }}" target="_blank" rel="noopener" aria-label="Open full product image">
-                        <img id="detail-main-image" class="img-fluid w-100 object-fit-contain" src="{{ $initialImage }}"
-                            alt="{{ $product->name }}" fetchpriority="high" style="height: clamp(240px, 50vw, 460px);">
+                        <img id="detail-main-image" class="d-block w-100 object-fit-cover" src="{{ $initialImage }}"
+                            alt="{{ $product->name }}" width="500" height="500" fetchpriority="high" style="height:auto;aspect-ratio:1 / 1;">
                     </a>
                     @if ($galleryUrls->count() > 1)
                         <div class="d-flex gap-2 overflow-auto py-3" aria-label="Product gallery">

@@ -29,9 +29,9 @@
                             <span class="badge bg-dark rounded-pill text-uppercase shadow-sm"
                                 style="font-size: .55rem;">New Arrival</span>
                         </div>
-                        <a href="{{ $productUrl }}" draggable="false" class="arrival-image-frame bg-light rounded-top-4 overflow-hidden"
+                        <a href="{{ $productUrl }}" draggable="false" class="arrival-image-frame bg-light rounded-3 overflow-hidden"
                             aria-label="View {{ $product->name }}">
-                            <img height="250px" width="100%"
+                            <img height="500" width="500"
                                 src="{{ asset($product->thumbnail_image ?: 'backend/assets/extra/preview-image.png') }}"
                                 alt="{{ $product->name }}" loading="lazy" draggable="false" class="arrival-image product-img">
                         </a>
